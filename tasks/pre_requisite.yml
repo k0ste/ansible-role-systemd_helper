@@ -1,0 +1,16 @@
+---
+- name: Check /etc/systemd exists
+  stat:
+    path: "/etc/systemd"
+  register: "systemd_stat"
+  failed_when: "systemd_stat.stat.exists == False"
+- name: Check system manager is systemd
+  fail:
+    msg: "System manager is not systemd"
+  when: "hostvars[inventory_hostname]['ansible_service_mgr'] != 'systemd'"
+- name: Set facts
+  set_fact:
+    systemd_tmpfiles_response: "{{ hostvars[inventory_hostname]['systemd_tmpfiles'] | json_query('[].file_name') }}"
+  when:
+  - "hostvars[inventory_hostname]['systemd_tmpfiles'] is defined"
+  - "hostvars[inventory_hostname]['systemd_tmpfiles'] != ''"

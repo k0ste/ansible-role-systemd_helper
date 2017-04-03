@@ -1,0 +1,10 @@
+## {{ 'journald.conf' }}
+# {{ ansible_managed }}
+# Do not edit manually
+
+{% if systemd_journald_settings is defined %}
+{{ '[Journal]' }}
+{% for k,v in systemd_journald_settings.items() %}
+{{ k + '=' + v }}
+{% endfor %}
+{% endif %}

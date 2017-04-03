@@ -1,0 +1,5 @@
+# {{ item.file_name + '.conf' }}
+# {{ ansible_managed }}
+# Do not edit manually
+
+{{ item.mode + ' ' + item.path }}{% if item.gid is defined %}{{ ' ' + item.gid }}{% else %}{{ ' -' }}{% endif %}

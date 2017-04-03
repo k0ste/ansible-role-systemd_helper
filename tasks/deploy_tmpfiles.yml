@@ -1,0 +1,10 @@
+---
+- name: Deploy tmpfiles
+  template:
+    src: "tmpfilesd.j2"
+    dest: "{{ '/etc/tmpfiles.d/' + outer_item + '.conf' }}"
+    group: "root"
+    owner: "root"
+    mode: "0644"
+    force: "yes"
+  with_items: "{{ systemd_tmpfiles | json_query(\"[?file_name=='\" + outer_item + \"']\") }}"
