@@ -1,4 +1,5 @@
 ---
+# /etc/systemd not exists, something wrong with this system
 - name: Check /etc/systemd exists
   stat:
     path: "/etc/systemd"
@@ -8,9 +9,20 @@
   fail:
     msg: "System manager is not systemd"
   when: "hostvars[inventory_hostname]['ansible_service_mgr'] != 'systemd'"
+- name: Make tmpfiles.d
+  file:
+    path: "/etc/tmpfiles.d"
+    state: "directory"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+  register: "tmpfiles_d"
 - name: Set facts
   set_fact:
-    systemd_tmpfiles_response: "{{ hostvars[inventory_hostname]['systemd_tmpfiles'] | json_query('[].file_name') }}"
+    systemd_tmpfiles_create: "{{ hostvars[inventory_hostname]['systemd_tmpfiles'] | json_query('[].create[].file_name') }}"
+    systemd_tmpfiles_clean: "{{ hostvars[inventory_hostname]['systemd_tmpfiles'] | json_query('[].clean[].file_name') }}"
+    systemd_tmpfiles_remove: "{{ hostvars[inventory_hostname]['systemd_tmpfiles'] | json_query('[].remove[].file_name') }}"
   when:
   - "hostvars[inventory_hostname]['systemd_tmpfiles'] is defined"
   - "hostvars[inventory_hostname]['systemd_tmpfiles'] != ''"
+  - "tmpfiles_d|success"

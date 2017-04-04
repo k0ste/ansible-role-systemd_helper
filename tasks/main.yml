@@ -1,8 +1,4 @@
 ---
 - include: pre_requisite.yml
 - include: deploy_journald.yml
-- include: deploy_tmpfiles.yml
-  with_items: "{{ hostvars[inventory_hostname]['systemd_tmpfiles_response'] }}"
-  loop_control:
-    loop_var: "outer_item"
-  when: "vars['systemd_tmpfiles_response'] is defined"
+- include: tmpfiles_executor.yml

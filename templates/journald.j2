@@ -1,6 +1,6 @@
-## {{ 'journald.conf' }}
-# {{ ansible_managed }}
-# Do not edit manually
+{{ '## ' + 'journald.conf' }}
+{{ '# ' + ansible_managed }}
+{{ '# ' + 'Do not edit manually' }}
 
 {% if systemd_journald_settings is defined %}
 {{ '[Journal]' }}
