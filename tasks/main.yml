@@ -2,3 +2,5 @@
 - include: pre_requisite.yml
 - include: deploy_journald.yml
 - include: tmpfiles_executor.yml
+- include: timedatectl.yml
+- include: udev_executor.yml

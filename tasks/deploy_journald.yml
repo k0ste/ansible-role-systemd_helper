@@ -1,5 +1,5 @@
 ---
-- name: Deploy journald configuration
+- name: systemd | Deploy journald configuration
   template:
     src: "journald.j2"
     dest: "/etc/systemd/journald.conf"

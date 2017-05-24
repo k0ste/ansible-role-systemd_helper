@@ -1,15 +1,16 @@
 ---
 # /etc/systemd not exists, something wrong with this system
-- name: Check /etc/systemd exists
+- name: systemd | Check /etc/systemd exists
   stat:
     path: "/etc/systemd"
   register: "systemd_stat"
   failed_when: "systemd_stat.stat.exists == False"
-- name: Check system manager is systemd
+- name: systemd | Check system manager is systemd
   fail:
     msg: "System manager is not systemd"
-  when: "hostvars[inventory_hostname]['ansible_service_mgr'] != 'systemd'"
-- name: Make tmpfiles.d
+  when:
+  - "hostvars[inventory_hostname]['ansible_service_mgr'] != 'systemd'"
+- name: systemd | Make tmpfiles.d
   file:
     path: "/etc/tmpfiles.d"
     state: "directory"
@@ -17,7 +18,15 @@
     group: "root"
     mode: "0755"
   register: "tmpfiles_d"
-- name: Set facts
+- name: systemd | Make udev rules.d
+  file:
+    path: "/etc/udev/rules.d"
+    state: "directory"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+  register: "udev_d"
+- name: systemd | Set facts about tmpfiles.d
   set_fact:
     systemd_tmpfiles_create: "{{ hostvars[inventory_hostname]['systemd_tmpfiles'] | json_query('[].create[].file_name') }}"
     systemd_tmpfiles_clean: "{{ hostvars[inventory_hostname]['systemd_tmpfiles'] | json_query('[].clean[].file_name') }}"
@@ -26,3 +35,21 @@
   - "hostvars[inventory_hostname]['systemd_tmpfiles'] is defined"
   - "hostvars[inventory_hostname]['systemd_tmpfiles'] != ''"
   - "tmpfiles_d|success"
+- name: systemd | Set facts about udev
+  set_fact:
+    systemd_udev_rules: "{{ hostvars[inventory_hostname]['systemd_udev'] | json_query('[].file_name') }}"
+  when:
+  - "hostvars[inventory_hostname]['systemd_udev'] is defined"
+  - "hostvars[inventory_hostname]['systemd_udev'] != ''"
+  - "udev_d|success"
+- name: systemd | Copy udev syntax check script
+  copy:
+    src: "rule-syntax-check.py"
+    dest: "/tmp/rule-syntax-check.py"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+  when:
+  - "hostvars[inventory_hostname]['systemd_udev'] is defined"
+  - "hostvars[inventory_hostname]['systemd_udev'] != ''"
+  - "udev_d|success"

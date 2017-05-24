@@ -1,0 +1,6 @@
+---
+- name: systemd | Set timezone
+  shell: "{{ 'timedatectl set-timezone' + ' ' + hostvars[inventory_hostname]['systemd_tzdata'] }}"
+  when:
+  - "hostvars[inventory_hostname]['tzdata'] is defined"
+  - "hostvars[inventory_hostname]['tzdata'] != ''"

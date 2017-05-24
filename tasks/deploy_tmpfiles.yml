@@ -1,5 +1,5 @@
 ---
-- name: Deploy tmpfiles
+- name: systemd | Deploy tmpfiles
   template:
     src: "tmpfilesd.j2"
     dest: "{{ '/etc/tmpfiles.d/' + vars['outer_item'] + '.conf' }}"
@@ -8,6 +8,6 @@
     mode: "0644"
     force: "yes"
     validate: "{{ 'systemd-tmpfiles --' + vars['query_type'] + ' %s' }}"
-  with_items: "{{ systemd_tmpfiles | json_query(\"[].\" + vars['query_type'] + \"[?file_name=='\" + vars['outer_item'] + \"']\") }}"
+  with_items: "{{ hostvars[inventory_hostname]['systemd_tmpfiles'] | json_query(\"[].\" + vars['query_type'] + \"[?file_name=='\" + vars['outer_item'] + \"']\") }}"
   loop_control:
     label: "{{ item.file_name }}"

@@ -1,0 +1,7 @@
+---
+- include: deploy_udev.yml
+  with_items: "{{ hostvars[inventory_hostname]['systemd_udev_rules'] }}"
+  loop_control:
+    loop_var: "outer_item"
+  when:
+  - "vars['systemd_udev_rules'] is defined"

@@ -2,9 +2,9 @@
 {{ '# ' + ansible_managed }}
 {{ '# ' + 'Do not edit manually' }}
 
-{% if systemd_journald_settings is defined %}
 {{ '[Journal]' }}
-{% for k,v in systemd_journald_settings.items() %}
+{% for k,v in hostvars[inventory_hostname]['systemd_journald_settings'].items() %}
+{% if v is defined and v != '' %}
 {{ k + '=' + v }}
-{% endfor %}
 {% endif %}
+{% endfor %}
