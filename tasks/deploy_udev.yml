@@ -1,5 +1,5 @@
 ---
-- name: systemd | Deploy udev
+- name: systemd_helper | Deploy udev
   template:
     src: "udev.j2"
     dest: "{{ '/etc/udev/rules.d/' + vars['outer_item'] + '.rules' }}"

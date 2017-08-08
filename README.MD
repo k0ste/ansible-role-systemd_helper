@@ -1,10 +1,11 @@
-ansible-systemd_helper
-=======================
+systemd_helper
+=================
 
 Allow to define systemd:
-* journald.conf;
+* `journald.conf`;
 * [systemd-tmpfiles](https://www.freedesktop.org/software/systemd/man/tmpfiles.d.html);
 * set timezone via systemd-timedatectl;
+* set console settings via `vconsole.conf`
 
 Requirements
 ---------------
@@ -25,6 +26,12 @@ Example configuration
 
 ```yaml
 ---
+# systemd-tmpfiles uses the configuration files from the above directories to
+# describe the creation, cleaning and removal of volatile and temporary files
+# and directories which usually reside in directories such as '/run' or '/tmp'.
+# Volatile and temporary files and directories are those located in '/run'
+# (and its alias '/var/run'), '/tmp', '/var/tmp', the API file systems such
+# as '/sys' or '/proc', as well as some other directories below '/var'.
 systemd_tmpfiles:
 - create:
   - file_name: 'set_sda_scheduler'
@@ -68,4 +75,21 @@ systemd_udev:
   - 'ATTRS{idVendor}=="abcd", ATTRS{idProduct}=="1980", GROUP="100", MODE="0660", SYMLINK+="rr02"'
   - 'ATTRS{idVendor}=="067b", ATTRS{idProduct}=="2303", GROUP="100", MODE="0660", SYMLINK+="m200"'
   - 'ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", GROUP="100", MODE="0660", SYMLINK+="m200"'
+
+# The '/etc/vconsole.conf' file configures the virtual console, i.e. keyboard
+# mapping and console font. It is applied at boot by udev using
+# '90-vconsole.rules' file. You can safely mask this file if you want to avoid
+# this kind of initialization.
+systemd_vconsole:
+# Configures the key mapping table for the keyboard.
+- keymap: 'ru'
+# The KEYMAP_TOGGLE= can be used to configure a second toggle keymap and is by
+# default unset.
+  keymap_toggle: 'dvorak'
+# Configures the console font.
+  font: 'cyr-sun16'
+# Configures the console map.
+  font_map: ''
+# Configures the unicode font map.
+  font_unimap: ''
 ```

@@ -1,6 +1,19 @@
 ---
 - include: pre_requisite.yml
 - include: deploy_journald.yml
+  when:
+  - "hostvars[inventory_hostname]['systemd_journald_settings'] is defined"
+  - "hostvars[inventory_hostname]['systemd_journald_settings'] != ''"
+- include: deploy_timedatectl.yml
+  when:
+  - "hostvars[inventory_hostname]['systemd_tzdata'] is defined"
+  - "hostvars[inventory_hostname]['systemd_tzdata'] != ''"
+- include: deploy_vconsole.yml
+  when:
+  - "hostvars[inventory_hostname]['systemd_vconsole'] is defined"
+  - "hostvars[inventory_hostname]['systemd_vconsole'] != ''"
 - include: tmpfiles_executor.yml
-- include: timedatectl.yml
 - include: udev_executor.yml
+  when:
+  - "vars['systemd_udev_rules'] is defined"
+  - "vars['systemd_udev_rules'] != ''"

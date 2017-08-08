@@ -1,0 +1,9 @@
+---
+- name: systemd_helper | Deploy vconsole configuration
+  template:
+    src: "vconsole.j2"
+    dest: "/etc/vconsole.conf"
+    group: "root"
+    owner: "root"
+    mode: "0644"
+    force: "yes"
