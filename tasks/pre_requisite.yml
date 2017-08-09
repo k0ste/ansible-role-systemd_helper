@@ -1,31 +1,29 @@
 ---
-# /etc/systemd not exists, something wrong with this system
-- name: systemd_helper | Check /etc/systemd exists
-  stat:
+- stat:
     path: "/etc/systemd"
   register: "systemd_stat"
-  failed_when: "systemd_stat.stat.exists == False"
-- name: systemd_helper | Check system manager is systemd
-  fail:
-    msg: "System manager is not systemd"
-  when:
-  - "hostvars[inventory_hostname]['ansible_service_mgr'] != 'systemd'"
-- name: systemd_helper | Make tmpfiles.d
+- assert:
+    that:
+    - "vars['systemd_stat']['stat']['exists'] == True"
+    msg: "/etc/systemd not exists, something wrong with this system."
+- assert:
+    that:
+    - "hostvars[inventory_hostname]['ansible_service_mgr'] == 'systemd'"
+    msg: "System manager is not systemd."
+- name: systemd_helper | Make tmpfiles.d directory
   file:
     path: "/etc/tmpfiles.d"
     state: "directory"
     owner: "root"
     group: "root"
     mode: "0755"
-  register: "tmpfiles_d"
-- name: systemd_helper | Make udev rules.d
+- name: systemd_helper | Make udev rules.d directory
   file:
     path: "/etc/udev/rules.d"
     state: "directory"
     owner: "root"
     group: "root"
     mode: "0755"
-  register: "udev_d"
 - name: systemd_helper | Set facts about tmpfiles.d
   set_fact:
     systemd_tmpfiles_create: "{{ hostvars[inventory_hostname]['systemd_tmpfiles'] | json_query('[].create[].file_name') }}"
@@ -34,14 +32,12 @@
   when:
   - "hostvars[inventory_hostname]['systemd_tmpfiles'] is defined"
   - "hostvars[inventory_hostname]['systemd_tmpfiles'] != ''"
-  - "tmpfiles_d|success"
 - name: systemd_helper | Set facts about udev
   set_fact:
     systemd_udev_rules: "{{ hostvars[inventory_hostname]['systemd_udev'] | json_query('[].file_name') }}"
   when:
   - "hostvars[inventory_hostname]['systemd_udev'] is defined"
   - "hostvars[inventory_hostname]['systemd_udev'] != ''"
-  - "udev_d|success"
 - name: systemd_helper | Copy udev syntax check script
   copy:
     src: "rule-syntax-check.py"
@@ -52,4 +48,3 @@
   when:
   - "hostvars[inventory_hostname]['systemd_udev'] is defined"
   - "hostvars[inventory_hostname]['systemd_udev'] != ''"
-  - "udev_d|success"
