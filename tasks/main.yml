@@ -16,4 +16,3 @@
 - include: udev_executor.yml
   when:
   - "vars['systemd_udev_rules'] is defined"
-  - "vars['systemd_udev_rules'] != ''"

@@ -2,10 +2,10 @@ systemd_helper
 =================
 
 Allow to define systemd:
-* `journald.conf`;
+* [journald.conf](https://www.freedesktop.org/software/systemd/man/journald.conf.html);
 * [systemd-tmpfiles](https://www.freedesktop.org/software/systemd/man/tmpfiles.d.html);
-* set timezone via systemd-timedatectl;
-* set console settings via `vconsole.conf`
+* set timezone via [systemd-timedatectl](https://www.freedesktop.org/software/systemd/man/timedatectl.html);
+* set console settings via [vconsole.conf](https://www.freedesktop.org/software/systemd/man/vconsole.conf.html)
 
 Requirements
 ---------------
@@ -18,7 +18,7 @@ Extra
 
 * journald options is not validate and pass as-is. For all possible options
 consult `man journald.conf(5)`;
-* tmpfiles are validated by real time execution (online apply of settings);
+* tmpfiles are validated by real time execution (online apply settings);
 * udev rules syntax validated via external script;
 
 Example configuration
@@ -33,7 +33,9 @@ Example configuration
 # (and its alias '/var/run'), '/tmp', '/var/tmp', the API file systems such
 # as '/sys' or '/proc', as well as some other directories below '/var'.
 systemd_tmpfiles:
-- create:
+# This option allow to delete '/etc/tmpfiles.d/*.conf' files before deploy.
+- drop_exists: 'true'
+  create:
   - file_name: 'set_sda_scheduler'
     path: '/sys/block/sda/queue/scheduler'
     type: 'w'
