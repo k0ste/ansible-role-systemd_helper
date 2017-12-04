@@ -3,3 +3,7 @@
   systemd:
     name: "systemd-journald"
     state: "restarted"
+- name: Cleanup udev script
+  file:
+    path: "/tmp/rule-syntax-check.py"
+    state: "absent"
