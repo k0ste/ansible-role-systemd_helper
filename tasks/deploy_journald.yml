@@ -7,4 +7,5 @@
     owner: "root"
     mode: "0644"
     force: "yes"
-  notify: "Restart systemd-journald"
+  notify:
+  - "Restart systemd-journald"

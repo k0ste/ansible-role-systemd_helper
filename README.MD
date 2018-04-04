@@ -1,5 +1,4 @@
-systemd_helper
-=================
+# ansible-systemd_helper
 
 Allow to define systemd:
 * [journald.conf](https://www.freedesktop.org/software/systemd/man/journald.conf.html);
@@ -7,22 +6,18 @@ Allow to define systemd:
 * set timezone via [systemd-timedatectl](https://www.freedesktop.org/software/systemd/man/timedatectl.html);
 * set console settings via [vconsole.conf](https://www.freedesktop.org/software/systemd/man/vconsole.conf.html)
 
-Requirements
----------------
+## Requirements
 
-* Ansible 2.2;
-* jmespath;
+* Ansible 2.4;
 
-Extra
-------
+## Extra
 
 * journald options is not validate and pass as-is. For all possible options
 consult `man journald.conf(5)`;
 * tmpfiles are validated by real time execution (online apply settings);
 * udev rules syntax validated via external script;
 
-Example configuration
--------------------------
+## Example configuration
 
 ```yaml
 ---

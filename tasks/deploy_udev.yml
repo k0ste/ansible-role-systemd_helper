@@ -2,12 +2,14 @@
 - name: systemd_helper | Deploy udev
   template:
     src: "udev.j2"
-    dest: "{{ '/etc/udev/rules.d/' + vars['outer_item'] + '.rules' }}"
+    dest: "{{ '/etc/udev/rules.d' ~ '/' ~ vars['outer_item'] ~ '.rules' }}"
     group: "root"
     owner: "root"
     mode: "0644"
     force: "yes"
     validate: "/tmp/rule-syntax-check.py %s"
-  with_items: "{{ hostvars[inventory_hostname]['systemd_udev'] | json_query(\"[?file_name=='\" + vars['outer_item'] + \"']\") }}"
+  with_items: "{{ hostvars[inventory_hostname]['systemd_udev'] |
+                  json_query(\"[?file_name=='\" +
+                  vars['outer_item'] + \"']\") }}"
   loop_control:
     label: "{{ item.file_name }}"

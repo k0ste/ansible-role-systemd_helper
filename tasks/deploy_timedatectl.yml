@@ -1,3 +1,4 @@
 ---
 - name: systemd_helper | Set timezone
-  command: "{{ 'timedatectl set-timezone' + ' ' + hostvars[inventory_hostname]['systemd_tzdata'] }}"
+  timezone:
+    name: "{{ hostvars[inventory_hostname]['systemd_tzdata'] }}"

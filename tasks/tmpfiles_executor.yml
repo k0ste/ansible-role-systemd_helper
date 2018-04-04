@@ -1,19 +1,19 @@
 ---
-- include: deploy_tmpfiles.yml
+- include_tasks: deploy_tmpfiles.yml
   with_items: "{{ hostvars[inventory_hostname]['systemd_tmpfiles_create'] }}"
   loop_control:
     loop_var: "outer_item"
   when: "vars['systemd_tmpfiles_create'] is defined"
   vars:
     query_type: "create"
-- include: deploy_tmpfiles.yml
+- include_tasks: deploy_tmpfiles.yml
   with_items: "{{ hostvars[inventory_hostname]['systemd_tmpfiles_clean'] }}"
   loop_control:
     loop_var: "outer_item"
   when: "vars['systemd_tmpfiles_clean'] is defined"
   vars:
     query_type: "clean"
-- include: deploy_tmpfiles.yml
+- include_tasks: deploy_tmpfiles.yml
   with_items: "{{ hostvars[inventory_hostname]['systemd_tmpfiles_remove'] }}"
   loop_control:
     loop_var: "outer_item"
