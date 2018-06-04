@@ -1,0 +1,58 @@
+---
+- name: systemd_helper | Make networkd directory
+  file:
+    path: "/etc/systemd/network"
+    state: "directory"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+- name: systemd_helper | Set facts about networkd
+  set_fact:
+    systemd_networkd_ifaces: "{{
+      hostvars[inventory_hostname]['systemd_networkd'] |
+      json_query('[].interfaces[].interface') }}"
+  when:
+  - "hostvars[inventory_hostname]['systemd_networkd'] is defined"
+  - "hostvars[inventory_hostname]['systemd_networkd'] != ''"
+- name: systemd_helper | Find exists networkd configuration files
+  find:
+    paths: "/etc/systemd/network"
+    recurse: "no"
+    file_type: "file"
+    patterns: "(.*).(network|netdev|link)"
+    exclude: "99-default.link"
+    use_regex: "true"
+  register: "networkd_find_result"
+  when:
+  - "hostvars[inventory_hostname]['systemd_networkd'] is defined"
+  - "hostvars[inventory_hostname]['systemd_networkd'] != ''"
+  - "hostvars[inventory_hostname]['systemd_networkd'] |
+     json_query(vars['networkd_drop_exists']) is defined"
+  - "hostvars[inventory_hostname]['systemd_networkd'] |
+     json_query(vars['networkd_drop_exists']) == 'true'"
+  vars:
+    networkd_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
+- name: systemd_helper | Delete exists networkd configuration files
+  file:
+    path: "{{ item.path }}"
+    state: "absent"
+  with_items: "{{ vars['networkd_find_result']['files'] }}"
+  loop_control:
+    label: "{{ item.path }}"
+  when:
+  - "vars['networkd_find_result']['files'] is defined"
+- stat:
+    path: "/etc/systemd/network/99-default.link"
+  register: "systemd_default_link_stat"
+  when:
+  - "hostvars[inventory_hostname]['systemd_networkd'] is defined"
+  - "hostvars[inventory_hostname]['systemd_networkd'] != ''"
+- name: systemd_helper | Mask default networkd link
+  file:
+    path: "/etc/systemd/network/99-default.link"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+    state: "touch"
+  when:
+  - "vars['systemd_default_link_stat']['stat']['exists'] == False"

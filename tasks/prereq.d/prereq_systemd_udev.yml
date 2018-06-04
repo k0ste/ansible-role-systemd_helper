@@ -1,0 +1,26 @@
+---
+- name: systemd_helper | Make udev rules.d directory
+  file:
+    path: "/etc/udev/rules.d"
+    state: "directory"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+- name: systemd_helper | Set facts about udev
+  set_fact:
+    systemd_udev_rules: "{{ hostvars[inventory_hostname]['systemd_udev'] |
+                            json_query('[].file_name') }}"
+  when:
+  - "hostvars[inventory_hostname]['systemd_udev'] is defined"
+  - "hostvars[inventory_hostname]['systemd_udev'] != ''"
+- name: systemd_helper | Copy udev syntax check script
+  copy:
+    src: "rule-syntax-check.py"
+    dest: "/tmp/rule-syntax-check.py"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+  notify: "Cleanup udev script"
+  when:
+  - "hostvars[inventory_hostname]['systemd_udev'] is defined"
+  - "hostvars[inventory_hostname]['systemd_udev'] != ''"

@@ -1,0 +1,16 @@
+---
+- include_tasks: deploy_networkd.yml
+  with_items: "{{ hostvars[inventory_hostname]['systemd_networkd_ifaces'] }}"
+  loop_control:
+    loop_var: "outer_item"
+- name: systemd_helper | Enable systemd-networkd service
+  systemd:
+    name: "systemd-networkd"
+    enabled: "yes"
+  when:
+  - "hostvars[inventory_hostname]['systemd_networkd'] |
+     json_query(vars['systemd_networkd_enable']) is defined"
+  - "hostvars[inventory_hostname]['systemd_networkd'] |
+     json_query(vars['systemd_networkd_enable']) == 'true'"
+  vars:
+    systemd_networkd_enable: "[] | map(&enable || 'false', @) | [0]"

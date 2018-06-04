@@ -1,0 +1,71 @@
+{{ '## ' ~ network_netdev_name ~ '.network' }}
+{{ '# ' + ansible_managed }}
+{{ '# ' + 'Do not edit manually' }}
+
+{{ '[Match]' }}
+{% if item.match_override is defined and item.match_override != '' %}
+{% for m in item.match_override %}
+{% if (m.match_entry is defined and m.match_entry != '') and
+      (m.match_value is defined and m.match_value != '') %}
+{{ m.match_entry ~ '=' ~ m.match_value }}
+{% endif %}
+{% endfor %}
+{% else %}
+{% if network_netdev_kind == 'ether' %}
+{{ 'MACAddress' ~ '=' ~ item.physaddr }}
+{% elif network_netdev_kind != 'ether' %}
+{{ 'Name' ~ '=' ~ network_netdev_name }}
+{% endif %}
+{% endif %}
+{{ '' }}
+{% include 'networkd_network_generic.j2' %}
+{{ '' }}
+{% include 'networkd_network_link.j2' %}
+{% if item.ip is defined and item.ip != '' %}
+{{ '' }}
+{% for ip in item.ip %}
+{% include 'networkd_network_ip.j2' %}
+{% endfor %}
+{% endif %}
+{% if item.ip_rule is defined and item.ip_rule != '' %}
+{{ '' }}
+{% for ip in item.ip_rule %}
+{% include 'networkd_network_ip_rule.j2' %}
+{% if not loop.last %}
+{{ '' }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if item.ip_route is defined and item.ip_route != '' %}
+{{ '' }}
+{% for ip in item.ip_route %}
+{% include 'networkd_network_ip_route.j2' %}
+{% if not loop.last %}
+{{ '' }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if item.dhcp_client is defined and item.dhcp_client != '' %}
+{{ '' }}
+{% for d in item.dhcp_client %}
+{% include 'networkd_network_dhcp_client.j2' -%}
+{% endfor %}
+{% endif %}
+{% if item.dhcp_server is defined and item.dhcp_server != '' %}
+{{ '' }}
+{% for d in item.dhcp_server %}
+{% include 'networkd_network_dhcp_server.j2' %}
+{% endfor %}
+{% endif %}
+{% if item.bridge is defined and item.bridge != '' %}
+{{ '' }}
+{% for br in item.bridge %}
+{% include 'networkd_network_bridge.j2' %}
+{% if br.bridge_vlan is defined and br.bridge_vlan != '' %}
+{{ '' }}
+{% for bv in br.bridge_vlan %}
+{% include 'networkd_network_bridge_vlan.j2' %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}

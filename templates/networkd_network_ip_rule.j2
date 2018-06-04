@@ -1,0 +1,25 @@
+{{ '[RoutingPolicyRule]' }}
+{% if ip.tos is defined and ip.tos != '' %}
+{{ 'TypeOfService' ~ '=' ~ ip.tos }}
+{% endif %}
+{% if ip.from is defined and ip.from | ipaddr() %}
+{{ 'From' + '=' + ip.from }}
+{% endif %}
+{% if ip.to is defined and ip.to | ipaddr() %}
+{{ 'To' + '=' + ip.to }}
+{% endif %}
+{% if ip.fwmark is defined and ip.fwmark != '' %}
+{{ 'FirewallMark' ~ '=' ~ ip.fwmark }}
+{% endif %}
+{% if ip.table is defined and ip.table != '' %}
+{{ 'Table' ~ '=' ~ ip.table }}
+{% endif %}
+{% if ip.prio is defined and ip.prio != '' %}
+{{ 'Priority' ~ '=' ~ ip.prio }}
+{% endif %}
+{% if ip.in_interface is defined and ip.in_interface != '' %}
+{{ 'IncomingInterface' ~ '=' ~ ip.in_interface }}
+{% endif %}
+{% if ip.out_interface is defined and ip.out_interface != '' %}
+{{ 'OutgoingInterface' ~ '=' ~ ip.out_interface }}
+{% endif %}

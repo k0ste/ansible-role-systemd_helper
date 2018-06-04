@@ -1,0 +1,136 @@
+- assert:
+    that: "item.type is defined and item.type != ''"
+    msg: "{{ 'type for ' ~ vars['outer_item'] ~ ' is not defined' }}"
+  with_items: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+                  json_query(\"[].interfaces[?interface=='\" ~
+                  vars['outer_item'] ~ \"']\") }}"
+  loop_control:
+    label: "{{ 'interface: ' ~ vars['outer_item'] }}"
+- assert:
+    that: "item.physaddr is defined and item.physaddr != ''"
+    msg: "{{ 'physaddr for ' ~ vars['outer_item'] ~ ' is not defined' }}"
+  with_items: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+                  json_query(\"[].interfaces[?interface=='\" ~
+                  vars['outer_item'] ~ \"']\") }}"
+  loop_control:
+    label: "{{ 'interface: ' ~ vars['outer_item'] ~ ' [' ~ item.type ~ ']' }}"
+  when:
+  - "item.type == 'ether'"
+  - "item.match_override is not defined or (item.match_override is defined and
+     item.match_override == '')"
+- name: systemd_helper | Deploy networkd [network]
+  template:
+    src: "networkd_network.j2"
+    dest: "{{ '/etc/systemd/network' ~ '/' ~ vars['outer_item'] ~ '.network' }}"
+    group: "root"
+    owner: "root"
+    mode: "0644"
+    force: "yes"
+  notify:
+  - "Restart systemd-networkd"
+  with_items: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+                  json_query(\"[].interfaces[?interface=='\" ~
+                  vars['outer_item'] ~ \"']\") }}"
+  loop_control:
+    label: "{{ '[network] interface: ' ~ vars['outer_item'] ~
+               ' [' ~ item.type ~ ']' }}"
+  vars:
+    network_netdev_kind: "{{ item.type }}"
+    network_netdev_name: "{{ vars['outer_item'] }}"
+- name: systemd_helper | Deploy networkd [netdev]
+  template:
+    src: "networkd_netdev.j2"
+    dest: "{{ '/etc/systemd/network' ~ '/' ~ vars['outer_item'] ~ '.netdev' }}"
+    group: "root"
+    owner: "root"
+    mode: "0644"
+    force: "yes"
+  notify:
+  - "Restart systemd-networkd"
+  with_items: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+                  json_query(\"[].interfaces[?interface=='\" ~
+                  vars['outer_item'] ~ \"']\") }}"
+  loop_control:
+    label: "{{ '[netdev] interface: ' ~ vars['outer_item'] ~
+               ' [' ~ item.type ~ ']' }}"
+  vars:
+    network_netdev_kind: "{{ item.type }}"
+    network_netdev_name: "{{ vars['outer_item'] }}"
+  when:
+  - "item.type != 'ether'"
+- name: systemd_helper | Deploy networkd [link]
+  template:
+    src: "networkd_link.j2"
+    dest: "{{ '/etc/systemd/network' ~ '/' ~ vars['outer_item'] ~ '.link' }}"
+    group: "root"
+    owner: "root"
+    mode: "0644"
+    force: "yes"
+  notify:
+  - "Restart systemd-networkd"
+  with_items: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+                  json_query(\"[].interfaces[?interface=='\" ~
+                  vars['outer_item'] ~ \"']\") }}"
+  loop_control:
+    label: "{{ '[link] interface: ' ~ vars['outer_item'] ~
+               ' [' ~ item.type ~ ']' }}"
+  vars:
+    network_netdev_kind: "{{ item.type }}"
+    network_netdev_name: "{{ vars['outer_item'] }}"
+- name: systemd_helper | Deploy networkd [network.vlan]
+  template:
+    src: "networkd_network.j2"
+    dest: "{{ '/etc/systemd/network' ~ '/' ~ item.name ~ '.network' }}"
+    group: "root"
+    owner: "root"
+    mode: "0644"
+    force: "yes"
+  notify:
+  - "Restart systemd-networkd"
+  with_items: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+                  json_query(\"[].interfaces[?interface=='\" ~
+                  vars['outer_item'] ~ \"'].vlans[]\") }}"
+  loop_control:
+    label: "{{ '[network] interface: ' ~ item.name ~
+               ' [' ~ network_netdev_kind ~ ']' }}"
+  vars:
+    network_netdev_kind: "vlan"
+    network_netdev_name: "{{ item.name }}"
+- name: systemd_helper | Deploy networkd [netdev.vlan]
+  template:
+    src: "networkd_netdev.j2"
+    dest: "{{ '/etc/systemd/network' ~ '/' ~ item.name ~ '.netdev' }}"
+    group: "root"
+    owner: "root"
+    mode: "0644"
+    force: "yes"
+  notify:
+  - "Restart systemd-networkd"
+  with_items: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+                  json_query(\"[].interfaces[?interface=='\" ~
+                  vars['outer_item'] ~ \"'].vlans[]\") }}"
+  loop_control:
+    label: "{{ '[netdev] interface: ' ~ item.name ~
+               ' [' ~ network_netdev_kind ~ ']' }}"
+  vars:
+    network_netdev_kind: "vlan"
+    network_netdev_name: "{{ item.name }}"
+- name: systemd_helper | Deploy networkd [link.vlan]
+  template:
+    src: "networkd_link.j2"
+    dest: "{{ '/etc/systemd/network' ~ '/' ~ item.name ~ '.link' }}"
+    group: "root"
+    owner: "root"
+    mode: "0644"
+    force: "yes"
+  notify:
+  - "Restart systemd-networkd"
+  with_items: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+                  json_query(\"[].interfaces[?interface=='\" ~
+                  vars['outer_item'] ~ \"'].vlans[]\") }}"
+  loop_control:
+    label: "{{ '[link] interface: ' ~ item.name ~
+               ' [' ~ network_netdev_kind ~ ']' }}"
+  vars:
+    network_netdev_kind: "vlan"
+    network_netdev_name: "{{ item.name }}"

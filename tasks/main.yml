@@ -16,3 +16,11 @@
 - include_tasks: udev_executor.yml
   when:
   - "vars['systemd_udev_rules'] is defined"
+- include_tasks: deploy_resolved.yml
+  when:
+  - "hostvars[inventory_hostname]['systemd_resolved'] is defined"
+  - "hostvars[inventory_hostname]['systemd_resolved'] != ''"
+- include_tasks: networkd_executor.yml
+  when:
+  - "vars['systemd_networkd_ifaces'] is defined"
+  - "vars['systemd_networkd_ifaces'] != []"

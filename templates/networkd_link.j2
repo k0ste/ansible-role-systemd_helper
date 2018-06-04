@@ -1,0 +1,55 @@
+{{ '## ' ~ network_netdev_name ~ '.link' }}
+{{ '# ' + ansible_managed }}
+{{ '# ' + 'Do not edit manually' }}
+
+{{ '[Match]' }}
+{% if item.match_override is defined and item.match_override != '' %}
+{% for m in item.match_override %}
+{% if (m.match_entry is defined and m.match_entry != '') and
+      (m.match_value is defined and m.match_value != '') %}
+{{ m.match_entry ~ '=' ~ m.match_value }}
+{% endif %}
+{% endfor %}
+{% else %}
+{% if network_netdev_kind == 'ether' %}
+{{ 'MACAddress' ~ '=' ~ item.physaddr }}
+{% elif network_netdev_kind != 'ether' %}
+{{ 'OriginalName' ~ '=' ~ network_netdev_name }}
+{% endif %}
+{% endif %}
+{{ '' }}
+{{ '[Link]' }}
+{% if network_netdev_kind == 'ether' and
+      ((item.match_override is defined and item.match_override == '') or
+       (item.match_override is not defined)) %}
+{{ 'Name' ~ '=' ~ network_netdev_name }}
+{% endif %}
+{% if item.description is defined and item.description != '' %}
+{{ 'Description' ~ '=' ~ item.description }}
+{% endif %}
+{% if item.alias is defined and item.alias != '' %}
+{{ 'Alias' ~ '=' ~ item.alias }}
+{% endif %}
+{% if item.macaddr_policy is defined and
+      item.macaddr_policy in ['persistent', 'random', 'never'] %}
+{{ 'MACAddressPolicy' + '=' + item.macaddr_policy }}
+{% endif %}
+{% if item.macaddr is defined and item.macaddr != '' %}
+{{ 'MACAddress' ~ '=' ~ item.macaddr }}
+{% endif %}
+{% if item.mtu is defined and item.mtu != '' %}
+{{ 'MTUBytes' ~ '=' ~ item.mtu }}
+{% endif %}
+{% if item.speed is defined and item.speed != '' %}
+{{ 'BitsPerSecond' ~ '=' ~ item.speed }}
+{% endif %}
+{% if item.duplex is defined and item.duplex in ['half', 'full'] %}
+{{ 'Duplex' + '=' + item.duplex }}
+{% endif %}
+{% if item.autoneg is defined and item.autoneg in ['true', 'false'] %}
+{{ 'AutoNegotiation' + '=' + item.autoneg }}
+{% endif %}
+{% if item.won is defined and item.won in ['phy', 'unicast', 'multicast',
+                              'broadcast', 'arp', 'magic', 'secureon', 'off'] %}
+{{ 'WakeOnLan' + '=' + item.won }}
+{% endif %}

@@ -1,0 +1,66 @@
+{{ '[DHCP]' }}
+{% if d.use_dns is defined and d.use_dns in ['true', 'false'] %}
+{{ 'UseDNS' + '=' + d.use_dns }}
+{% endif %}
+{% if d.use_ntp is defined and d.use_ntp in ['true', 'false'] %}
+{{ 'UseNTP' + '=' + d.use_ntp }}
+{% endif %}
+{% if d.use_mtu is defined and d.use_mtu in ['true', 'false'] %}
+{{ 'UseMTU' + '=' + d.use_mtu }}
+{% endif %}
+{% if d.anonymize is defined and d.anonymize in ['true', 'false'] %}
+{{ 'Anonymize' + '=' + d.anonymize }}
+{% endif %}
+{% if d.send_hostname is defined and d.send_hostname in
+      ['true', 'false'] %}
+{{ 'SendHostname' + '=' + d.send_hostname }}
+{% endif %}
+{% if d.use_hostname is defined and d.use_hostname in ['true', 'false'] %}
+{{ 'UseHostname' + '=' + d.use_hostname }}
+{% endif %}
+{% if d.hostname is defined and d.hostname != '' %}
+{{ 'Hostname' ~ '=' ~ d.hostname }}
+{% endif %}
+{% if d.use_domains is defined and d.use_domains in ['true', 'false'] %}
+{{ 'UseDomains' + '=' + d.use_domains }}
+{% endif %}
+{% if d.use_routes is defined and d.use_routes in ['true', 'false'] %}
+{{ 'UseRoutes' + '=' + d.use_routes }}
+{% endif %}
+{% if d.use_timezone is defined and d.use_timezone in ['true', 'false'] %}
+{{ 'UseTimezone' + '=' + d.use_timezone }}
+{% endif %}
+{% if d.critical_connection is defined and d.critical_connection in
+      ['true', 'false'] %}
+{{ 'CriticalConnection' + '=' + d.critical_connection }}
+{% endif %}
+{% if d.client_identifier is defined and d.client_identifier in
+      ['mac', 'duid'] %}
+{{ 'ClientIdentifier' + '=' + d.client_identifier }}
+{% endif %}
+{% if d.vendor_class_identifier is defined and
+      d.vendor_class_identifier != '' %}
+{{ 'VendorClassIdentifier' ~ '=' ~ d.vendor_class_identifier }}
+{% endif %}
+{% if d.duid_type is defined and d.duid_type != '' %}
+{{ 'DUIDType' ~ '=' ~ d.duid_type }}
+{% endif %}
+{% if d.duid_raw_data is defined and d.duid_raw_data != '' %}
+{{ 'DUIDRawData' ~ '=' ~ d.duid_raw_data }}
+{% endif %}
+{% if d.iaid is defined and d.iaid != '' %}
+{{ 'IAID' ~ '=' ~ d.iaid }}
+{% endif %}
+{% if d.request_broadcast is defined and d.request_broadcast in
+      ['true', 'false'] %}
+{{ 'RequestBroadcast' + '=' + d.request_broadcast }}
+{% endif %}
+{% if d.route_metric is defined and d.route_metric != '' %}
+{{ 'RouteMetric' ~ '=' ~ d.route_metric }}
+{% endif %}
+{% if d.listen_port is defined and d.listen_port != '' %}
+{{ 'ListenPort' ~ '=' ~ d.listen_port }}
+{% endif %}
+{% if d.rapid_commit is defined and d.rapid_commit in ['true', 'false'] %}
+{{ 'RapidCommit' + '=' + d.rapid_commit }}
+{% endif %}

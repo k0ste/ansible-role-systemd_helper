@@ -10,75 +10,14 @@
     that:
     - "hostvars[inventory_hostname]['ansible_service_mgr'] == 'systemd'"
     msg: "System manager is not systemd."
-- name: systemd_helper | Make tmpfiles.d directory
-  file:
-    path: "/etc/tmpfiles.d"
-    state: "directory"
-    owner: "root"
-    group: "root"
-    mode: "0755"
-- name: systemd_helper | Make udev rules.d directory
-  file:
-    path: "/etc/udev/rules.d"
-    state: "directory"
-    owner: "root"
-    group: "root"
-    mode: "0755"
-- name: systemd_helper | Set facts about tmpfiles.d
-  set_fact:
-    systemd_tmpfiles_create: "{{
-      hostvars[inventory_hostname]['systemd_tmpfiles'] |
-      json_query('[].create[].file_name') }}"
-    systemd_tmpfiles_clean: "{{
-      hostvars[inventory_hostname]['systemd_tmpfiles'] |
-      json_query('[].clean[].file_name') }}"
-    systemd_tmpfiles_remove: "{{
-      hostvars[inventory_hostname]['systemd_tmpfiles'] |
-      json_query('[].remove[].file_name') }}"
+- include_tasks: prereq.d/prereq_systemd_tmpfilesd.yml
+- include_tasks: prereq.d/prereq_systemd_udev.yml
+- include_tasks: prereq.d/prereq_systemd_resolved.yml
   when:
-  - "hostvars[inventory_hostname]['systemd_tmpfiles'] is defined"
-  - "hostvars[inventory_hostname]['systemd_tmpfiles'] != ''"
-- name: systemd_helper | Find exists tmpfiles configuration files
-  find:
-    paths: "/etc/tmpfiles.d"
-    recurse: "no"
-    file_type: "file"
-    patterns: "(.*).conf"
-    use_regex: "true"
-  register: "tmpfiles_find_result"
-  when:
-  - "hostvars[inventory_hostname]['systemd_tmpfiles'] is defined"
-  - "hostvars[inventory_hostname]['systemd_tmpfiles'] != ''"
-  - "hostvars[inventory_hostname]['systemd_tmpfiles'] |
-     json_query(vars['tmpfiles_drop_exists']) | join() is defined"
-  - "hostvars[inventory_hostname]['systemd_tmpfiles'] |
-     json_query(vars['tmpfiles_drop_exists']) | join() == 'true'"
+  - "hostvars[inventory_hostname]['systemd_resolved'] |
+     json_query(vars['systemd_resolved_make_link']) is defined"
+  - "hostvars[inventory_hostname]['systemd_resolved'] |
+     json_query(vars['systemd_resolved_make_link']) == 'true'"
   vars:
-    tmpfiles_drop_exists: "[] | map(&drop_exists || 'false', @)"
-- name: systemd_helper | Delete exists tmpfiles configuration files
-  file:
-    path: "{{ item.path }}"
-    state: "absent"
-  with_items: "{{ vars['tmpfiles_find_result']['files'] }}"
-  loop_control:
-    label: "{{ item.path }}"
-  when:
-  - "vars['tmpfiles_find_result']['files'] is defined"
-- name: systemd_helper | Set facts about udev
-  set_fact:
-    systemd_udev_rules: "{{ hostvars[inventory_hostname]['systemd_udev'] |
-                            json_query('[].file_name') }}"
-  when:
-  - "hostvars[inventory_hostname]['systemd_udev'] is defined"
-  - "hostvars[inventory_hostname]['systemd_udev'] != ''"
-- name: systemd_helper | Copy udev syntax check script
-  copy:
-    src: "rule-syntax-check.py"
-    dest: "/tmp/rule-syntax-check.py"
-    owner: "root"
-    group: "root"
-    mode: "0755"
-  notify: "Cleanup udev script"
-  when:
-  - "hostvars[inventory_hostname]['systemd_udev'] is defined"
-  - "hostvars[inventory_hostname]['systemd_udev'] != ''"
+    systemd_resolved_make_link: "[] | map(&make_link || 'false', @) | [0]"
+- include_tasks: prereq.d/prereq_systemd_networkd.yml
