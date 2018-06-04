@@ -1,8 +1,8 @@
 ---
 galaxy_info:
   author: "Konstantin Shalygin <k0ste@k0ste.ru>"
-  issue_tracker_url: "http://jira.opentech.local/secure/Dashboard.jspa"
-  description: "Very simple helper for systemd settings."
+  issue_tracker_url: "https://github.com/k0ste/ansible-role-systemd_helper"
+  description: "Helper for deploy settings for systemd."
   company: "LLC Open Technologies"
   license: "GPL"
   min_ansible_version: "2.4"
@@ -15,4 +15,5 @@ galaxy_info:
     - 7
   categories:
   - system
+  - networking
 dependencies: []
