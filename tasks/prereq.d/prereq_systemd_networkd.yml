@@ -11,9 +11,6 @@
     systemd_networkd_ifaces: "{{
       hostvars[inventory_hostname]['systemd_networkd'] |
       json_query('[].interfaces[].interface') }}"
-  when:
-  - "hostvars[inventory_hostname]['systemd_networkd'] is defined"
-  - "hostvars[inventory_hostname]['systemd_networkd'] != ''"
 - name: systemd_helper | Find exists networkd configuration files
   find:
     paths: "/etc/systemd/network"
@@ -24,8 +21,6 @@
     use_regex: "true"
   register: "networkd_find_result"
   when:
-  - "hostvars[inventory_hostname]['systemd_networkd'] is defined"
-  - "hostvars[inventory_hostname]['systemd_networkd'] != ''"
   - "hostvars[inventory_hostname]['systemd_networkd'] |
      json_query(vars['networkd_drop_exists']) is defined"
   - "hostvars[inventory_hostname]['systemd_networkd'] |
@@ -44,9 +39,6 @@
 - stat:
     path: "/etc/systemd/network/99-default.link"
   register: "systemd_default_link_stat"
-  when:
-  - "hostvars[inventory_hostname]['systemd_networkd'] is defined"
-  - "hostvars[inventory_hostname]['systemd_networkd'] != ''"
 - name: systemd_helper | Mask default networkd link
   file:
     path: "/etc/systemd/network/99-default.link"

@@ -21,3 +21,6 @@
   vars:
     systemd_resolved_make_link: "[] | map(&make_link || 'false', @) | [0]"
 - include_tasks: prereq.d/prereq_systemd_networkd.yml
+  when:
+  - "hostvars[inventory_hostname]['systemd_networkd'] is defined"
+  - "hostvars[inventory_hostname]['systemd_networkd'] != ''"
