@@ -14,6 +14,8 @@
 - include_tasks: prereq.d/prereq_systemd_udev.yml
 - include_tasks: prereq.d/prereq_systemd_resolved.yml
   when:
+  - "hostvars[inventory_hostname]['systemd_resolved'] is defined"
+  - "hostvars[inventory_hostname]['systemd_resolved'] != ''"
   - "hostvars[inventory_hostname]['systemd_resolved'] |
      json_query(vars['systemd_resolved_make_link']) is defined"
   - "hostvars[inventory_hostname]['systemd_resolved'] |
