@@ -1,0 +1,14 @@
+---
+- name: systemd_helper | Set facts about time and date settings
+  set_fact:
+    systemd_timedatectl_timezone: "{{
+      hostvars[inventory_hostname]['systemd_timesyncd'] |
+      json_query('[].timezone') }}"
+    systemd_timedatectl_timesyncd: "{{
+      hostvars[inventory_hostname]['systemd_timesyncd'] |
+      json_query('[].timesyncd[]') }}"
+- name: systemd_helper | Set timezone
+  timezone:
+    name: "{{ vars['systemd_timedatectl_timezone'] | join() }}"
+  when:
+  - "vars['systemd_timedatectl_timezone'] != []"

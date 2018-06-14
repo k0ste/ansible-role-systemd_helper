@@ -1,4 +1,0 @@
----
-- name: systemd_helper | Set timezone
-  timezone:
-    name: "{{ hostvars[inventory_hostname]['systemd_tzdata'] }}"

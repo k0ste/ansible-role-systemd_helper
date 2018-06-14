@@ -10,6 +10,10 @@
     that:
     - "hostvars[inventory_hostname]['ansible_service_mgr'] == 'systemd'"
     msg: "System manager is not systemd."
+- include_tasks: prereq.d/prereq_systemd_timedatectl.yml
+  when:
+  - "hostvars[inventory_hostname]['systemd_timesyncd'] is defined"
+  - "hostvars[inventory_hostname]['systemd_timesyncd'] != ''"
 - include_tasks: prereq.d/prereq_systemd_tmpfilesd.yml
 - include_tasks: prereq.d/prereq_systemd_udev.yml
 - include_tasks: prereq.d/prereq_systemd_resolved.yml

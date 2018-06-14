@@ -2,8 +2,10 @@
 
 Allow to define systemd:
 * [journald.conf](https://www.freedesktop.org/software/systemd/man/journald.conf.html);
-* [systemd-tmpfiles](https://www.freedesktop.org/software/systemd/man/tmpfiles.d.html);
+* [tmpfiles](https://www.freedesktop.org/software/systemd/man/tmpfiles.d.html);
 * set timezone via [systemd-timedatectl](https://www.freedesktop.org/software/systemd/man/timedatectl.html);
+* [timesyncd](https://www.freedesktop.org/software/systemd/man/systemd-timesyncd.service.html)
+support;
 * set console settings via [vconsole.conf](https://www.freedesktop.org/software/systemd/man/vconsole.conf.html)
 * [networkd](https://www.freedesktop.org/software/systemd/man/systemd-networkd.html)
 support;
@@ -101,7 +103,41 @@ systemd_tmpfiles:
     path: '/tmp/example3'
     type: 'r'
 
-systemd_tzdata: 'Asia/Yekaterinburg'
+systemd_timesyncd:
+# Enable systemd-timesyncd or not.
+- enable: 'true'
+# Restart systemd-timesyncd after deploy or not.
+  restart: 'true'
+# Set this timezone.
+  timezone: 'Asia/Yekaterinburg'
+  timesyncd:
+# A list of NTP server host names or IP addresses. During runtime this list is
+# combined with any per-interface NTP servers acquired from systemd-networkd.
+# systemd-timesyncd will contact all configured system or per-interface servers
+# in turn until one is found that responds. When the empty string is assigned,
+# the list of NTP servers is reset, and all assignments prior to this one will
+# have no effect. This setting defaults to an empty list.
+  - ntp:
+    - '0.ru.pool.ntp.org'
+    - '1.ru.pool.ntp.org'
+# A list of NTP server host names or IP addresses to be used as the fallback
+# NTP servers. Any per-interface NTP servers obtained from systemd-networkd
+# take precedence over this setting, as do any servers set via 'ntp' above.
+# This setting is hence only used if no other NTP server information is known.
+# When the empty string is assigned, the list of NTP servers is reset, and all
+# assignments prior to this one will have no effect. If this option is not
+# given, a compiled-in list of NTP servers is used instead.
+    fallback: ''
+# Maximum acceptable root distance. Takes a time value (in seconds). Defaults
+# to 5 seconds.
+    root_distance_max_sec: '5'
+# The minimum and maximum poll intervals for NTP messages. Each setting takes a
+# time value (in seconds). PollIntervalMinSec= must not be smaller than 16
+# seconds. 'poll_interval_max_sec' must be larger than 'poll_interval_min_sec'.
+# 'poll_interval_min_sec' defaults to 32 seconds, and 'poll_interval_max_sec'
+# defaults to 2048 seconds.
+    poll_interval_min_sec: '32'
+    poll_interval_max_sec: '2048'
 
 systemd_journald_settings:
   Storage: 'persistent'

@@ -4,10 +4,10 @@
   when:
   - "hostvars[inventory_hostname]['systemd_journald_settings'] is defined"
   - "hostvars[inventory_hostname]['systemd_journald_settings'] != ''"
-- include_tasks: deploy_timedatectl.yml
+- include_tasks: deploy_timesyncd.yml
   when:
-  - "hostvars[inventory_hostname]['systemd_tzdata'] is defined"
-  - "hostvars[inventory_hostname]['systemd_tzdata'] != ''"
+  - "vars['systemd_timedatectl_timesyncd'] is defined"
+  - "vars['systemd_timedatectl_timesyncd'] != []"
 - include_tasks: deploy_vconsole.yml
   when:
   - "hostvars[inventory_hostname]['systemd_vconsole'] is defined"
