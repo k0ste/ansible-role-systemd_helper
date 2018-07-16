@@ -1,5 +1,5 @@
 ---
-- include_tasks: pre_requisite.yml
+- import_tasks: pre_requisite.yml
 - include_tasks: deploy_journald.yml
   when:
   - "hostvars[inventory_hostname]['systemd_journald_settings'] is defined"
@@ -12,7 +12,7 @@
   when:
   - "hostvars[inventory_hostname]['systemd_vconsole'] is defined"
   - "hostvars[inventory_hostname]['systemd_vconsole'] != ''"
-- include_tasks: tmpfiles_executor.yml
+- import_tasks: tmpfiles_executor.yml
 - include_tasks: udev_executor.yml
   when:
   - "vars['systemd_udev_rules'] is defined"

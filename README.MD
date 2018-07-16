@@ -14,7 +14,7 @@ support;
 
 ## Requirements
 
-* Ansible 2.4;
+* Ansible 2.5+;
 
 ## Extra
 
@@ -62,7 +62,7 @@ just need simple dhcp on ethernet interfaces you can define simple
         dhcp: 'yes'
         match_override:
         - match_entry: 'Name'
-          match_value: 'e*' # <--- any linux 'ens*' or 'eth*' device
+          match_value: 'e*' # <--- any linux `ens*/enp*/eth*` device
   ```
 
 ## Example configuration

@@ -31,12 +31,13 @@
   file:
     path: "{{ item.path }}"
     state: "absent"
-  with_items: "{{ vars['networkd_find_result']['files'] }}"
+  loop: "{{ vars['networkd_find_result']['files'] | flatten(levels=1) }}"
   loop_control:
     label: "{{ item.path }}"
   when:
   - "vars['networkd_find_result']['files'] is defined"
-- stat:
+- name: systemd_helper | Stat default networkd link settings
+  stat:
     path: "/etc/systemd/network/99-default.link"
   register: "systemd_default_link_stat"
 - name: systemd_helper | Mask default networkd link

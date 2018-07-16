@@ -1,6 +1,8 @@
 ---
 systemd_tmpfiles: []
-systemd_tzdata: ''
+systemd_timesyncd: []
 systemd_journald_settings: []
 systemd_udev: []
 systemd_vconsole: []
+systemd_resolved: []
+systemd_networkd: []

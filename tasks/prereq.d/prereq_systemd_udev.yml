@@ -20,7 +20,9 @@
     owner: "root"
     group: "root"
     mode: "0755"
-  notify: "Cleanup udev script"
+  diff: "false"
   when:
   - "hostvars[inventory_hostname]['systemd_udev'] is defined"
   - "hostvars[inventory_hostname]['systemd_udev'] != ''"
+  notify:
+  - "Cleanup udev script"

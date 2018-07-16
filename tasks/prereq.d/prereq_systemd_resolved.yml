@@ -1,5 +1,6 @@
 ---
-- stat:
+- name: systemd_helper | Stat resolv.conf path
+  stat:
     path: "/etc/resolv.conf"
   register: "systemd_resolv_link_stat"
 - name: systemd_helper | Delete resolv.conf because is file
@@ -26,3 +27,4 @@
     dest: "/etc/resolv.conf"
     state: "link"
     force: "yes"
+    follow: "no"

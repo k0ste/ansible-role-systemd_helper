@@ -1,17 +1,20 @@
-- assert:
+---
+- name: systemd_helper | Assert that type for interface is defined
+  assert:
     that: "item.type is defined and item.type != ''"
     msg: "{{ 'type for ' ~ vars['outer_item'] ~ ' is not defined' }}"
-  with_items: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
-                  json_query(\"[].interfaces[?interface=='\" ~
-                  vars['outer_item'] ~ \"']\") }}"
+  loop: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+    json_query(\"[].interfaces[?interface=='\" ~ vars['outer_item'] ~ \"']\") |
+    flatten(levels=1) }}"
   loop_control:
     label: "{{ 'interface: ' ~ vars['outer_item'] }}"
-- assert:
+- name: systemd_helper | Assert that physaddr for interface is defined
+  assert:
     that: "item.physaddr is defined and item.physaddr != ''"
     msg: "{{ 'physaddr for ' ~ vars['outer_item'] ~ ' is not defined' }}"
-  with_items: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
-                  json_query(\"[].interfaces[?interface=='\" ~
-                  vars['outer_item'] ~ \"']\") }}"
+  loop: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+    json_query(\"[].interfaces[?interface=='\" ~ vars['outer_item'] ~ \"']\") |
+    flatten(levels=1) }}"
   loop_control:
     label: "{{ 'interface: ' ~ vars['outer_item'] ~ ' [' ~ item.type ~ ']' }}"
   when:
@@ -26,14 +29,14 @@
     owner: "root"
     mode: "0644"
     force: "yes"
-  notify:
-  - "Restart systemd-networkd"
-  with_items: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
-                  json_query(\"[].interfaces[?interface=='\" ~
-                  vars['outer_item'] ~ \"']\") }}"
+  loop: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+    json_query(\"[].interfaces[?interface=='\" ~ vars['outer_item'] ~ \"']\") |
+    flatten(levels=1) }}"
   loop_control:
     label: "{{ '[network] interface: ' ~ vars['outer_item'] ~
-               ' [' ~ item.type ~ ']' }}"
+      ' [' ~ item.type ~ ']' }}"
+  notify:
+  - "Restart systemd-networkd"
   vars:
     network_netdev_kind: "{{ item.type }}"
     network_netdev_name: "{{ vars['outer_item'] }}"
@@ -45,19 +48,19 @@
     owner: "root"
     mode: "0644"
     force: "yes"
-  notify:
-  - "Restart systemd-networkd"
-  with_items: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
-                  json_query(\"[].interfaces[?interface=='\" ~
-                  vars['outer_item'] ~ \"']\") }}"
+  loop: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+    json_query(\"[].interfaces[?interface=='\" ~ vars['outer_item'] ~ \"']\") |
+    flatten(levels=1) }}"
   loop_control:
     label: "{{ '[netdev] interface: ' ~ vars['outer_item'] ~
-               ' [' ~ item.type ~ ']' }}"
+      ' [' ~ item.type ~ ']' }}"
+  when:
+  - "item.type != 'ether'"
+  notify:
+  - "Restart systemd-networkd"
   vars:
     network_netdev_kind: "{{ item.type }}"
     network_netdev_name: "{{ vars['outer_item'] }}"
-  when:
-  - "item.type != 'ether'"
 - name: systemd_helper | Deploy networkd [link]
   template:
     src: "networkd_link.j2"
@@ -66,14 +69,14 @@
     owner: "root"
     mode: "0644"
     force: "yes"
-  notify:
-  - "Restart systemd-networkd"
-  with_items: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
-                  json_query(\"[].interfaces[?interface=='\" ~
-                  vars['outer_item'] ~ \"']\") }}"
+  loop: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+    json_query(\"[].interfaces[?interface=='\" ~ vars['outer_item'] ~ \"']\") |
+    flatten(levels=1) }}"
   loop_control:
     label: "{{ '[link] interface: ' ~ vars['outer_item'] ~
-               ' [' ~ item.type ~ ']' }}"
+      ' [' ~ item.type ~ ']' }}"
+  notify:
+  - "Restart systemd-networkd"
   vars:
     network_netdev_kind: "{{ item.type }}"
     network_netdev_name: "{{ vars['outer_item'] }}"
@@ -85,14 +88,15 @@
     owner: "root"
     mode: "0644"
     force: "yes"
-  notify:
-  - "Restart systemd-networkd"
-  with_items: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
-                  json_query(\"[].interfaces[?interface=='\" ~
-                  vars['outer_item'] ~ \"'].vlans[]\") }}"
+
+  loop: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+    json_query(\"[].interfaces[?interface=='\" ~
+    vars['outer_item'] ~ \"'].vlans[]\") | flatten(levels=1) }}"
   loop_control:
     label: "{{ '[network] interface: ' ~ item.name ~
-               ' [' ~ network_netdev_kind ~ ']' }}"
+      ' [' ~ network_netdev_kind ~ ']' }}"
+  notify:
+  - "Restart systemd-networkd"
   vars:
     network_netdev_kind: "vlan"
     network_netdev_name: "{{ item.name }}"
@@ -104,14 +108,14 @@
     owner: "root"
     mode: "0644"
     force: "yes"
-  notify:
-  - "Restart systemd-networkd"
-  with_items: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
-                  json_query(\"[].interfaces[?interface=='\" ~
-                  vars['outer_item'] ~ \"'].vlans[]\") }}"
+  loop: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+    json_query(\"[].interfaces[?interface=='\" ~
+    vars['outer_item'] ~ \"'].vlans[]\") | flatten(levels=1) }}"
   loop_control:
     label: "{{ '[netdev] interface: ' ~ item.name ~
-               ' [' ~ network_netdev_kind ~ ']' }}"
+      ' [' ~ network_netdev_kind ~ ']' }}"
+  notify:
+  - "Restart systemd-networkd"
   vars:
     network_netdev_kind: "vlan"
     network_netdev_name: "{{ item.name }}"
@@ -123,14 +127,14 @@
     owner: "root"
     mode: "0644"
     force: "yes"
-  notify:
-  - "Restart systemd-networkd"
-  with_items: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
-                  json_query(\"[].interfaces[?interface=='\" ~
-                  vars['outer_item'] ~ \"'].vlans[]\") }}"
+  loop: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+    json_query(\"[].interfaces[?interface=='\" ~
+    vars['outer_item'] ~ \"'].vlans[]\") | flatten(levels=1) }}"
   loop_control:
     label: "{{ '[link] interface: ' ~ item.name ~
-               ' [' ~ network_netdev_kind ~ ']' }}"
+      ' [' ~ network_netdev_kind ~ ']' }}"
+  notify:
+  - "Restart systemd-networkd"
   vars:
     network_netdev_kind: "vlan"
     network_netdev_name: "{{ item.name }}"

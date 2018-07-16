@@ -8,8 +8,8 @@
     mode: "0644"
     force: "yes"
     validate: "/tmp/rule-syntax-check.py %s"
-  with_items: "{{ hostvars[inventory_hostname]['systemd_udev'] |
-                  json_query(\"[?file_name=='\" +
-                  vars['outer_item'] + \"']\") }}"
+  loop: "{{ hostvars[inventory_hostname]['systemd_udev'] |
+    json_query(\"[?file_name=='\" + vars['outer_item'] + \"']\") |
+    flatten(levels=1) }}"
   loop_control:
     label: "{{ item.file_name }}"

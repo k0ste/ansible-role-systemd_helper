@@ -41,7 +41,7 @@
   file:
     path: "{{ item.path }}"
     state: "absent"
-  with_items: "{{ vars['tmpfiles_find_result']['files'] }}"
+  loop: "{{ vars['tmpfiles_find_result']['files'] | flatten(levels=1) }}"
   loop_control:
     label: "{{ item.path }}"
   when:
