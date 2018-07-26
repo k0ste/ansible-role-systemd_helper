@@ -22,7 +22,7 @@
   when:
   - "hostvars[inventory_hostname]['systemd_modules_load'] |
      json_query(vars['modules_load_drop_exists']) is defined"
-  - "hostvars[inventory_hostname]['systemd_tmpfiles'] |
+  - "hostvars[inventory_hostname]['systemd_modules_load'] |
      json_query(vars['modules_load_drop_exists']) == 'true'"
   vars:
     modules_load_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
