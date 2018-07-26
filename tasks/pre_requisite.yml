@@ -13,13 +13,23 @@
     that:
     - "hostvars[inventory_hostname]['ansible_service_mgr'] == 'systemd'"
     msg: "System manager is not systemd."
-- include_tasks: prereq.d/prereq_systemd_timedatectl.yml
+- include_tasks: 'prereq.d/prereq_systemd_timedatectl.yml'
   when:
   - "hostvars[inventory_hostname]['systemd_timesyncd'] is defined"
   - "hostvars[inventory_hostname]['systemd_timesyncd'] != ''"
-- import_tasks: prereq.d/prereq_systemd_tmpfilesd.yml
-- import_tasks: prereq.d/prereq_systemd_udev.yml
-- include_tasks: prereq.d/prereq_systemd_resolved.yml
+- include_tasks: 'prereq.d/prereq_systemd_tmpfilesd.yml'
+  when:
+  - "hostvars[inventory_hostname]['systemd_tmpfiles'] is defined"
+  - "hostvars[inventory_hostname]['systemd_tmpfiles'] != ''"
+- include_tasks: 'prereq.d/prereq_systemd_modules_load.yml'
+  when:
+  - "hostvars[inventory_hostname]['systemd_modules_load'] is defined"
+  - "hostvars[inventory_hostname]['systemd_modules_load'] != ''"
+- include_tasks: 'prereq.d/prereq_systemd_udev.yml'
+  when:
+  - "hostvars[inventory_hostname]['systemd_udev'] is defined"
+  - "hostvars[inventory_hostname]['systemd_udev'] != ''"
+- include_tasks: 'prereq.d/prereq_systemd_resolved.yml'
   when:
   - "hostvars[inventory_hostname]['systemd_resolved'] is defined"
   - "hostvars[inventory_hostname]['systemd_resolved'] != ''"
@@ -29,7 +39,7 @@
      json_query(vars['systemd_resolved_make_link']) == 'true'"
   vars:
     systemd_resolved_make_link: "[] | map(&make_link || 'false', @) | [0]"
-- include_tasks: prereq.d/prereq_systemd_networkd.yml
+- include_tasks: 'prereq.d/prereq_systemd_networkd.yml'
   when:
   - "hostvars[inventory_hostname]['systemd_networkd'] is defined"
   - "hostvars[inventory_hostname]['systemd_networkd'] != ''"

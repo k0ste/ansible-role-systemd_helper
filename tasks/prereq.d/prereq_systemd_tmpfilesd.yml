@@ -17,9 +17,6 @@
     systemd_tmpfiles_remove: "{{
       hostvars[inventory_hostname]['systemd_tmpfiles'] |
       json_query('[].remove[].file_name') }}"
-  when:
-  - "hostvars[inventory_hostname]['systemd_tmpfiles'] is defined"
-  - "hostvars[inventory_hostname]['systemd_tmpfiles'] != ''"
 - name: systemd_helper | Find exists tmpfiles configuration files
   find:
     paths: "/etc/tmpfiles.d"
@@ -29,8 +26,6 @@
     use_regex: "true"
   register: "tmpfiles_find_result"
   when:
-  - "hostvars[inventory_hostname]['systemd_tmpfiles'] is defined"
-  - "hostvars[inventory_hostname]['systemd_tmpfiles'] != ''"
   - "hostvars[inventory_hostname]['systemd_tmpfiles'] |
      json_query(vars['tmpfiles_drop_exists']) is defined"
   - "hostvars[inventory_hostname]['systemd_tmpfiles'] |

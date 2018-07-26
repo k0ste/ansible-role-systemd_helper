@@ -1,7 +1,7 @@
 ---
 - name: systemd_helper | Deploy tmpfiles
   template:
-    src: "tmpfilesd.j2"
+    src: "systemd_tmpfiles.j2"
     dest: "{{ '/etc/tmpfiles.d' ~ '/' ~ vars['outer_item'] ~ '.conf' }}"
     group: "root"
     owner: "root"

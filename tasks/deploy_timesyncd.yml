@@ -1,7 +1,7 @@
 ---
 - name: systemd_helper | Deploy timesyncd.conf
   template:
-    src: "timesyncd.j2"
+    src: "systemd_timesyncd.j2"
     dest: "/etc/systemd/timesyncd.conf"
     group: "root"
     owner: "root"

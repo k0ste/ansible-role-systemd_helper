@@ -11,6 +11,8 @@ support;
 support;
 * [resolved](https://www.freedesktop.org/software/systemd/man/systemd-resolved.html)
 support;
+* [modules-load](https://www.freedesktop.org/software/systemd/man/modules-load.d.html)
+support;
 
 ## Requirements
 
@@ -102,6 +104,18 @@ systemd_tmpfiles:
   - file_name: 'example3'
     path: '/tmp/example3'
     type: 'r'
+
+systemd_modules_load:
+# This option allow to delete '/etc/modules-load.d/*.conf' files before deploy.
+- drop_exists: 'true'
+  modules_load:
+  - file_name: '99-ipvs'
+    modules:
+    - 'ip_vs'
+    - 'virtio_net'
+  - file_name: 'facebook'
+    modules:
+    - 'tls'
 
 systemd_timesyncd:
 # Enable systemd-timesyncd or not.

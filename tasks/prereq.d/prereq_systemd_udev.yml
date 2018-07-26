@@ -10,9 +10,6 @@
   set_fact:
     systemd_udev_rules: "{{ hostvars[inventory_hostname]['systemd_udev'] |
                             json_query('[].file_name') }}"
-  when:
-  - "hostvars[inventory_hostname]['systemd_udev'] is defined"
-  - "hostvars[inventory_hostname]['systemd_udev'] != ''"
 - name: systemd_helper | Copy udev syntax check script
   copy:
     src: "rule-syntax-check.py"
@@ -21,8 +18,5 @@
     group: "root"
     mode: "0755"
   diff: "false"
-  when:
-  - "hostvars[inventory_hostname]['systemd_udev'] is defined"
-  - "hostvars[inventory_hostname]['systemd_udev'] != ''"
   notify:
   - "Cleanup udev script"

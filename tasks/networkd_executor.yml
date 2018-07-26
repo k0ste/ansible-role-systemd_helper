@@ -1,5 +1,5 @@
 ---
-- include_tasks: deploy_networkd.yml
+- include_tasks: 'deploy_networkd.yml'
   loop: "{{ hostvars[inventory_hostname]['systemd_networkd_ifaces'] |
     flatten(levels=1) }}"
   loop_control:
