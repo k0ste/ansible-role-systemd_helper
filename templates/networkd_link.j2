@@ -11,17 +11,12 @@
 {% endif %}
 {% endfor %}
 {% else %}
-{% if network_netdev_kind == 'ether' %}
 {{ 'MACAddress' ~ '=' ~ item.physaddr }}
-{% elif network_netdev_kind != 'ether' %}
-{{ 'OriginalName' ~ '=' ~ network_netdev_name }}
-{% endif %}
 {% endif %}
 {{ '' }}
 {{ '[Link]' }}
-{% if network_netdev_kind == 'ether' and
-      ((item.match_override is defined and item.match_override == '') or
-       (item.match_override is not defined)) %}
+{% if (item.match_override is defined and item.match_override == '') or
+      (item.match_override is not defined) %}
 {{ 'Name' ~ '=' ~ network_netdev_name }}
 {% endif %}
 {% if item.description is defined and item.description != '' %}
@@ -34,8 +29,8 @@
       item.macaddr_policy in ['persistent', 'random', 'never'] %}
 {{ 'MACAddressPolicy' + '=' + item.macaddr_policy }}
 {% endif %}
-{% if item.macaddr is defined and item.macaddr != '' %}
-{{ 'MACAddress' ~ '=' ~ item.macaddr }}
+{% if item.macaddr is defined and item.macaddr | hwaddr() %}
+{{ 'MACAddress' ~ '=' ~ item.macaddr | hwaddr('linux') }}
 {% endif %}
 {% if item.mtu is defined and item.mtu != '' %}
 {{ 'MTUBytes' ~ '=' ~ item.mtu }}
