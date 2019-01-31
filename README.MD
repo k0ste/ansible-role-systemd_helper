@@ -476,6 +476,8 @@ systemd_networkd:
       priority: ''
   - interface: 'br1'
     type: 'bridge'
+# Hardware persistent MAC address. Used to manually set MAC for this interface.
+    physaddr: '3c:fd:fe:aa:bb:f8'
     address: '10.18.18.2/24'
     bridging_opts:
 # Specifies the number of seconds between two hello packets sent out by the
