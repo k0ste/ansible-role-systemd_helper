@@ -983,11 +983,25 @@ systemd_networkd:
         prio: ''
 # Specifies incoming device to match. If the interface is loopback, the rule
 # only matches packets originating from this host.
-        in_interface: ''
+        iif: ''
 # Specifies the outgoing device to match. The outgoing interface is only
 # available for packets originating from local sockets that are bound to a
 # device.
-        out_interface: ''
+        oif: ''
+# Specifies the source IP port or IP port range match in forwarding information
+# base (FIB) rules. A port range is specified by the lower and upper port
+# separated by a dash.
+        sport: ''
+# Specifies the destination IP port or IP port range match in forwarding
+# information base (FIB) rules. A port range is specified by the lower and
+# upper port separated by a dash.
+        dport: ''
+# Specifies the IP protocol to match in forwarding information base (FIB) rules.
+# Takes IP protocol name such as 'tcp', 'udp' or 'sctp', or IP protocol number
+# such as '6' for 'tcp' or '17' for 'udp'.
+        ip_proto: ''
+# A boolean. Specifies wheather the rule to be inverted. Defaults to 'false'.
+        invert_rule: 'false'
       - from: 'all'
         fwmark: '200'
         table: '200'
