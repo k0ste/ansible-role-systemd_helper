@@ -16,7 +16,7 @@ support;
 
 ## Requirements
 
-* Ansible 2.5+;
+* Ansible 2.8+;
 
 ## Extra
 

@@ -3,6 +3,7 @@
   assert:
     that: "item.type is defined and item.type != ''"
     msg: "{{ 'type for ' ~ vars['outer_item'] ~ ' is not defined' }}"
+    quiet: "true"
   loop: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
     json_query(\"[].interfaces[?interface=='\" ~ vars['outer_item'] ~ \"']\") |
     flatten(levels=1) }}"
@@ -12,6 +13,7 @@
   assert:
     that: "item.physaddr is defined and item.physaddr != ''"
     msg: "{{ 'physaddr for ' ~ vars['outer_item'] ~ ' is not defined' }}"
+    quiet: "true"
   loop: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
     json_query(\"[].interfaces[?interface=='\" ~ vars['outer_item'] ~ \"']\") |
     flatten(levels=1) }}"
@@ -25,6 +27,7 @@
   assert:
     that: "item.physaddr is defined and item.physaddr | hwaddr()"
     msg: "{{ 'physaddr for ' ~ vars['outer_item'] ~ ' is invalid' }}"
+    quiet: "true"
   loop: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
     json_query(\"[].interfaces[?interface=='\" ~ vars['outer_item'] ~ \"']\") |
     flatten(levels=1) }}"
