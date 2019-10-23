@@ -5,6 +5,21 @@
 {% if d.use_ntp is defined and d.use_ntp in ['true', 'false'] %}
 {{ 'UseNTP' + '=' + d.use_ntp }}
 {% endif %}
+{{ '' }}
+{{ '[DHCPv6]' }}
+{% if d.rapid_commit is defined and d.rapid_commit in ['true', 'false'] %}
+{{ 'RapidCommit' + '=' + d.rapid_commit }}
+{% endif %}
+{% if d.force_dhcp_v6_pd_other_information is defined and
+      d.force_dhcp_v6_pd_other_information in ['true', 'false'] %}
+{{ 'ForceDHCPv6PDOtherInformation' + '=' +
+    d.force_dhcp_v6_pd_other_information }}
+{% endif %}
+{{ '' }}
+{{ '[DHCPv4]' }}
+{% if d.routes_to_dns is defined and d.routes_to_dns in ['true', 'false'] %}
+{{ 'RoutesToDNS' + '=' + d.routes_to_dns }}
+{% endif %}
 {% if d.use_mtu is defined and d.use_mtu in ['true', 'false'] %}
 {{ 'UseMTU' + '=' + d.use_mtu }}
 {% endif %}
@@ -30,17 +45,19 @@
 {% if d.use_timezone is defined and d.use_timezone in ['true', 'false'] %}
 {{ 'UseTimezone' + '=' + d.use_timezone }}
 {% endif %}
-{% if d.critical_connection is defined and d.critical_connection in
-      ['true', 'false'] %}
-{{ 'CriticalConnection' + '=' + d.critical_connection }}
-{% endif %}
-{% if d.client_identifier is defined and d.client_identifier in
-      ['mac', 'duid'] %}
+{% if d.client_identifier is defined and
+      d.client_identifier in ['mac', 'duid'] %}
 {{ 'ClientIdentifier' + '=' + d.client_identifier }}
 {% endif %}
 {% if d.vendor_class_identifier is defined and
       d.vendor_class_identifier != '' %}
 {{ 'VendorClassIdentifier' ~ '=' ~ d.vendor_class_identifier }}
+{% endif %}
+{% if d.user_class is defined and d.user_class != '' %}
+{{ 'UserClass' ~ '=' ~ d.user_class }}
+{% endif %}
+{% if d.max_attempts is defined and d.max_attempts != '' %}
+{{ 'MaxAttempts' ~ '=' ~ d.max_attempts }}
 {% endif %}
 {% if d.duid_type is defined and d.duid_type != '' %}
 {{ 'DUIDType' ~ '=' ~ d.duid_type }}
@@ -61,6 +78,19 @@
 {% if d.listen_port is defined and d.listen_port != '' %}
 {{ 'ListenPort' ~ '=' ~ d.listen_port }}
 {% endif %}
-{% if d.rapid_commit is defined and d.rapid_commit in ['true', 'false'] %}
-{{ 'RapidCommit' + '=' + d.rapid_commit }}
+{% if d.send_release is defined and d.send_release in ['true', 'false'] %}
+{{ 'SendRelease' + '=' + d.send_release }}
+{% endif %}
+{% if d.blacklist is defined and d.blacklist != '' %}
+{% for db in d.blacklist %}
+{% if loop.first %}
+{{ 'BlackList' + '=' -}}
+{% endif %}
+{% if db | ipaddr('host') %}
+{{ db -}}
+{% endif %}
+{% if not loop.last %}
+{{ ' ' -}}
+{% endif %}
+{% endfor %}
 {% endif %}

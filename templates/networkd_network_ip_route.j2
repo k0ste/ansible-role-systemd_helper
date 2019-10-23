@@ -27,6 +27,9 @@
 {% if ip.table is defined and ip.table != '' %}
 {{ 'Table' ~ '=' ~ ip.table }}
 {% endif %}
+{% if ip.protocol is defined and ip.protocol != '' %}
+{{ 'Protocol' ~ '=' ~ ip.protocol }}
+{% endif %}
 {% if ip.type is defined and ip.type in
       ['unicast', 'blackhole', 'unreachable', 'prohibit'] %}
 {{ 'Type' + '=' + ip.type }}
@@ -42,4 +45,14 @@
 {% endif %}
 {% if ip.quick_ack is defined and ip.quick_ack in ['true', 'false'] %}
 {{ 'QuickAck' + '=' + ip.quick_ack }}
+{% endif %}
+{% if ip.fast_open_no_cookie is defined and
+      ip.fast_open_no_cookie in ['true', 'false'] %}
+{{ 'FastOpenNoCookie' + '=' + ip.fast_open_no_cookie }}
+{% endif %}
+{% if ip.ttl_propagate is defined and ip.ttl_propagate in ['true', 'false'] %}
+{{ 'TTLPropagate' + '=' + ip.ttl_propagate }}
+{% endif %}
+{% if ip.mtu_bytes is defined and ip.mtu_bytes != '' %}
+{{ 'MTUBytes' + '=' + ip.mtu_bytes }}
 {% endif %}

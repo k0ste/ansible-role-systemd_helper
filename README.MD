@@ -282,6 +282,21 @@ systemd_resolved:
 # that are not known by the DNS root server. This logic does not work in all
 # private zone setups. Defaults to off.
     dnssec: 'false'
+# Takes a boolean argument or 'opportunistic'. If true all connections to the
+# server will be encrypted. Note that this mode requires a DNS server that
+# supports DNS-over-TLS and has a valid certificate for it's IP. If the DNS
+# server does not support DNS-over-TLS all DNS requests will fail. When set to
+# 'opportunistic' DNS request are attempted to send encrypted with DNS-over-TLS.
+# If the DNS server does not support TLS, DNS-over-TLS is disabled. Note that
+# this mode makes DNS-over-TLS vulnerable to "downgrade" attacks, where an
+# attacker might be able to trigger a downgrade to non-encrypted mode by
+# synthesizing a response that suggests DNS-over-TLS was not supported. If set
+# to 'false', DNS lookups are send over UDP. Note that DNS-over-TLS requires
+# additional data to be send for setting up an encrypted connection, and thus
+# results in a small DNS look-up time penalty. Note as the resolver is not
+# capable of authenticating the server, it is vulnerable for
+# "man-in-the-middle" attacks. Default is 'false'.
+    dns_over_tls: 'false'
 # Takes a boolean argument. If 'yes' (the default), resolving a domain name
 # which already got queried earlier will return the previous result as long as
 # it is still valid, and thus does not result in a new network request. Be
@@ -297,6 +312,10 @@ systemd_resolved:
 # listener is disabled. Note that the DNS stub listener is turned off
 # implicitly when its listening address and port are already in use.
     dns_stub_listener: 'udp'
+# Takes a boolean argument. If 'true' (the default), the DNS stub resolver will
+# read '/etc/hosts', and try to resolve hosts or address by using the entries
+# in the file before sending query to DNS servers.
+    read_etc_hosts: 'true'
 
 systemd_networkd:
 # Drop exists "\.(network|netdev|link)" profiles or not.
@@ -305,6 +324,36 @@ systemd_networkd:
   enable: 'true'
 # Restart systemd-networkd after deploy or not.
   restart: 'true'
+  networkd:
+  - network:
+    - speed_meter: 'no'
+      speed_meter_interval: '10'
+# This section configures the DHCP Unique Identifier (DUID) value used by DHCP
+# protocol. DHCPv6 client protocol sends the DHCP Unique Identifier and the
+# interface Identity Association Identifier (IAID) to a DHCP server when
+# acquiring a dynamic IPv6 address.
+    dhcp:
+# Specifies how the DUID should be generated. The following values are
+# understood:
+# 'vendor' - the DUID value will be generated using "43793" as the vendor
+# identifier (systemd) and hashed contents of machine-id. This is the default.
+# 'uuid' - product UUID is used as a DUID value. If a system does not have valid
+# product UUID, then an application-specific machine-id is used as a DUID value.
+# 'link-layer-time', 'link-layer' - if is specified, then the MAC address of
+# the interface is used as a DUID value. The value 'link-layer-time' can take
+# value like '2018-01-23 12:34:56 UTC'. The default time value is
+# "2000-01-01 00:00:00 UTC".
+    - duid_type: 'vendor'
+      value: '2000-01-01 00:00:00 UTC'
+# Specifies the DHCP DUID value as a single newline-terminated, hexadecimal
+# string, with each byte separated by ":". The DUID that is sent is composed of
+# the DUID type specified by 'duid_type' and the value configured here. The
+# DUID value specified here overrides the DUID that systemd-networkd.service
+# generates from the machine ID. The configured DHCP DUID should conform to the
+# specification in RFC 3315, RFC 6355. This specifies a 14 byte DUID, with the
+# type DUID-EN ("00:02"), enterprise number 43793 ("00:00:ab:11"), and
+# identifier value "f9:2a:c2:77:29:f9:5c:00".
+      duid_raw_data: '00:00:ab:11:f9:2a:c2:77:29:f9:5c:00'
   interfaces:
   - interface: 'ethernet'
     type: 'ether'
@@ -322,6 +371,12 @@ systemd_networkd:
     table: '8'
   - interface: 'Tunnel0'
     type: 'gre'
+# A link name or a list of link names. When set, controls the behavior of the
+# current link. When all links in the list are in an operational down state,
+# the current link is brought down. When at least one link has carrier, the
+# current interface is brought up.
+    bind_carrier:
+    - 'po1'
     address: '10.17.17.2/24'
 # A boolean. Enables or disables the change the MULTICAST flag on the device.
     multicast: 'true'
@@ -339,13 +394,14 @@ systemd_networkd:
 # interfering with certain interfaces that are fully controlled by other
 # applications.
     unmanaged: 'false'
-# A boolean. When 'yes', the network is deemed required when determining
-# whether the system is online when running "systemd-networkd-wait-online".
-# When 'no', the network is ignored when checking for online state. Defaults
-# to 'yes'. The network will be brought up normally in all cases, but in the
-# event that there is no address being assigned by DHCP or the cable is not
-# plugged in, the link will simply remain offline and be skipped automatically
-# by "systemd-networkd-wait-online" if "required_for_online: 'true'".
+# A boolean. When 'true' (the default), the network is deemed required when
+# determining whether the system is online when running
+# "systemd-networkd-wait-online". When 'false', the network is ignored when
+# checking for online state. The network will be brought up normally in all
+# cases, but in the event that there is no address being assigned by DHCP or the
+# cable is not plugged in, the link will simply remain offline and be skipped
+# automatically by "systemd-networkd-wait-online" if
+# "required_for_online: 'true'".
     required_for_online: 'false'
 # A static local address for tunneled packets. It must be an address on another
 # interface of this host.
@@ -396,6 +452,9 @@ systemd_networkd:
 # A boolean. When true tunnel does not require .network file. Created as
 # "tunnel@NONE". Defaults to 'false'.
     independent: 'true'
+# Takes a boolean. If set to 'true', the loopback interface 'lo' is used as the
+# underlying device of the tunnel interface. Default is 'false'.
+    assign_to_loopback: 'false'
 # A boolean. When true allows tunnel traffic on ip6tnl devices where the remote
 # endpoint is a local host address. Defaults to unset.
     allow_local_remote: ''
@@ -404,7 +463,7 @@ systemd_networkd:
 #
 # Takes a boolean argument. Configures whether all packets are queued at the
 # device (enabled), or a fixed number of packets are queued at the device and
-# the rest at the "qdisc". Defaults to 'no'.
+# the rest at the "qdisc". Defaults to 'false'.
     one_queue: 'false'
 # Takes a boolean argument. Configures whether to use multiple file descriptors
 # (queues) to parallelize packets sending and receiving. Defaults to 'no'.
@@ -569,12 +628,27 @@ systemd_networkd:
     bond: 'po1'
     lldp_receive: 'true'
     lldp_transmit: 'true'
+# Takes a boolean. Specifies the new active slave. The option is only valid for
+# following modes: 'active-backup', 'balance-alb' and 'balance-tlb'. Defaults is
+# 'false'.
+    active_slave: 'false'
+# Takes a boolean. Specifies which slave is the primary device. The specified
+# device will always be the active slave while it is available. Only when the
+# primary is off-line will alternate devices be used. This is useful when one
+# slave is preferred over another, e.g. when one slave has higher throughput
+# than another. The option is only valid for following modes: 'active-backup',
+# 'balance-alb' and 'balance-tlb'. Defaults is false.
+    primary_slave: 'false'
   - interface: 'po1'
     type: 'bond'
     mtu: '9000'
 # A boolean. Allows networkd to configure a specific link even if it has no
 # carrier (plugged-in cable). Defaults to false.
     skip_no_carrier: 'true'
+# A boolean. Allows networkd to retain both the static and dynamic
+# configuration of the interface even if its carrier is lost. Default is
+# 'false'.
+    ignore_carrier_loss: 'false'
     bonding_options:
 # Specifies one of the bonding policies. The default is 'balance-rr'
 # (round robin). Possible values are 'balance-rr', 'active-backup',
@@ -685,11 +759,34 @@ systemd_networkd:
       dns:
       - '8.8.8.8'
       - '8.8.4.4'
+# Takes a boolean argument. If 'true', this link's configured DNS servers are
+# used for resolving domain names that do not match any link's configured
+# 'domains'. If 'false', this link's configured DNS servers are never used for
+# such domains, and are exclusively used for resolving names that match at
+# least one of the domains configured on this link. If not specified defaults
+# to an automatic mode: queries not matching any link's configured domains will
+# be routed to this link if it has no routing-only domains configured.
+      dns_default_route: ''
 # An NTP server address. This option may be specified more than once. This
 # setting is read by systemd-timesyncd.service(8).
       ntp:
       - '0.europe.pool.ntp.org'
       - '1.europe.pool.ntp.org'
+# Configures IP packet forwarding for the system. If enabled, incoming packets
+# on any network interface will be forwarded to any other interfaces according
+# to the routing table. Takes a boolean, or the values 'ipv4' or 'ipv6', which
+# only enable IP packet forwarding for the specified address family. This
+# controls the "net.ipv4.ip_forward" and "net.ipv6.conf.all.forwarding" sysctl
+# options of the network interface. Default is 'false'.
+# Note: this setting controls a global kernel option, and does so one way only:
+# if a network that has this setting enabled is set up the global setting is
+# turned on. However, it is never turned off again, even after all networks
+# with this setting enabled are shut down again.
+      ip_forward: 'false'
+# Configures IP masquerading for the network interface. If enabled, packets
+# forwarded from the network interface will be appear as coming from the local
+# host. Takes a boolean argument. Default is 'false'.
+      ip_masquerade: 'false'
     - name: 'vlan3'
       vlan_id: '3'
       address: '82.200.50.2/30'
@@ -702,17 +799,31 @@ systemd_networkd:
       vlan_id: '4'
 # Accepts 'yes', 'no', 'ipv4', or 'ipv6'. Defaults to 'no'.
       dhcp: 'yes'
+# Takes a boolean or one of 'static', 'dhcp-on-stop', 'dhcp'. When 'static',
+# systemd-networkd will not drop static addresses and routes on starting up
+# process. When set to 'dhcp-on-stop', systemd-networkd will not drop
+# addresses and routes on stopping the daemon. When 'dhcp', the addresses and
+# routes provided by a DHCP server will never be dropped even if the DHCP lease
+# expires. This is contrary to the DHCP specification, but may be the best
+# choice if, e.g., the root filesystem relies on this connection. The setting
+# 'dhcp' implies 'dhcp-on-stop', and 'true' implies 'dhcp' and 'static'.
+# Defaults to 'dhcp-on-stop'.
+      keep_configuration: 'dhcp-on-stop'
 # This section configures the DHCPv4 and DHCP6 client, if it is enabled with
 # the 'dhcp' setting described above.
       dhcp_client:
-# When true (the default), the DNS servers received from the DHCP server will
+# When 'true' (the default), the DNS servers received from the DHCP server will
 # be used and take precedence over any statically configured ones.
       - use_dns: 'false'
-# When true (the default), the NTP servers received from the DHCP server will
+# When 'true', the routes to the DNS servers received from the DHCP server will
+# be configured. When 'use_dns' is disabled, this setting is ignored. Defaults
+# to 'false'.
+        routes_to_dns: 'false'
+# When 'true' (the default), the NTP servers received from the DHCP server will
 # be used by systemd-timesyncd and take precedence over any statically
 # configured ones.
         use_ntp: 'false'
-# When true, the interface maximum transmission unit from the DHCP server will
+# When 'true', the interface maximum transmission unit from the DHCP server will
 # be used on the current link. Defaults to false.
         use_mtu: 'true'
 # Takes a boolean argument. When true, the options sent to the DHCP server will
@@ -756,16 +867,22 @@ systemd_networkd:
 # When true, the timezone received from the DHCP server will be set as timezone
 # of the local system. Defaults to "no".
         use_timezone: 'no'
-# When true, the connection will never be torn down even if the DHCP lease
-# expires. This is contrary to the DHCP specification, but may be the best
-# choice if, say, the root filesystem relies on this connection.
-# Defaults to false.
-        critical_connection: 'false'
 # The DHCPv4 client identifier to use. Either 'mac' to use the MAC address of
 # the link or 'duid' (the default) to use an RFC4361-compliant Client ID.
         client_identifier: 'duid'
 # The vendor class identifier used to identify vendor type and configuration.
         vendor_class_identifier: ''
+# A DHCPv4 client can use 'user_class' option to identify the type or category
+# of user or applications it represents. The information contained in this
+# option is a string that represents the user class of which the client is a
+# member. Each class sets an identifying string of information to be used by
+# the DHCP service to classify clients.
+        user_class: ''
+# Specifies how many times the DHCPv4 client configuration should be attempted.
+# Takes a number or 'infinity' (the default). Note that the time between
+# retries is increased exponentially, so the network will not be overloaded
+# even if this number is high.  
+        max_attempts: 'infinity'
 # If 'vendor', then the DUID value will be generated using "43793" as the
 # vendor identifier (systemd) and hashed contents of machine-id(5). This is the
 # default if 'duid_type' is not specified.
@@ -812,8 +929,27 @@ systemd_networkd:
 # exchange (solicit, advertise, request, and reply). The two-message exchange
 # provides faster client configuration and is beneficial in environments in
 # which networks are under a heavy load. See RFC 3315 for details.
-# Defaults to true.
+# Defaults to 'true'.
         rapid_commit: 'true'
+# Takes a boolean that enforces DHCPv6 stateful mode when the
+# "Other information" bit is set in Router Advertisement messages. By default
+# setting only the 'O' bit in Router Advertisements makes DHCPv6 request
+# network information in a stateless manner using a two-message Information
+# Request and Information Reply message exchange. RFC 7084, requirement WPD-4,
+# updates this behavior for a Customer Edge router so that stateful DHCPv6
+# Prefix Delegation is also requested when only the 'O' bit is set in Router
+# Advertisements. This option enables such a CE behavior as it is impossible to
+# automatically distinguish the intention of the 'O' bit otherwise. By default
+# this option is set to 'false', enable it if no prefixes are delegated when the
+# device should be acting as a CE router.
+        force_dhcp_v6_pd_other_information: 'false'
+# When 'true', the DHCPv4 client sends a DHCP release packet when it stops.
+# Defaults to 'false'.
+        send_release: 'false'
+# A list of IPv4 addresses. DHCP offers from servers in the list are rejected.
+        blacklist:
+        - '10.10.10.1'
+        - '10.10.10.2'
     - name: 'vlan5'
       vlan_id: '5'
       address: '172.16.16.2/24'
@@ -881,6 +1017,11 @@ systemd_networkd:
 # A boolean. When true, sets up the route needed for non-IPv4LL hosts to
 # communicate with IPv4LL-only hosts. Defaults to false.
       ipv4_llroute: 'false'
+# Takes a boolean. If set to 'true', sets up the default route bound to the
+# interface. Defaults to 'false'. This is useful when creating routes on
+# point-to-point interfaces. This is equivalent to e.g. the following.
+# "ip route add default dev veth99".
+      default_route_on_device: 'false'
 # An IPv6 address with the top 64 bits unset. When set, indicates the 64-bit
 # interface part of SLAAC IPv6 addresses for this link. Note that the token is
 # only ever used for SLAAC, and not for DHCPv6 addresses, even in the case DHCP
@@ -896,6 +1037,12 @@ systemd_networkd:
 # registration and announcement. Defaults to false. This setting is read by
 # systemd-resolved.service(8).
       multicast_dns: 'false'
+# Takes a boolean or 'opportunistic'. When 'true', enables DNS-over-TLS support
+# on the link. When set to 'opportunistic', compatibility with non-DNS-over-TLS
+# servers is increased, by automatically turning off DNS-over-TLS servers in
+# this case. This option defines a per-interface setting for resolved
+# 'dns_over_tls' option. Defaults to 'false'.
+      dns_over_tls: 'false'
 # A boolean or 'allow-downgrade'. When true, enables DNSSEC DNS validation
 # support on the link. When set to 'allow-downgrade', compatibility with
 # non-DNSSEC capable networks is increased, by automatically turning off DNSSEC
@@ -1034,6 +1181,10 @@ systemd_networkd:
 # The table identifier for the route (a number between 1 and 4294967295, or 0
 # to unset).
         table: '100'
+# The protocol identifier for the route. Takes a number between 0 and 255 or
+# the special values 'kernel', 'boot', 'static', 'ra' and 'dhcp'. Defaults to
+# 'static'.
+        protocol: 'static'
 # The Type identifier for special route types, which can be 'unicast' route to
 # a destination network address which describes the path to the destination,
 # 'blackhole' packets are discarded silently, 'unreachable' packets are
@@ -1055,9 +1206,21 @@ systemd_networkd:
 # and 4294967295 (2^32 - 1). The usual suffixes K, M, G are supported and are
 # understood to the base of 1024. Defaults to unset.
         initial_advertised_receive_window: ''
-# Takes a boolean argument. When true enables TCP quick ack mode for the route.
-# Defaults to unset.
+# Takes a boolean. When 'true' enables TCP quick ack mode for the route. When
+# unset, the kernel's default will be used.
         quick_ack: ''
+# Takes a boolean. When 'true' enables TCP fastopen without a cookie on a
+# per-route basis. When unset, the kernel's default will be used.
+        fast_open_no_cookie: ''
+# Takes a boolean. When 'true' enables TTL propagation at Label Switched Path
+# (LSP) egress. When unset, the kernel's default will be used.
+        ttl_propagate: ''
+# The maximum transmission unit in bytes to set for the route. The usual
+# suffixes K, M, G, are supported and are understood to the base of 1024.
+# Note that if IPv6 is enabled on the interface, and the MTU is chosen below
+# '1280' (the minimum MTU for IPv6) it will automatically be increased to this
+# value.
+        mtu_bytes: ''
     - name: 'vlan7'
       vlan_id: '7'
 # The name of the VRF to add the link to.
@@ -1067,4 +1230,17 @@ systemd_networkd:
       vlan_id: '8'
       vrf: 'vrf8'
       address: '100.200.200.1/24'
+    - name: 'vlan9'
+      vlan_id: '9'
+      address: '101.201.201.1/24'
+# A 'neighbors' section adds a permanent, static entry to the neighbor table
+# (IPv6) or ARP table (IPv4) for the given hardware address on the links
+# matched for the network.
+      neighbors:
+# The IP address of the neighbor.
+      - address: '101.201.201.2'
+# The link layer address (MAC address or IP address) of the neighbor.
+        link_layer_address: '6c:62:6d:92:37:82'
+      - address: '2001:db8:0:f102::17'
+        link_layer_address: '2a00:ffde:4567:edde::4988'
 ```

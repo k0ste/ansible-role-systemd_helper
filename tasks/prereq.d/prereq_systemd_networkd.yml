@@ -8,7 +8,10 @@
     mode: "0755"
 - name: systemd_helper | Set facts about networkd
   set_fact:
-    systemd_networkd_ifaces: "{{
+    systemd_networkd_networkd: "{{
+      hostvars[inventory_hostname]['systemd_networkd'] |
+      json_query('[].networkd[]') }}"
+    systemd_networkd_interfaces: "{{
       hostvars[inventory_hostname]['systemd_networkd'] |
       json_query('[].interfaces[].interface') }}"
 - name: systemd_helper | Find exists networkd configuration files

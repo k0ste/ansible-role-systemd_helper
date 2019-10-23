@@ -15,16 +15,23 @@
 {% if item.ipv4_llroute is defined and item.ipv4_llroute in ['true', 'false'] %}
 {{ 'IPv4LLRoute' + '=' + item.ipv4_llroute }}
 {% endif %}
+{% if item.default_route_on_device is defined and
+      item.default_route_on_device in ['true', 'false'] %}
+{{ 'DefaultRouteOnDevice' + '=' + item.default_route_on_device }}
+{% endif %}
 {% if item.ipv6_token is defined and item.ipv6_token != '' %}
 {{ 'IPv6Token' ~ '=' ~ item.ipv6_token }}
 {% endif %}
-{% if item.ipv4_llroute is defined and item.ipv4_llroute in ['true', 'false',
-      'resolve'] %}
-{{ 'IPv4LLRoute' + '=' + item.ipv4_llroute }}
+{% if item.llmnr is defined and item.llmnr in ['true', 'false', 'resolve'] %}
+{{ 'LLMNR' + '=' + item.llmnr }}
 {% endif %}
-{% if item.multicast_dns is defined and item.multicast_dns in ['true', 'false',
-      'resolve'] %}
+{% if item.multicast_dns is defined and
+      item.multicast_dns in ['true', 'false', 'resolve'] %}
 {{ 'MulticastDNS' + '=' + item.multicast_dns }}
+{% endif %}
+{% if item.dns_over_tls is defined and
+      item.dns_over_tls in ['true', 'false', 'opportunistic'] %}
+{{ 'DNSOverTLS' + '=' + item.dns_over_tls }}
 {% endif %}
 {% if item.dnssec is defined and item.dnssec in ['true', 'false',
       'allow-downgrade'] %}
@@ -41,6 +48,13 @@
 {% if item.lldp_transmit is defined and item.lldp_transmit in ['true', 'false',
       'nearest-bridge', 'non-tpmr-bridge', 'customer-bridge'] %}
 {{ 'EmitLLDP' + '=' + item.lldp_transmit }}
+{% endif %}
+{% if item.bind_carrier is defined and item.bind_carrier != '' %}
+{% if item.bind_carrier is string %}
+{{ 'BindCarrier' ~ '=' ~ item.bind_carrier }}
+{% elif item.bind_carrier is sequence %}
+{{ 'BindCarrier' ~ '=' ~ item.bind_carrier | join(' ') }}
+{% endif %}
 {% endif %}
 {% if item.address is defined and item.address != '' %}
 {% if item.address is string and item.address | ipaddr('host/prefix') %}
@@ -66,6 +80,17 @@
 {% endif %}
 {% endfor %}
 {% endif %}
+{% endif %}
+{% if item.dns_default_route is defined and
+      item.dns_default_route in ['true', 'false'] %}
+{{ 'DNSDefaultRoute' + '=' + item.dns_default_route }}
+{% endif %}
+{% if item.ip_forward is defined and item.ip_forward in ['true', 'false'] %}
+{{ 'IPForward' + '=' + item.ip_forward }}
+{% endif %}
+{% if item.ip_masquerade is defined and
+      item.ip_masquerade in ['true', 'false'] %}
+{{ 'IPMasquerade' + '=' + item.ip_masquerade }}
 {% endif %}
 {% if item.ntp is defined and item.ntp != '' %}
 {% if item.ntp is string and item.ntp != '' %}
@@ -96,7 +121,37 @@
 {{ 'VLAN' ~ '=' ~ v.name }}
 {% endfor %}
 {% endif %}
-{% if item.skip_no_carrier is defined and item.skip_no_carrier in ['true',
-      'false'] %}
+{% if item.ipvlans is defined and item.ipvlans != '' %}
+{% for ipv in item.ipvlans %}
+{{ 'IPVLAN' ~ '=' ~ ipv.name }}
+{% endfor %}
+{% endif %}
+{% if item.macvlans is defined and item.macvlans != '' %}
+{% for mv in item.macvlans %}
+{{ 'MACVLAN' ~ '=' ~ mv.name }}
+{% endfor %}
+{% endif %}
+{% if item.vxlans is defined and item.vxlans != '' %}
+{% for vx in item.vxlans %}
+{{ 'VXLAN' ~ '=' ~ vx.name }}
+{% endfor %}
+{% endif %}
+{% if item.active_slave is defined and item.active_slave in ['true', 'false'] %}
+{{ 'ActiveSlave' + '=' + item.active_slave }}
+{% endif %}
+{% if item.primary_slave is defined and
+      item.primary_slave in ['true', 'false'] %}
+{{ 'PrimarySlave' + '=' + item.primary_slave }}
+{% endif %}
+{% if item.skip_no_carrier is defined and
+      item.skip_no_carrier in ['true', 'false'] %}
 {{ 'ConfigureWithoutCarrier' + '=' + item.skip_no_carrier }}
+{% endif %}
+{% if item.ignore_carrier_loss is defined and
+      item.ignore_carrier_loss in ['true', 'false'] %}
+{{ 'IgnoreCarrierLoss' + '=' + item.ignore_carrier_loss }}
+{% endif %}
+{% if item.keep_configuration is defined and item.keep_configuration in ['true',
+      'false', 'static', 'dhcp-on-stop', 'dhcp'] %}
+{{ 'KeepConfiguration' + '=' + item.keep_configuration }}
 {% endif %}

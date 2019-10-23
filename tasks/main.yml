@@ -24,7 +24,11 @@
   when:
   - "hostvars[inventory_hostname]['systemd_resolved'] is defined"
   - "hostvars[inventory_hostname]['systemd_resolved'] != ''"
+- include_tasks: 'deploy_networkd.yml'
+  when:
+  - "vars['systemd_networkd_networkd'] is defined"
+  - "vars['systemd_networkd_networkd'] != []"
 - include_tasks: 'networkd_executor.yml'
   when:
-  - "vars['systemd_networkd_ifaces'] is defined"
-  - "vars['systemd_networkd_ifaces'] != []"
+  - "vars['systemd_networkd_interfaces'] is defined"
+  - "vars['systemd_networkd_interfaces'] != []"

@@ -60,20 +60,27 @@
 {% if rr.llmnr is defined and rr.llmnr in ['true', 'false', 'resolve'] %}
 {{ 'LLMNR' + '=' + rr.llmnr }}
 {% endif %}
-{% if rr.multicast_dns is defined and rr.multicast_dns in
-      ['true', 'false', 'resolve'] %}
+{% if rr.multicast_dns is defined and
+      rr.multicast_dns in ['true', 'false', 'resolve'] %}
 {{ 'MulticastDNS' + '=' + rr.multicast_dns }}
 {% endif %}
-{% if rr.dnssec is defined and rr.dnssec in
-      ['true', 'false', 'allow-downgrade'] %}
+{% if rr.dns_over_tls is defined and
+      rr.dns_over_tls in ['true', 'false', 'opportunistic'] %}
+{{ 'DNSOverTLS' + '=' + rr.dns_over_tls }}
+{% endif %}
+{% if rr.dnssec is defined and
+      rr.dnssec in ['true', 'false', 'allow-downgrade'] %}
 {{ 'DNSSEC' + '=' + rr.dnssec }}
 {% endif %}
 {% if rr.cache is defined and rr.cache in ['true', 'false'] %}
 {{ 'Cache' + '=' + rr.cache }}
 {% endif %}
-{% if rr.dns_stub_listener is defined and rr.dns_stub_listener in
-      ['true', 'false', 'udp', 'tcp'] %}
+{% if rr.dns_stub_listener is defined and
+      rr.dns_stub_listener in ['true', 'false', 'udp', 'tcp'] %}
 {{ 'DNSStubListener' + '=' + rr.dns_stub_listener }}
+{% endif %}
+{% if rr.read_etc_hosts is defined and rr.read_etc_hosts in ['true', 'false'] %}
+{{ 'ReadEtcHosts' + '=' + rr.read_etc_hosts }}
 {% endif %}
 {% endfor %}
 {% endif %}

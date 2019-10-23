@@ -8,7 +8,7 @@
 {% if item.unmanaged is defined and item.unmanaged in ['true', 'false'] %}
 {{ 'Unmanaged' + '=' + item.unmanaged }}
 {% endif %}
-{% if item.required_for_online is defined and item.required_for_online in
-      ['true', 'false'] %}
+{% if item.required_for_online is defined and
+      item.required_for_online in ['true', 'false'] %}
 {{ 'RequiredForOnline' + '=' + item.required_for_online }}
 {% endif %}

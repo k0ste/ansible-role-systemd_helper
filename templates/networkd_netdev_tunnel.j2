@@ -39,6 +39,11 @@
 {% if item.independent is defined and item.independent in ['true', 'false'] %}
 {{ 'Independent' + '=' + item.independent }}
 {% endif %}
+{% if item.assign_to_loopback is defined and
+      item.assign_to_loopback in ['true', 'false'] %}
+{{ 'AssignToLoopback' + '=' + item.assign_to_loopback }}
+{% endif %}
+
 {% if item.allow_local_remote is defined and item.allow_local_remote in
       ['true', 'false'] %}
 {{ 'AllowLocalRemote' + '=' + item.allow_local_remote }}
