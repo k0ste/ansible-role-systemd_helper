@@ -40,4 +40,11 @@
 {% elif network_netdev_kind in ['tun', 'tap'] %}
 {{ '\n' }}
 {% include 'networkd_netdev_tuntap.j2' %}
+{% elif network_netdev_kind == 'ipvlan' %}
+{% if item.ipvlan_options is defined and item.ipvlan_options != '' %}
+{% for ipvl in item.ipvlan_options %}
+{{ '\n' }}
+{% include 'networkd_netdev_ipvlan.j2' %}
+{% endfor %}
+{% endif %}
 {% endif %}

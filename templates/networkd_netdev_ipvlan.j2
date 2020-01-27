@@ -1,0 +1,9 @@
+{{ '[IPVLAN]' }}
+{% if ipvl.mode is defined and ipvl.mode in
+      [ 'L2', 'L3', 'L3S' ] %}
+{{ 'Mode' + '=' + ipvl.mode }}
+{% endif %}
+{% if ipvl.flags is defined and ipvl.flags in
+      [ 'bridge', 'private', 'vepa' ] %}
+{{ 'Flags' + '=' + ipvl.flags }}
+{% endif %}

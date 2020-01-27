@@ -744,6 +744,16 @@ systemd_networkd:
 # Specifies the minimum number of links that must be active before asserting
 # carrier. The default value is 0.
       min_links: ''
+# Specifies master IPVLAN interface name
+    type: 'ether'
+    ipvlans:
+    - name: 'ipvl0'
+# Special IPVLAN options. 'Mode' must be one of 'L2', 'L3' or 'L3S':
+    type: 'ipvlan'
+    ipvlan_options:
+    - mode: 'L2'
+# Supported flags are 'bridge', 'private' or 'vepa'. Optional parameter.
+    - flags: 
     vlans:
     - name: 'vlan2'
       vlan_id: '2'
