@@ -1,34 +1,34 @@
 ---
-- import_tasks: 'pre_requisite.yml'
-- include_tasks: 'deploy_journald.yml'
+- import_tasks: "pre_requisite.yml"
+- include_tasks: "deploy_journald.yml"
   when:
   - "hostvars[inventory_hostname]['systemd_journald_settings'] is defined"
   - "hostvars[inventory_hostname]['systemd_journald_settings'] != ''"
-- include_tasks: 'deploy_timesyncd.yml'
+- include_tasks: "deploy_timesyncd.yml"
   when:
   - "vars['systemd_timedatectl_timesyncd'] is defined"
   - "vars['systemd_timedatectl_timesyncd'] != []"
-- include_tasks: 'deploy_vconsole.yml'
+- include_tasks: "deploy_vconsole.yml"
   when:
   - "hostvars[inventory_hostname]['systemd_vconsole'] is defined"
   - "hostvars[inventory_hostname]['systemd_vconsole'] != ''"
-- import_tasks: 'tmpfiles_executor.yml'
-- include_tasks: 'modules_load_executor.yml'
+- import_tasks: "tmpfiles_executor.yml"
+- include_tasks: "modules_load_executor.yml"
   when:
   - "vars['systemd_modules_load_create'] is defined"
   - "vars['systemd_modules_load_create'] != []"
-- include_tasks: 'udev_executor.yml'
+- include_tasks: "udev_executor.yml"
   when:
   - "vars['systemd_udev_rules'] is defined"
-- include_tasks: 'deploy_resolved.yml'
+- include_tasks: "deploy_resolved.yml"
   when:
   - "hostvars[inventory_hostname]['systemd_resolved'] is defined"
   - "hostvars[inventory_hostname]['systemd_resolved'] != ''"
-- include_tasks: 'deploy_networkd.yml'
+- include_tasks: "deploy_networkd.yml"
   when:
   - "vars['systemd_networkd_networkd'] is defined"
   - "vars['systemd_networkd_networkd'] != []"
-- include_tasks: 'networkd_executor.yml'
+- include_tasks: "networkd_executor.yml"
   when:
   - "vars['systemd_networkd_interfaces'] is defined"
   - "vars['systemd_networkd_interfaces'] != []"

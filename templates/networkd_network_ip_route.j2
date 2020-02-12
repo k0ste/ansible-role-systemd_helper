@@ -2,7 +2,8 @@
 {% if ip.gateway is defined and ip.gateway | ipaddr('host') %}
 {{ 'Gateway' + '=' + ip.gateway }}
 {% endif %}
-{% if ip.gateway_on_link is defined and ip.gateway_on_link in ['true', 'false'] %}
+{% if ip.gateway_on_link is defined and
+      ip.gateway_on_link in ['true', 'false'] %}
 {{ 'GatewayOnlink' + '=' + ip.gateway_on_link }}
 {% endif %}
 {% if ip.destination is defined and ip.destination | ipaddr() %}
