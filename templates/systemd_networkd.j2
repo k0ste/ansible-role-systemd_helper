@@ -7,10 +7,10 @@
 {{ '[Network]' }}
 {% for nn in n.network %}
 {% if nn.speed_meter is defined and nn.speed_meter in ['yes', 'no'] %}
-{{ 'SpeedMeter' + '=' + nn.speed_meter }}
+{{ 'SpeedMeter=' + nn.speed_meter }}
 {% endif %}
 {% if nn.speed_meter_interval is defined and nn.speed_meter_interval != '' %}
-{{ 'SpeedMeterIntervalSec' ~ '=' ~ nn.speed_meter_interval ~ 'sec' }}
+{{ 'SpeedMeterIntervalSec=' ~ nn.speed_meter_interval ~ 'sec' }}
 {% endif %}
 {% endfor %}
 {% endif %}
@@ -20,9 +20,9 @@
 {% for nd in n.dhcp %}
 {% if nd.duid_type is defined and nd.duid_type != '' %}
 {% if nd.duid_type in ['vendor', 'uuid', 'link-layer'] %}
-{{ 'DUIDType' + '=' + nd.duid_type }}
+{{ 'DUIDType=' + nd.duid_type }}
 {% elif nd.duid_type in 'link-layer-time' %}
-{{ 'DUIDType' + '=' + nd.duid_type + ':' + nd.value }}
+{{ 'DUIDType=' + nd.duid_type + ':' + nd.value }}
 {% endif %}
 {% endif %}
 {% endfor %}

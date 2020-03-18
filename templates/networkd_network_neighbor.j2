@@ -3,6 +3,6 @@
       (ne.link_layer_address | ipaddr('host') or
        ne.link_layer_address | hwaddr())) %}
 {{ '[Neighbor]' }}
-{{ 'Address' + '=' + ne.address }}
-{{ 'LinkLayerAddress' + '=' + ne.link_layer_address }}
+{{ 'Address=' + ne.address }}
+{{ 'LinkLayerAddress=' + ne.link_layer_address }}
 {% endif %}

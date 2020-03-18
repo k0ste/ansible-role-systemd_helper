@@ -12,9 +12,9 @@
 {% endfor %}
 {% else %}
 {% if network_netdev_kind == 'ether' %}
-{{ 'MACAddress' ~ '=' ~ item.physaddr }}
+{{ 'MACAddress=' ~ item.physaddr }}
 {% elif network_netdev_kind != 'ether' %}
-{{ 'Name' ~ '=' ~ network_netdev_name }}
+{{ 'Name=' ~ network_netdev_name }}
 {% endif %}
 {% endif %}
 {{ '' }}
@@ -23,6 +23,7 @@
 {{ '' }}
 {% for ne in item.neighbors %}
 {% include 'networkd_network_neighbor.j2' %}
+{{ '' }}
 {% endfor %}
 {% endif %}
 {{ '' }}
@@ -51,6 +52,15 @@
 {% endif %}
 {% endfor %}
 {% endif %}
+{% if item.ip_next_hop is defined and item.ip_next_hop != '' %}
+{{ '' }}
+{% for ip in item.ip_next_hop %}
+{% include 'networkd_network_ip_next_hop.j2' %}
+{% if not loop.last %}
+{{ '' }}
+{% endif %}
+{% endfor %}
+{% endif %}
 {% if item.dhcp_client is defined and item.dhcp_client != '' %}
 {{ '' }}
 {% for d in item.dhcp_client %}
@@ -71,6 +81,7 @@
 {{ '' }}
 {% for bv in br.bridge_vlan %}
 {% include 'networkd_network_bridge_vlan.j2' %}
+{{ '' }}
 {% endfor %}
 {% endif %}
 {% endfor %}

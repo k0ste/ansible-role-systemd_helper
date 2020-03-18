@@ -378,16 +378,18 @@ systemd_networkd:
     bind_carrier:
     - 'po1'
     address: '10.17.17.2/24'
-# A boolean. Enables or disables the change the MULTICAST flag on the device.
+# If set to 'true', the ARP (low-level Address Resolution Protocol) for this
+# interface is enabled. When unset, the kernel's default will be used.
+# For example, disabling ARP is useful when creating multiple MACVLAN or VLAN
+# virtual interfaces atop a single lower-level physical interface, which will
+# then only serve as a link/"bridge" device aggregating traffic to the same
+# physical link and not participate in the network otherwise.
+    arp: 'true'
+# If set to 'true', the multicast flag on the device is enabled.
     multicast: 'true'
-# A boolean. Enables or disables the ARP (low-level Address Resolution
-# Protocol) for this interface. Defaults to unset, which means that the kernel
-# default will be used. For example, disabling ARP is useful when creating
-# multiple MACVLAN or VLAN virtual interfaces atop a single lower-level physical
-# interface, which will then only serve as a link/"bridge" device aggregating
-# traffic to the same physical link and not participate in the network
-# otherwise.
-    arp: ''
+# Takes a boolean. If set to 'true', the driver retrieves all multicast packets
+# from the network. This happens when multicast routing is enabled.
+    all_multicast: 'true'
 # A boolean. When 'yes', no attempts are made to bring up or configure matching
 # links, equivalent to when there are no matching network files. Defaults to
 # 'no'. This is useful for preventing later matching network files from
@@ -639,6 +641,79 @@ systemd_networkd:
 # than another. The option is only valid for following modes: 'active-backup',
 # 'balance-alb' and 'balance-tlb'. Defaults is false.
     primary_slave: 'false'
+  - interface: 'fo1'
+    type: 'ether'
+    physaddr: 'e8:65:d4:e8:5c:68'
+# The speed to set for the device, the value is rounded down to the nearest
+# Mbps. The usual suffixes K, M, G, are supported and are understood to the base
+# of 1000.
+    speed: '40G'
+# The duplex mode to set for the device. The accepted values are 'half' and
+# 'full'.
+    duplex: 'full'
+# If set, automatic negotiation of transmission parameters is enabled.
+# Autonegotiation is a procedure by which two connected ethernet devices choose
+# common transmission parameters, such as speed, duplex mode, and flow control.
+# When unset, the kernel's default will be used. Note that if autonegotiation
+# is enabled, speed and duplex settings are read-only. If autonegotiation
+# is disabled, speed and duplex settings are writable if the driver supports
+# multiple link modes.
+    autoneg: ''
+# The Wake-on-LAN policy to set for the device. The supported values are:
+# * phy - wake on PHY activity;
+# * unicast - wake on unicast messages;
+# * multicast - wake on multicast messages;
+# * broadcast - wake on broadcast messages;
+# * arp - wake on ARP;
+# * magic - wake on receipt of a magic packet;
+# * secureon - enable secureon(tm) password for MagicPacket(tm);
+# * off - never wake (the default);
+    won: 'off'
+# The port option is used to select the device port. The supported values are:
+# * tp - an Ethernet interface using Twisted-Pair cable as the medium.
+# * aui - Attachment Unit Interface (AUI). Normally used with hubs.
+# * bnc - an Ethernet interface using BNC connectors and co-axial cable.
+# * mii - an Ethernet interface using a Media Independent Interface (MII).
+# * fibre - an Ethernet interface using Optical Fibre as the medium.
+    port: ''
+# This sets what speeds and duplex modes of operation are advertised for
+# autonegotiation.
+    negotiation: '100000baselr4-er4-full'
+# If set to 'true', the hardware offload for checksumming of ingress network
+# packets is enabled. When unset, the kernel's default will be used.
+    eth_rx: 'false'
+# If set to 'true', the hardware offload for checksumming of egress network
+# packets is enabled. When unset, the kernel's default will be used.
+    eth_tx: 'false'
+# If set to 'true', the TCP Segmentation Offload (TSO) is enabled. When unset,
+# the kernel's default will be used.
+    eth_tso: 'false'
+# If set to 'true', the TCP6 Segmentation Offload (tx-tcp6-segmentation) is
+# enabled. When unset, the kernel's default will be used.
+    eth_tso6: 'false'
+# If set to 'true', the Generic Segmentation Offload (GSO) is enabled. When
+# unset, the kernel's default will be used.
+    eth_gso: 'false'
+# If set to 'true', the Generic Receive Offload (GRO) is enabled. When unset,
+# the kernel's default will be used.
+    eth_gro: 'false'
+# If set to 'true', the Large Receive Offload (LRO) is enabled. When unset, the
+# kernel's default will be used.
+    eth_lro: 'false'
+# Sets the number of receive channels (a number between 1 and 4294967295).
+    eth_rx_channels: ''
+# Sets the number of transmit channels (a number between 1 and 4294967295).
+    eth_tx_channels: ''
+# Sets the number of other channels (a number between 1 and 4294967295).
+    eth_other_channels: ''
+# Sets the number of combined set channels (a number between 1 and 4294967295).
+    eth_combined_channels: ''
+# Specifies the NIC receive ring buffer size. When unset, the kernel's default
+# will be used.
+    eth_rx_ring: ''
+# Specifies the NIC transmit ring buffer size. When unset, the kernel's default
+# will be used.
+    eth_tx_ring: ''
   - interface: 'po1'
     type: 'bond'
     mtu: '9000'
@@ -823,6 +898,10 @@ systemd_networkd:
 # be used by systemd-timesyncd and take precedence over any statically
 # configured ones.
         use_ntp: 'false'
+# When 'true' (the default), the SIP servers received from the DHCP server will
+# be saved at the state files and can be read via
+# sd_network_link_get_sip_servers() function.
+        use_sip: 'true'
 # When 'true', the interface maximum transmission unit from the DHCP server will
 # be used on the current link. Defaults to false.
         use_mtu: 'true'
@@ -919,7 +998,9 @@ systemd_networkd:
 # The table identifier for DHCP routes (a number between 1 and 4294967295, or 0
 # to unset). When used in combination with 'vrf' the VRF's routing table is
 # used unless this parameter is specified.
-        table: '0'
+        route_table: ''
+# Specifies the MTU for the DHCP routes.
+        route_mtu: ''
 # Allow setting custom port for the DHCP client to listen on.
         listen_port: ''
 # A boolean. The DHCPv6 client can obtain configuration parameters from a
@@ -930,6 +1011,31 @@ systemd_networkd:
 # provides faster client configuration and is beneficial in environments in
 # which networks are under a heavy load. See RFC 3315 for details.
 # Defaults to 'true'.
+# When 'true', the DHCPv4 client sends a DHCP release packet when it stops.
+# Defaults to 'false'.
+        send_release: 'false'
+# When 'true', DHCPv4 clients receives IP address from DHCP server. After new
+# IP is received, DHCPv4 performs IPv4 Duplicate Address Detection. If duplicate
+# use of IP is detected the DHCPv4 client rejects the IP by sending a
+# DHCPDECLINE packet DHCP clients try to obtain an IP address again. Defaults is
+# None.
+        send_decline: ''
+# A list of IPv4 addresses. DHCP offers from servers in the list are rejected.
+        blacklist:
+        - '10.10.10.1'
+        - '10.10.10.2'
+# List of DHCP options to request.
+        request_options:
+        - '31'
+        - '6'
+# Send an arbitrary option in the DHCPv4 request. Takes a DHCP option number,
+# data type and data separated with a colon ('option:type:value'). The option
+# number must be an integer in the range 1..254. The type takes one of 'uint8',
+# 'uint16', 'uint32', 'ipv4address', or 'string'. Special characters in the
+# data string may be escaped using C-style escapes. This setting can be
+# specified multiple times. If an empty string is specified, then all options
+# specified earlier are cleared. Defaults is None.
+        send_option: ''
         rapid_commit: 'true'
 # Takes a boolean that enforces DHCPv6 stateful mode when the
 # "Other information" bit is set in Router Advertisement messages. By default
@@ -943,13 +1049,10 @@ systemd_networkd:
 # this option is set to 'false', enable it if no prefixes are delegated when the
 # device should be acting as a CE router.
         force_dhcp_v6_pd_other_information: 'false'
-# When 'true', the DHCPv4 client sends a DHCP release packet when it stops.
-# Defaults to 'false'.
-        send_release: 'false'
-# A list of IPv4 addresses. DHCP offers from servers in the list are rejected.
-        blacklist:
-        - '10.10.10.1'
-        - '10.10.10.2'
+# Takes an IPv6 address with prefix length as 'address'. Specifies the DHCPv6
+# client for the requesting router to include a prefix-hint in the DHCPv6
+# solicitation. Prefix ranges 1-128. Defaults to unset.
+        prefix_delegation_hint: ''
     - name: 'vlan5'
       vlan_id: '5'
       address: '172.16.16.2/24'
@@ -999,6 +1102,12 @@ systemd_networkd:
 # for 'push_dns' and 'dns'.
         push_ntp: 'true'
         ntp: '172.16.16.1'
+# Similar to the 'push_dns' and 'dns' settings described above, these settings
+# configure whether and what SIP server information shall be emitted as part of
+# the DHCP lease. The same syntax, propagation semantics and defaults apply as
+# for 'push_dns' and 'dns'.
+        push_sip: 'true'
+        sip: '172.16.16.1'
 # This setting configures whether the DHCP lease should contain the router
 # option. The same syntax, propagation semantics and defaults apply as for
 # 'push_dns'.
@@ -1011,6 +1120,14 @@ systemd_networkd:
 # determined by the /etc/localtime symlink.
         push_timezone: 'yes'
         timezone: 'UTC'
+# Send an arbitrary option in the DHCPv4 request. Takes a DHCP option number,
+# data type and data separated with a colon ('option:type:value'). The option
+# number must be an integer in the range 1..254. The type takes one of 'uint8',
+# 'uint16', 'uint32', 'ipv4address', or 'string'. Special characters in the
+# data string may be escaped using C-style escapes. This setting can be
+# specified multiple times. If an empty string is specified, then all options
+# specified earlier are cleared. Defaults is None.
+        send_option: ''
 # Enables link-local address autoconfiguration. Accepts 'yes', 'no', 'ipv4', or
 # 'ipv6'. Defaults to 'ipv6'.
       link_local_adressing: 'ipv6'
@@ -1058,8 +1175,8 @@ systemd_networkd:
 # using the Internet DNS hierarchy. Defaults to the empty list. This setting is
 # read by systemd-resolved.service(8).
       dnssec_negative_trust_anchors: ''
-    - name: 'vlan6'
-      vlan_id: '6'
+    - name: 'vlan66'
+      vlan_id: '66'
       ip:
       - address: '100.100.100.2/24'
 # The peer address in a point-to-point connection.
@@ -1094,12 +1211,9 @@ systemd_networkd:
 # 64. This flag allows to use privacy extensions in a manually configured
 # network, just like if stateless auto-configuration was active.
         manage_temporary_address: 'false'
-# Takes a boolean argument. When adding or modifying an IPv6 address, the
-# userspace application needs a way to suppress adding a prefix route. This is
-# for example relevant together with IFA_F_MANAGERTEMPADDR, where userspace
-# creates autoconf generated addresses, but depending on on-link, no route for
-# the prefix should be added. Defaults to false.
-        prefix_route: 'false'
+# When 'true' (the default), the prefix route for the address is automatically
+# added.
+        add_prefix_route: 'false'
 # Takes a boolean argument. Joining multicast group on ethernet level via ip
 # maddr command would not work if we have an Ethernet switch that does IGMP
 # snooping since the switch would not replicate multicast packets on ports that
@@ -1149,10 +1263,23 @@ systemd_networkd:
         ip_proto: ''
 # A boolean. Specifies wheather the rule to be inverted. Defaults to 'false'.
         invert_rule: 'false'
+# Takes a special value 'ipv4', 'ipv6', or 'both'. By default, the address
+# family is determined by the address specified in 'to' or 'from'. If neither
+# 'to' or 'from' are specified, then defaults to 'ipv4'.
+        family: 'ipv4'
+# Takes a username, a user ID, or a range of user IDs separated by a dash.
+# Defaults is None.
+        user: ''
+# Takes a number N in the range 0-128 and rejects routing decisions that have a
+# prefix length of N or less. Defaults is None.
+        suppress_prefix_length: ''
       - from: 'all'
         fwmark: '200'
         table: '200'
       ip_route:
+# Takes the gateway address or special value '_dhcp'. If '_dhcp', then the
+# gateway address provided by DHCP (or in the IPv6 case, provided by IPv6 RA)
+# is used.
       - gateway: '100.100.100.1'
 # Option tells the kernel that it does not have to check if the gateway is
 # reachable directly by the current machine (i.e., the kernel does not need to
@@ -1221,6 +1348,31 @@ systemd_networkd:
 # '1280' (the minimum MTU for IPv6) it will automatically be increased to this
 # value.
         mtu_bytes: ''
+# Used to set IP service type to 'CS6' (network control) or 'CS4' (Realtime).
+# Defaults to 'CS6'.
+        ip_service_type: 'CS6'
+      - destination: '192.168.10.1/32'
+# Multipath routing is the technique of using multiple alternative paths
+# through a network. Takes gateway address. Optionally, takes a network
+# interface name or index, and a weight in range of 1-256 for this multipath
+# route.
+        multi_path_route:
+        - gateway: '149.10.124.59'
+          iface: 'dummy98'
+          weight: '10'
+        - gateway: '149.10.124.60'
+          iface: 'dummy98'
+          weight: '5'
+    - name: 'vlan6'
+      vlan_id: '6'
+      address: '192.168.5.10/24'
+      gateway: '192.168.5.1'
+# Nexthop is used to manipulate entries in the kernel's nexthop tables.
+      ip_next_hop:
+# The id of the nexthop. If unspecified or '0' then automatically chosen by
+# kernel.
+      - id: '1'
+        gateway: '192.168.5.1'
     - name: 'vlan7'
       vlan_id: '7'
 # The name of the VRF to add the link to.

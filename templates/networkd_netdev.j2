@@ -3,15 +3,15 @@
 {{ '# ' + 'Do not edit manually' }}
 
 {{ '[NetDev]' }}
-{{ 'Name' ~ '=' ~ network_netdev_name }}
-{{ 'Kind' + '=' + network_netdev_kind -}}
+{{ 'Name=' ~ network_netdev_name }}
+{{ 'Kind=' + network_netdev_kind -}}
 {% if item.macaddr is defined and item.macaddr | hwaddr() %}
 {{ '' }}
-{{ 'MACAddress' ~ '=' ~ item.macaddr | hwaddr('linux') -}}
+{{ 'MACAddress=' ~ item.macaddr | hwaddr('linux') -}}
 {% endif %}
 {% if item.mtu is defined and item.mtu != '' %}
 {{ '' }}
-{{ 'MTUBytes' ~ '=' ~ item.mtu -}}
+{{ 'MTUBytes=' ~ item.mtu -}}
 {% endif %}
 {% if network_netdev_kind == 'vlan' %}
 {{ '\n' }}
