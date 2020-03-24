@@ -1,6 +1,6 @@
 {{ '[ControlledDelay]' }}
-{% if bcd.parent is defined and bcd.parent in ['root', 'clsact', 'ingress'] %}
-{{ 'Parent=' + bcd.parent }}
+{% if bcd.parent is defined and bcd.parent != '' %}
+{{ 'Parent=' ~ bcd.parent }}
 {% endif %}
 {% if bcd.handle is defined and bcd.handle != '' %}
 {{ 'Handle=' ~ bcd.handle }}

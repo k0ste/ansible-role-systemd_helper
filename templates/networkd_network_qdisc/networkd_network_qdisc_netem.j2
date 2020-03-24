@@ -1,6 +1,6 @@
 {{ '[NetworkEmulator]' }}
-{% if bne.parent is defined and bne.parent in ['root', 'clsact', 'ingress'] %}
-{{ 'Parent=' + bne.parent }}
+{% if bne.parent is defined and bne.parent != '' %}
+{{ 'Parent=' ~ bne.parent }}
 {% endif %}
 {% if bne.handle is defined and bne.handle != '' %}
 {{ 'Handle=' + bne.handle }}

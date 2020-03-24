@@ -1,6 +1,6 @@
 {{ '[HeavyHitterFilter]' }}
-{% if bf.parent is defined and bf.parent in ['root', 'clsact', 'ingress'] %}
-{{ 'Parent=' + bf.parent }}
+{% if bf.parent is defined and bf.parent != '' %}
+{{ 'Parent=' ~ bf.parent }}
 {% endif %}
 {% if bf.handle is defined and bf.handle != '' %}
 {{ 'Handle=' ~ bf.handle }}

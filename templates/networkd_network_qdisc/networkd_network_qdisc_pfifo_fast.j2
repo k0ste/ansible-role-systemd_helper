@@ -1,6 +1,6 @@
 {{ '[PFIFOFast]' }}
-{% if bpf.parent is defined and bpf.parent in ['root', 'clsact', 'ingress'] %}
-{{ 'Parent=' + bpf.parent }}
+{% if bpf.parent is defined and bpf.parent != '' %}
+{{ 'Parent=' ~ bpf.parent }}
 {% endif %}
 {% if bpf.handle is defined and bpf.handle != '' %}
 {{ 'Handle=' ~ bpf.handle }}

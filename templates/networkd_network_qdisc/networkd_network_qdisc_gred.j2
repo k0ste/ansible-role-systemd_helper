@@ -1,6 +1,6 @@
 {{ '[GenericRandomEarlyDetection]' }}
-{% if bg.parent is defined and bg.parent in ['root', 'clsact', 'ingress'] %}
-{{ 'Parent=' + bg.parent }}
+{% if bg.parent is defined and bg.parent != '' %}
+{{ 'Parent=' ~ bg.parent }}
 {% endif %}
 {% if bg.handle is defined and bg.handle != '' %}
 {{ 'Handle=' ~ bg.handle }}

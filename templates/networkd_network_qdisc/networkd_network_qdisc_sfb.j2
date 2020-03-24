@@ -1,6 +1,6 @@
 {{ '[StochasticFairBlue]' }}
-{% if bsb.parent is defined and bsb.parent in ['root', 'clsact', 'ingress'] %}
-{{ 'Parent=' + bsb.parent }}
+{% if bsb.parent is defined and bsb.parent != '' %}
+{{ 'Parent=' ~ bsb.parent }}
 {% endif %}
 {% if bsb.handle is defined and bsb.handle != '' %}
 {{ 'Handle=' ~ bsb.handle }}

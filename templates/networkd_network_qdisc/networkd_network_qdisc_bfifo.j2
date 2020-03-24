@@ -1,6 +1,6 @@
 {{ '[BFIFO]' }}
-{% if bb.parent is defined and bb.parent in ['root', 'clsact', 'ingress'] %}
-{{ 'Parent=' + bb.parent }}
+{% if bb.parent is defined and bb.parent != '' %}
+{{ 'Parent=' ~ bb.parent }}
 {% endif %}
 {% if bb.handle is defined and bb.handle != '' %}
 {{ 'Handle=' ~ bb.handle }}

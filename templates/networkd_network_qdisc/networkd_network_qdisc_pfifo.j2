@@ -1,6 +1,6 @@
-{{ '[PIE]' }}
-{% if bp.parent is defined and bp.parent in ['root', 'clsact', 'ingress'] %}
-{{ 'Parent=' + bp.parent }}
+{{ '[PFIFO]' }}
+{% if bp.parent is defined and bp.parent != '' %}
+{{ 'Parent=' ~ bp.parent }}
 {% endif %}
 {% if bp.handle is defined and bp.handle != '' %}
 {{ 'Handle=' ~ bp.handle }}

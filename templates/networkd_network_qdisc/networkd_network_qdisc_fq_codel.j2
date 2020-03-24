@@ -1,6 +1,6 @@
 {{ '[FairQueueingControlledDelay]' }}
-{% if bfc.parent is defined and bfc.parent in ['root', 'clsact', 'ingress'] %}
-{{ 'Parent=' + bfc.parent }}
+{% if bfc.parent is defined and bfc.parent != '' %}
+{{ 'Parent=' ~ bfc.parent }}
 {% endif %}
 {% if bfc.handle is defined and bfc.handle != '' %}
 {{ 'Handle=' ~ bfc.handle }}

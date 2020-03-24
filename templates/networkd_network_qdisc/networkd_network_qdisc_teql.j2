@@ -1,6 +1,6 @@
 {{ '[TrivialLinkEqualizer]' }}
-{% if btq.parent is defined and btq.parent in ['root', 'clsact', 'ingress'] %}
-{{ 'Parent=' + btq.parent }}
+{% if btq.parent is defined and btq.parent != '' %}
+{{ 'Parent=' ~ btq.parent }}
 {% endif %}
 {% if btq.handle is defined and btq.handle != '' %}
 {{ 'Handle=' ~ btq.handle }}

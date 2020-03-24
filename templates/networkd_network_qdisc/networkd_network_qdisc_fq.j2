@@ -1,6 +1,6 @@
 {{ '[FairQueueing]' }}
-{% if bfq.parent is defined and bfq.parent in ['root', 'clsact', 'ingress'] %}
-{{ 'Parent=' + bfq.parent }}
+{% if bfq.parent is defined and bfq.parent != '' %}
+{{ 'Parent=' ~ bfq.parent }}
 {% endif %}
 {% if bfq.handle is defined and bfq.handle != '' %}
 {{ 'Handle=' ~ bfq.handle }}
