@@ -1395,4 +1395,376 @@ systemd_networkd:
         link_layer_address: '6c:62:6d:92:37:82'
       - address: '2001:db8:0:f102::17'
         link_layer_address: '2a00:ffde:4567:edde::4988'
+    - name: 'vlan10'
+      vlan_id: '10'
+      address: '100.202.202.1/24'
+# Manages the traffic control queueing discipline (qdisc).
+      qdisc:
+# Specifies the parent Queueing Discipline (qdisc). Takes one of 'clsact' or
+# 'ingress'. This is mandatory.
+      - parent: 'clsact'
+# Specifies the major number of unique identifier of the qdisc, known as the
+# handle. Takes a number in hexadecimal ranges 1 to ffff. Default is None.
+        handle: '1:0'
+# Manages the queueing discipline (qdisc) of the network emulator (netem). It
+# can be used to configure the kernel packet scheduler and simulate packet
+# delay and loss for UDP or TCP applications, or limit the bandwidth usage of a
+# particular service to simulate internet connections.
+      qdisc_netem:
+# Specifies the parent Queueing Discipline (qdisc). Takes one of 'root',
+# 'clsact', 'ingress' or a class id. The class id takes the major and minor
+# number in hexadecimal ranges 1 to ffff separated with a colon ('major:minor').
+# Defaults to 'root'.
+      - parent: '2:30'
+# Specifies the major number of unique identifier of the qdisc, known as the
+# handle. Takes a number in hexadecimal ranges 1 to ffff. Default is None.
+        handle: '0030'
+# Specifies the fixed amount of delay to be added to all packets going out of
+# the interface. Default is None.
+        delay_sec: '50ms'
+# Specifies the chosen delay to be added to the packets outgoing to the network
+# interface. Default is None.
+        delay_jitter_sec: '10ms'
+# Specifies the maximum number of packets the qdisc may hold queued at a time.
+# An unsigned integer ranges 0 to 4294967294. Default is '1000'.
+        packet_limit: '100'
+# Specifies an independent loss probability to be added to the packets outgoing
+# from the network interface. Takes a percentage value, suffixed with '%'.
+# Default is None.
+        loss_rate: '20%'
+# Specifies that the chosen percent of packets is duplicated before queuing
+# them. Takes a percentage value, suffixed with '%'. Defaults to unset.
+        duplicate_rate: ''
+# Manages the queueing discipline (qdisc) of token bucket filter (tbf).
+      qdsic_tbf:
+      - parent: '2:35'
+        handle: '0035'
+# Specifies the latency parameter, which specifies the maximum amount of time a
+# packet can sit in the Token Bucket Filter (TBF). Default is None.
+        latency_sec: '70msec'
+# Takes the number of bytes that can be queued waiting for tokens to become
+# available. When the size is suffixed with K, M, or G, it is parsed as
+# Kilobytes, Megabytes, or Gigabytes, respectively, to the base of 1000.
+# Default is None.
+        limit_size: ''
+# Specifies the size of the bucket. This is the maximum amount of bytes that
+# tokens can be available for instantaneous transfer. When the size is suffixed
+# with K, M, or G, it is parsed as Kilobytes, Megabytes, or Gigabytes,
+# respectively, to the base of 1000. Default is None.
+        burst: '5K'
+# Specifies the device specific bandwidth. When suffixed with K, M, or G, the
+# specified bandwidth is parsed as Kilobits, Megabits, or Gigabits,
+# respectively, to the base of 1000. Defaults to unset.
+        rate: '1G'
+# The Minimum Packet Unit (MPU) determines the minimal token usage (specified
+# in bytes) for a packet. When suffixed with K, M, or G, the specified size is
+# parsed as Kilobytes, Megabytes, or Gigabytes, respectively, to the base of
+# 1000. Defaults to zero.
+        mpu: ''
+# Takes the maximum depletion rate of the bucket. When suffixed with K, M, or
+# G, the specified size is parsed as Kilobits, Megabits, or Gigabits,
+# respectively, to the base of 1000. Default is None.
+        peak_rate: '100G'
+# Specifies the size of the peakrate bucket. When suffixed with K, M, or G, the
+# specified size is parsed as Kilobytes, Megabytes, or Gigabytes, respectively,
+# to the base of 1000. Default is None.
+        mtu: '1M'
+# Manages the queueing discipline (qdisc) of Proportional Integral
+# controller-Enhanced (PIE).
+      qdisc_pie:
+      - parent: 'root'
+        handle: '3a'
+# Specifies the hard limit on the queue size in number of packets. When this
+# limit is reached, incoming packets are dropped. An unsigned integer ranges 1
+# to 4294967294. Defaults to unset and kernel's default is used.
+        packet_limit: '200000'
+# Manages the queueing discipline (qdisc) of stochastic fair blue (sfb).
+      qdisc_sfb:
+      - parent: '2:39'
+        handle: '0039'
+# Specifies the hard limit on the queue size in number of packets. When this
+# limit is reached, incoming packets are dropped. An unsigned integer ranges 1
+# to 4294967294. Defaults to unset and kernel's default is used.
+        packet_limit: '200000'
+# Manages the queueing discipline (qdisc) of stochastic fairness queueing (sfq).
+      qdisc_sfq:
+      - parent: '2:36'
+        handle: '0036'
+# Specifies the interval in seconds for queue algorithm perturbation. Defaults
+# is None.
+        perturb: '5sec'
+# Manages the queueing discipline (qdisc) of Byte limited Packet First In First
+# Out (bfifo).
+      qdisc_bfifo:
+      - parent: '2:3a'
+        handle: '003a'
+# Specifies the hard limit on the FIFO size in bytes. The size limit (a buffer
+# size) to prevent it from overflowing in case it is unable to dequeue packets
+# as quickly as it receives them. When this limit is reached, incoming packets
+# are dropped. When suffixed with K, M, or G, the specified size is parsed as
+# Kilobytes, Megabytes, or Gigabytes, respectively, to the base of 1024.
+# Defaults to unset and kernel's default is used.
+        limit_size: '1M'
+# Manages the queueing discipline (qdisc) of Packet First In First Out (pfifo).
+      qdisc_pfifo:
+      - parent: '2:37'
+        handle: '0037'
+# Specifies the hard limit on the FIFO size in number of packets. The size
+# limit (a buffer size) to prevent it from overflowing in case it is unable to
+# dequeue packets as quickly as it receives them. When this limit is reached,
+# incoming packets are dropped. An unsigned integer ranges 0 to 4294967294.
+# Defaults to unset and kernel's default is used.
+        packet_limit: '100000'
+# Manages the queueing discipline (qdisc) of Packet First In First Out Head
+# Drop (pfifo_head_drop).
+      qdisc_pfifo_head_drop:
+      - parent: '2:3b'
+        handle: '003b'
+        packet_limit: '100000'
+# Manages the queueing discipline (qdisc) of Packet First In First Out Fast
+# (pfifo_fast).
+      qdisc_pfifo_fast:
+      - parent: '2:3c'
+        handle: '003c'
+# Manages the queueing discipline (qdisc) of Common Applications Kept Enhanced
+# (CAKE).
+      qdisc_cake:
+      - parent: 'root'
+        handle: '3a'
+# Specifies that bytes to be addeded to the size of each packet. Bytes may be
+# negative. Takes an integer ranges -64 to 256. Defaults to unset and kernel's
+# default is used.
+        overhead: '128'
+# Specifies the shaper bandwidth. When suffixed with K, M, or G, the specified
+# size is parsed as Kilobits, Megabits, or Gigabits, respectively, to the base
+# of 1000. Defaults to unset and kernel's default is used.
+        bandwidth: '500M'
+# Manages the queueing discipline (qdisc) of Deficit Round Robin Scheduler
+# (DRR).
+      qdisc_drr:
+      - parent: 'root'
+        handle: '0002'
+# Manages the traffic control class of Deficit Round Robin Scheduler (DRR).
+      qdisc_drr_class:
+      - parent: 'root'
+# Specifies the major and minur number of unique identifier of the class, known
+# as the class ID. Each number is in hexadecimal ranges 1 to ffff. Defaults to
+# unset.
+        class: '0002:0030'
+# Specifies the amount of bytes a flow is allowed to dequeue before the
+# scheduler moves to the next class. An unsigned integer ranges 1 to 4294967294.
+# Defaults to the MTU of the interface.
+        quantum: '2000'
+# Manages the queueing discipline (qdisc) of Generic Random Early Detection
+# (GRED).
+      qdisc_gred:
+      - parent: '2:38'
+        handle: '0038'
+# Specifies the number of virtual queues. Takes a integer in the range 1-16.
+# Defaults to unset and kernel's default is used.
+        queues: '12'
+# Specifies the number of default virtual queue. This must be less than
+# 'virtual_queues'. Defaults to unset and kernel's default is used.
+        default_queue: '10'
+# Takes a boolean. It turns on the RIO-like buffering scheme. Defaults to unset
+# and kernel's default is used.
+        generic_rio: 'true'
+# Manages the queueing discipline (qdisc) of controlled delay (CoDel).
+      qdisc_codel:
+      - parent: '2:33'
+        handle: '0033'
+# Specifies the hard limit on the queue size in number of packets. When this
+# limit is reached, incoming packets are dropped. An unsigned integer ranges 0
+# to 4294967294. Defaults to unset and kernel's default is used.
+        packet_limit: '2000'
+# Takes a timespan. Specifies the acceptable minimum standing/persistent queue
+# delay. Defaults to unset and kernel's default is used.
+        target: '10ms'
+# Takes a timespan. This is used to ensure that the measured minimum delay does
+# not become too stale. Defaults to unset and kernel's default is used.
+        interval: '50ms'
+# Takes a boolean. This can be used to mark packets instead of dropping them.
+# Defaults to unset and kernel's default is used.
+        ecn: 'yes'
+# Takes a timespan. This sets a threshold above which all packets are marked
+# with ECN Congestion Experienced (CE). Defaults to unset and kernel's default
+# is used.
+        ce_threshold: '100ms'
+# Manages the queueing discipline (qdisc) of fair queuing controlled delay
+# (FQ-CoDel).
+      qdisc_fq_codel:
+      - parent: '2:34'
+        handle: '0034'
+# Specifies the hard limit on the real queue size. When this limit is reached,
+# incoming packets are dropped. Defaults to unset and kernel's default is used.
+        packet_limit: '20480'
+# Specifies the limit on the total number of bytes that can be queued in this
+# FQ-CoDel instance. When suffixed with K, M, or G, the specified size is
+# parsed as Kilobytes, Megabytes, or Gigabytes, respectively, to the base of
+# 1024. Defaults to unset and kernel's default is used.
+        memory_limit: '64M'
+# Specifies the number of flows into which the incoming packets are classified.
+# Defaults to unset and kernel's default is used.
+        flows: '2048'
+# Takes a timespan. Specifies the acceptable minimum standing/persistent queue
+# delay. Defaults to unset and kernel's default is used.
+        target: '10ms'
+# Takes a timespan. This is used to ensure that the measured minimum delay does
+# not become too stale. Defaults to unset and kernel's default is used.
+        interval: '200ms'
+# Specifies the number of bytes used as 'deficit' in the fair queuing
+# algorithmtimespan. When suffixed with K, M, or G, the specified size is
+# parsed as Kilobytes, Megabytes, or Gigabytes, respectively, to the base of
+# 1024. Defaults to unset and kernel's default is used.
+        quantum: '1400'
+# Takes a boolean. This can be used to mark packets instead of dropping them.
+# Defaults to unset and kernel's default is used.
+        ecn: 'true'
+# Takes a timespan. This sets a threshold above which all packets are marked
+# with ECN Congestion Experienced (CE). Defaults to unset and kernel's default
+# is used.
+        ce_threshold: '100ms'
+# Manages the queueing discipline (qdisc) of fair queue traffic policing (FQ).
+      qdisc_fq:
+      - parent: '2:32'
+        handle: '0032'
+# Specifies the hard limit on the real queue size. When this limit is reached,
+# incoming packets are dropped. Defaults to unset and kernel's default is used.
+        packet_limit: '1000'
+# Specifies the hard limit on the maximum number of packets queued per flow.
+# Defaults to unset and kernel's default is used.
+        flow_limit: '200'
+# Specifies the credit per dequeue RR round, i.e. the amount of bytes a flow is
+# allowed to dequeue at once. When suffixed with K, M, or G, the specified size
+# is parsed as Kilobytes, Megabytes, or Gigabytes, respectively, to the base of
+# 1024. Defaults to unset and kernel's default is used.
+        quantum: '1500'
+# Specifies the initial sending rate credit, i.e. the amount of bytes a new
+# flow is allowed to dequeue initially. When suffixed with K, M, or G, the
+# specified size is parsed as Kilobytes, Megabytes, or Gigabytes, respectively,
+# to the base of 1024. Defaults to unset and kernel's default is used.
+        initial_quantum: '13000'
+# Specifies the maximum sending rate of a flow. When suffixed with K, M, or G,
+# the specified size is parsed as Kilobits, Megabits, or Gigabits, respectively,
+# to the base of 1000. Defaults to unset and kernel's default is used.
+        maximum_rate: '1M'
+# Specifies the size of the hash table used for flow lookups. Defaults to unset
+# and kernel's default is used.
+        buckets: '512'
+# Takes an unsigned integer. For packets not owned by a socket, fq is able to
+# mask a part of hash and reduce number of buckets associated with the traffic.
+# Defaults to unset and kernel's default is used.
+        orphan_mask: '511'
+# Takes a boolean, and enables or disables flow pacing. Defaults to unset and
+# kernel's default is used.
+        pacing: 'true'
+# Takes a timespan. This sets a threshold above which all packets are marked
+# with ECN Congestion Experienced (CE). Defaults to unset and kernel's default
+# is used.
+        ce_threshold: '100ms'
+# Manages the queueing discipline (qdisc) of trivial link equalizer (teql).
+      qdisc_teql:
+      - parent: '2:31'
+        handle: '0031'
+# Specifies the interface ID 'N' of teql. Defaults to '0'.
+        id: '1'
+# Manages the queueing discipline (qdisc) of Hierarchy Token Bucket (htb).
+      qdisc_htb:
+      - parent: 'root'
+        handle: '0002'
+# Takes the minor id in hexadecimal of the default class. Unclassified traffic
+# gets sent to the class. Defaults to unset.
+        default: '30'
+# Manages the traffic control class of Hierarchy Token Bucket (htb).
+      qdisc_htb_class:
+# Specifies the parent Queueing Discipline (qdisc). Takes one of 'root', or a
+# qdisc id. The qdisc id takes the major and minor number in hexadecimal ranges
+# 1 to ffff separated with a colon ("major:minor"). Defaults to 'root'.
+      - parent: 'root'
+# Specifies the major and minur number of unique identifier of the class, known
+# as the class ID. Each number is in hexadecimal ranges 1 to ffff. Default is
+# None.
+        class: '0002:0030'
+# Specifies the priority of the class. In the round-robin process, classes with
+# the lowest priority field are tried for packets first. This setting is
+# mandatory.
+        prio: '1'
+# Specifies the maximum rate this class and all its children are guaranteed.
+# When suffixed with K, M, or G, the specified size is parsed as Kilobits,
+# Megabits, or Gigabits, respectively, to the base of 1000. This setting is
+# mandatory.
+        rate: '1M'
+# Specifies the maximum rate at which a class can send, if its parent has
+# bandwidth to spare. When suffixed with K, M, or G the specified size is
+# parsed as Kilobits, Megabits, or Gigabits, respectively, to the base of 1000.
+# When unset, the value specified with Rate= is used.
+        ceil: '0.5M'
+      - parent: 'root'
+        class: '0002:0031'
+        prio: '1'
+        rate: '1M'
+        ceil: '0.5M'
+      - parent: 'root'
+        class: '0002:0032'
+        prio: '1'
+        rate: '1M'
+        ceil: '0.5M'
+      - parent: 'root'
+        class: '0002:0033'
+        prio: '1'
+        rate: '1M'
+        ceil: '0.5M'
+      - parent: 'root'
+        class: '0002:0034'
+        prio: '1'
+        rate: '1M'
+        ceil: '0.5M'
+      - parent: 'root'
+        class: '0002:0035'
+        prio: '1'
+        rate: '1M'
+        ceil: '0.5M'
+      - parent: 'root'
+        class: '0002:0036'
+        prio: '1'
+        rate: '1M'
+        ceil: '0.5M'
+      - parent: 'root'
+        class: '0002:0037'
+        prio: '1'
+        rate: '1M'
+        ceil: '0.5M'
+      - parent: 'root'
+        class: '0002:0038'
+        prio: '1'
+        rate: '1M'
+        ceil: '0.5M'
+      - parent: 'root'
+        class: '0002:0039'
+        prio: '1'
+        rate: '1M'
+        ceil: '0.5M'
+      - parent: 'root'
+        class: '0002:003a'
+        prio: '1'
+        rate: '1M'
+        ceil: '0.5M'
+      - parent: 'root'
+        class: '0002:003b'
+        prio: '1'
+        rate: '1M'
+        ceil: '0.5M'
+      - parent: 'root'
+        class: '0002:003c'
+        prio: '1'
+        rate: '1M'
+        ceil: '0.5M'
+# Manages the queueing discipline (qdisc) of Heavy Hitter Filter (hhf).
+      qdisc_hhf:
+      - parent: 'root'
+        handle: '3a'
+# Specifies the hard limit on the queue size in number of packets. When this
+# limit is reached, incoming packets are dropped. An unsigned integer ranges 0
+# to 4294967294. Defaults to unset and kernel's default is used.
+        packet_limit: '1022'
 ```

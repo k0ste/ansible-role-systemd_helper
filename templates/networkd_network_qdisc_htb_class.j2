@@ -1,0 +1,16 @@
+{{ '[HierarchyTokenBucketClass]' }}
+{% if bhc.parent is defined and bhc.parent != '' %}
+{{ 'Parent=' ~ bhc.parent }}
+{% endif %}
+{% if bhc.class is defined and bhc.class != '' %}
+{{ 'ClassId=' ~ bhc.class }}
+{% endif %}
+{% if bhc.prio is defined and bhc.prio != '' %}
+{{ 'Priority=' ~ bhc.prio }}
+{% endif %}
+{% if bhc.rate is defined and bhc.rate != '' %}
+{{ 'Rate=' ~ bhc.rate }}
+{% endif %}
+{% if bhc.ceil is defined and bhc.ceil != '' %}
+{{ 'CeilRate=' ~ bhc.ceil }}
+{% endif %}

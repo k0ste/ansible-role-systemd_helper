@@ -1,0 +1,7 @@
+{{ '[HierarchyTokenBucket]' }}
+{% if bh.parent is defined and bh.parent in ['root', 'clsact', 'ingress'] %}
+{{ 'Parent=' + bh.parent }}
+{% endif %}
+{% if bh.handle is defined and bh.handle != '' %}
+{{ 'Handle=' ~ bh.handle }}
+{% endif %}
