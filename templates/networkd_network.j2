@@ -92,6 +92,24 @@
 {{ '' }}
 {% endfor %}
 {% endif %}
+{% if item.qdisc_drr_class is defined and item.qdisc_drr_class != '' %}
+{% for bdc in item.qdisc_drr_class %}
+{% include 'networkd_network_qdisc/networkd_network_qdisc_drr_class.j2' %}
+{{ '' }}
+{% endfor %}
+{% endif %}
+{% if item.qdisc_htb is defined and item.qdisc_htb != '' %}
+{% for bh in item.qdisc_htb %}
+{% include 'networkd_network_qdisc/networkd_network_qdisc_htb.j2' %}
+{{ '' }}
+{% endfor %}
+{% endif %}
+{% if item.qdisc_htb_class is defined and item.qdisc_htb_class != '' %}
+{% for bhc in item.qdisc_htb_class %}
+{% include 'networkd_network_qdisc/networkd_network_qdisc_htb_class.j2' %}
+{{ '' }}
+{% endfor %}
+{% endif %}
 {% if item.qdisc_netem is defined and item.qdisc_netem != '' %}
 {% for bne in item.qdisc_netem %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_netem.j2' %}
@@ -164,12 +182,6 @@
 {{ '' }}
 {% endfor %}
 {% endif %}
-{% if item.qdisc_drr_class is defined and item.qdisc_drr_class != '' %}
-{% for bdc in item.qdisc_drr_class %}
-{% include 'networkd_network_qdisc/networkd_network_qdisc_drr_class.j2' %}
-{{ '' }}
-{% endfor %}
-{% endif %}
 {% if item.qdisc_gred is defined and item.qdisc_gred != '' %}
 {% for bg in item.qdisc_gred %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_gred.j2' %}
@@ -191,18 +203,6 @@
 {% if item.qdisc_teql is defined and item.qdisc_teql != '' %}
 {% for btq in item.qdisc_teql %}
 {% include 'networkd_network_qdisc/networkd_network_qdisc_teql.j2' %}
-{{ '' }}
-{% endfor %}
-{% endif %}
-{% if item.qdisc_htb is defined and item.qdisc_htb != '' %}
-{% for bh in item.qdisc_htb %}
-{% include 'networkd_network_qdisc/networkd_network_qdisc_htb.j2' %}
-{{ '' }}
-{% endfor %}
-{% endif %}
-{% if item.qdisc_htb_class is defined and item.qdisc_htb_class != '' %}
-{% for bhc in item.qdisc_htb_class %}
-{% include 'networkd_network_qdisc/networkd_network_qdisc_htb_class.j2' %}
 {{ '' }}
 {% endfor %}
 {% endif %}
