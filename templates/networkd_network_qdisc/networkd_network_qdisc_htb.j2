@@ -5,3 +5,6 @@
 {% if bh.handle is defined and bh.handle != '' %}
 {{ 'Handle=' ~ bh.handle }}
 {% endif %}
+{% if bh.default is defined and bh.default != '' %}
+{{ 'DefaultClass=' ~ bh.default }}
+{% endif %}
