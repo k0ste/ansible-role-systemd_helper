@@ -36,7 +36,7 @@
 {{ 'InvertRule=' + ip.invert_rule }}
 {% endif %}
 {% if ip.family is defined and ip.family in ['ipv4', 'ipv6', 'both'] %}
-{{ 'InvertRule=' + ip.family }}
+{{ 'Family=' + ip.family }}
 {% endif %}
 {% if ip.suppress_prefix_length is defined and
       ip.suppress_prefix_length != '' %}
