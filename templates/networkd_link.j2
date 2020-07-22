@@ -11,13 +11,19 @@
 {% endif %}
 {% endfor %}
 {% else %}
-{{ 'MACAddress=' ~ item.physaddr }}
+{% if network_netdev_kind is defined and network_netdev_kind == 'vlan' %}
+{{ 'OriginalName=' + network_netdev_name }}
+{% else %}
+{{ 'MACAddress=' + item.physaddr | hwaddr('linux')}}
+{% endif %}
 {% endif %}
 {{ '' }}
 {{ '[Link]' }}
+{% if network_netdev_kind is defined and network_netdev_kind != 'vlan' %}
 {% if (item.match_override is defined and item.match_override == '') or
       (item.match_override is not defined) %}
 {{ 'Name=' ~ network_netdev_name }}
+{% endif %}
 {% endif %}
 {% if item.description is defined and item.description != '' %}
 {{ 'Description=' ~ item.description }}
@@ -31,6 +37,19 @@
 {% endif %}
 {% if item.macaddr is defined and item.macaddr | hwaddr() %}
 {{ 'MACAddress=' + item.macaddr | hwaddr('linux') }}
+{% endif %}
+{% if item.altname_policy is defined and item.altname_policy in
+  ['database', 'onboard', 'slot', 'path', 'mac'] %}
+{{ 'AlternativeNamesPolicy=' + item.altname_policy | join(' ') }}
+{% endif %}
+{% if item.altname is defined and item.altname != '' %}
+{% if item.altname is string %}
+{{ 'AlternativeName=' + item.altname }}
+{% elif item.altname is sequence %}
+{% for a in item.altname %}
+{{ 'AlternativeName=' + a }}
+{% endfor %}
+{% endif %}
 {% endif %}
 {% if item.mtu is defined and item.mtu != '' %}
 {{ 'MTUBytes=' ~ item.mtu }}

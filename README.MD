@@ -592,6 +592,18 @@ systemd_networkd:
 # Hardware persistent MAC address. Used to match this interface.
     physaddr: '3c:fd:fe:aa:5e:f8'
     bond: 'po1'
+# A list of policies by which the interface's alternative names should be set.
+# Each of the policies may fail, and all successful policies are used. The
+# available policies are 'database', 'onboard', 'slot', 'path', and 'mac'. If
+# the kernel does not support the alternative names, then this setting will be
+# ignored.
+    altname_policy: ''
+# The alternative interface name to use. If the kernel does not support the
+# alternative names, then this setting will be ignored.
+    altname: 'tengigabitethernet0'
+# The speed to set for the device, the value is rounded down to the nearest
+# Mbps. The usual suffixes K, M, G, are supported and are understood to the base
+# of 1000.
 # Controls support for Ethernet LLDP packet reception. LLDP is a link-layer
 # protocol commonly implemented on professional routers and bridges which
 # announces which physical port a system is connected to, as well as other
@@ -628,6 +640,7 @@ systemd_networkd:
     type: 'ether'
     physaddr: '3c:fd:fe:aa:5e:f9'
     bond: 'po1'
+    altname: 'tengigabitethernet1'
     lldp_receive: 'true'
     lldp_transmit: 'true'
 # Takes a boolean. Specifies the new active slave. The option is only valid for
@@ -644,9 +657,6 @@ systemd_networkd:
   - interface: 'fo1'
     type: 'ether'
     physaddr: 'e8:65:d4:e8:5c:68'
-# The speed to set for the device, the value is rounded down to the nearest
-# Mbps. The usual suffixes K, M, G, are supported and are understood to the base
-# of 1000.
     speed: '40G'
 # The duplex mode to set for the device. The accepted values are 'half' and
 # 'full'.
