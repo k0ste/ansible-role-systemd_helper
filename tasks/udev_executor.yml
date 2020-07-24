@@ -1,5 +1,5 @@
 ---
-- include_tasks: 'deploy_udev.yml'
+- include_tasks: "deploy_udev.yml"
   loop: "{{ hostvars[inventory_hostname]['systemd_udev_rules'] |
     flatten(levels=1) }}"
   loop_control:

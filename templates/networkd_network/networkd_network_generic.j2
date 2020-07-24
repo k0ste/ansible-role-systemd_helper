@@ -128,7 +128,9 @@
 {% endif %}
 {% if item.macvlans is defined and item.macvlans != '' %}
 {% for mv in item.macvlans %}
+{% if mv.name is defined and mv.name != '' %}
 {{ 'MACVLAN=' ~ mv.name }}
+{% endif %}
 {% endfor %}
 {% endif %}
 {% if item.vxlans is defined and item.vxlans != '' %}

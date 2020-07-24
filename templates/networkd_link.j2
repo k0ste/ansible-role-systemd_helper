@@ -11,7 +11,8 @@
 {% endif %}
 {% endfor %}
 {% else %}
-{% if network_netdev_kind is defined and network_netdev_kind == 'vlan' %}
+{% if network_netdev_kind is defined and
+      network_netdev_kind in ['vlan', 'macvlan'] %}
 {{ 'OriginalName=' + network_netdev_name }}
 {% else %}
 {{ 'MACAddress=' + item.physaddr | hwaddr('linux')}}
@@ -19,7 +20,8 @@
 {% endif %}
 {{ '' }}
 {{ '[Link]' }}
-{% if network_netdev_kind is defined and network_netdev_kind != 'vlan' %}
+{% if network_netdev_kind is defined and
+      network_netdev_kind != ['vlan', 'macvlan'] %}
 {% if (item.match_override is defined and item.match_override == '') or
       (item.match_override is not defined) %}
 {{ 'Name=' ~ network_netdev_name }}

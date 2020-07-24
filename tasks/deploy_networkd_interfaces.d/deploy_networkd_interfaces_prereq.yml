@@ -1,0 +1,39 @@
+---
+- name: systemd_helper | Assert that type for interface is defined
+  assert:
+    that: "item.type is defined and item.type != ''"
+    msg: "{{ 'type for ' ~ vars['outer_item'] ~ ' is not defined' }}"
+    quiet: "true"
+  loop: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+    json_query(\"[].interfaces[?interface=='\" ~ vars['outer_item'] ~ \"']\") |
+    flatten(levels=1) }}"
+  loop_control:
+    label: "{{ 'interface: ' ~ vars['outer_item'] }}"
+- name: systemd_helper | Assert that physaddr for interface is defined
+  assert:
+    that: "item.physaddr is defined and item.physaddr != ''"
+    msg: "{{ 'physaddr for ' ~ vars['outer_item'] ~ ' is not defined' }}"
+    quiet: "true"
+  loop: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+    json_query(\"[].interfaces[?interface=='\" ~ vars['outer_item'] ~ \"']\") |
+    flatten(levels=1) }}"
+  loop_control:
+    label: "{{ 'interface: ' ~ vars['outer_item'] ~ ' [' ~ item.type ~ ']' }}"
+  when:
+  - "item.type == 'ether'"
+  - "item.match_override is not defined or (item.match_override is defined and
+     item.match_override == '')"
+- name: systemd_helper | Assert that physaddr for interface is valid hwaddr
+  assert:
+    that: "item.physaddr is defined and item.physaddr | hwaddr()"
+    msg: "{{ 'physaddr for ' ~ vars['outer_item'] ~ ' is invalid' }}"
+    quiet: "true"
+  loop: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+    json_query(\"[].interfaces[?interface=='\" ~ vars['outer_item'] ~ \"']\") |
+    flatten(levels=1) }}"
+  loop_control:
+    label: "{{ 'interface: ' ~ vars['outer_item'] ~ ' [' ~ item.type ~ ']' }}"
+  when:
+  - "item.type == 'ether'"
+  - "item.match_override is not defined or (item.match_override is defined and
+     item.match_override == '')"

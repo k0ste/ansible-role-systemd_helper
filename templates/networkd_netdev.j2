@@ -30,6 +30,9 @@
 {% include 'networkd_netdev/networkd_netdev_bridge.j2' %}
 {% endfor %}
 {% endif %}
+{% elif network_netdev_kind == 'macvlan' %}
+{{ '\n' }}
+{% include 'networkd_netdev/networkd_netdev_macvlan.j2' %}
 {% elif network_netdev_kind == 'vrf' %}
 {{ '\n' }}
 {% include 'networkd_netdev/networkd_netdev_vrf.j2' %}

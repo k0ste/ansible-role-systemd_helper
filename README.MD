@@ -535,6 +535,11 @@ systemd_networkd:
 # 0 to 63. Networkd does not set any default meaning the kernel default value
 # of 32 is used.
       priority: ''
+  - interface: 'dummy2'
+    type: 'dummy'
+    macvlans:
+    - name: 'macvlan2'
+      mode: 'bridge'
   - interface: 'br1'
     type: 'bridge'
     address: '10.18.18.2/24'
@@ -1777,4 +1782,10 @@ systemd_networkd:
 # limit is reached, incoming packets are dropped. An unsigned integer ranges 0
 # to 4294967294. Defaults to unset and kernel's default is used.
         packet_limit: '1022'
+    - name: 'vlan11'
+      vlan_id: '11'
+      macvlans:
+      - name: 'macvlan11'
+        address: '10.20.30.1/24'
+        mode: 'bridge'
 ```
