@@ -10,10 +10,10 @@
   set_fact:
     systemd_networkd_networkd: "{{
       hostvars[inventory_hostname]['systemd_networkd'] |
-      json_query('[].networkd[]') }}"
+      community.general.json_query('[].networkd[]') }}"
     systemd_networkd_interfaces: "{{
       hostvars[inventory_hostname]['systemd_networkd'] |
-      json_query('[].interfaces[].interface') }}"
+      community.general.json_query('[].interfaces[].interface') }}"
 - name: systemd_helper | Find exists networkd configuration files
   find:
     paths: "/etc/systemd/network"
@@ -25,9 +25,9 @@
   register: "networkd_find_result"
   when:
   - "hostvars[inventory_hostname]['systemd_networkd'] |
-     json_query(vars['networkd_drop_exists']) is defined"
+     community.general.json_query(vars['networkd_drop_exists']) is defined"
   - "hostvars[inventory_hostname]['systemd_networkd'] |
-     json_query(vars['networkd_drop_exists']) == 'true'"
+     community.general.json_query(vars['networkd_drop_exists']) == 'true'"
   vars:
     networkd_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
 - name: systemd_helper | Delete exists networkd configuration files

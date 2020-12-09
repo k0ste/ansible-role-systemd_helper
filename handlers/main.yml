@@ -15,9 +15,9 @@
   - "hostvars[inventory_hostname]['systemd_timesyncd'] is defined"
   - "hostvars[inventory_hostname]['systemd_timesyncd'] != ''"
   - "hostvars[inventory_hostname]['systemd_timesyncd'] |
-     json_query(vars['systemd_timesyncd_restart']) is defined"
+     community.general.json_query(vars['systemd_timesyncd_restart']) is defined"
   - "hostvars[inventory_hostname]['systemd_timesyncd'] |
-     json_query(vars['systemd_timesyncd_restart']) == 'true'"
+     community.general.json_query(vars['systemd_timesyncd_restart']) == 'true'"
   vars:
     systemd_timesyncd_restart: "[] | map(&restart || 'false', @) | [0]"
 - name: Restart systemd-resolved
@@ -28,9 +28,9 @@
   - "hostvars[inventory_hostname]['systemd_resolved'] is defined"
   - "hostvars[inventory_hostname]['systemd_resolved'] != ''"
   - "hostvars[inventory_hostname]['systemd_resolved'] |
-     json_query(vars['systemd_resolved_restart']) is defined"
+     community.general.json_query(vars['systemd_resolved_restart']) is defined"
   - "hostvars[inventory_hostname]['systemd_resolved'] |
-     json_query(vars['systemd_resolved_restart']) == 'true'"
+     community.general.json_query(vars['systemd_resolved_restart']) == 'true'"
   vars:
     systemd_resolved_restart: "[] | map(&restart || 'false', @) | [0]"
 - name: Restart systemd-networkd
@@ -41,8 +41,8 @@
   - "hostvars[inventory_hostname]['systemd_networkd'] is defined"
   - "hostvars[inventory_hostname]['systemd_networkd'] != ''"
   - "hostvars[inventory_hostname]['systemd_networkd'] |
-     json_query(vars['systemd_networkd_restart']) is defined"
+     community.general.json_query(vars['systemd_networkd_restart']) is defined"
   - "hostvars[inventory_hostname]['systemd_networkd'] |
-     json_query(vars['systemd_networkd_restart']) == 'true'"
+     community.general.json_query(vars['systemd_networkd_restart']) == 'true'"
   vars:
     systemd_networkd_restart: "[] | map(&restart || 'false', @) | [0]"

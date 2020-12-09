@@ -36,9 +36,9 @@
   - "hostvars[inventory_hostname]['systemd_resolved'] is defined"
   - "hostvars[inventory_hostname]['systemd_resolved'] != ''"
   - "hostvars[inventory_hostname]['systemd_resolved'] |
-     json_query(vars['systemd_resolved_make_link']) is defined"
+     community.general.json_query(vars['systemd_resolved_make_link']) is defined"
   - "hostvars[inventory_hostname]['systemd_resolved'] |
-     json_query(vars['systemd_resolved_make_link']) == 'true'"
+     community.general.json_query(vars['systemd_resolved_make_link']) == 'true'"
   vars:
     systemd_resolved_make_link: "[] | map(&make_link || 'false', @) | [0]"
 - include_tasks: 'prereq.d/prereq_systemd_networkd.yml'

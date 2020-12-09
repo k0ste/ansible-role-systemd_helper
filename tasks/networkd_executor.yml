@@ -10,8 +10,8 @@
     enabled: "yes"
   when:
   - "hostvars[inventory_hostname]['systemd_networkd'] |
-     json_query(vars['systemd_networkd_enable']) is defined"
+     community.general.json_query(vars['systemd_networkd_enable']) is defined"
   - "hostvars[inventory_hostname]['systemd_networkd'] |
-     json_query(vars['systemd_networkd_enable']) == 'true'"
+     community.general.json_query(vars['systemd_networkd_enable']) == 'true'"
   vars:
     systemd_networkd_enable: "[] | map(&enable || 'false', @) | [0]"

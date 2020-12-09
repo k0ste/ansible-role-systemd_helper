@@ -5,7 +5,7 @@
 - import_tasks: "deploy_networkd_interfaces.d/deploy_networkd_interfaces_macvlan.yml"
 - include_tasks: "deploy_networkd_interfaces.d/deploy_networkd_interfaces_vlan_macvlan.yml"
   loop: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
-    json_query(\"[].interfaces[?interface=='\" ~
+    community.general.json_query(\"[].interfaces[?interface=='\" ~
     vars['outer_item'] ~ \"'].vlans[]\") | flatten(levels=1) }}"
   loop_control:
     loop_var: "outer_item_vlan"
