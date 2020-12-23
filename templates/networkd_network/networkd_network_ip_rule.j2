@@ -2,10 +2,10 @@
 {% if ip.tos is defined and ip.tos != '' %}
 {{ 'TypeOfService=' ~ ip.tos }}
 {% endif %}
-{% if ip.from is defined and ip.from | ipaddr() %}
+{% if ip.from is defined and ip.from | ansible.netcommon.ipaddr() %}
 {{ 'From=' + ip.from }}
 {% endif %}
-{% if ip.to is defined and ip.to | ipaddr() %}
+{% if ip.to is defined and ip.to | ansible.netcommon.ipaddr() %}
 {{ 'To=' + ip.to }}
 {% endif %}
 {% if ip.fwmark is defined and ip.fwmark != '' %}
@@ -39,6 +39,6 @@
 {{ 'Family=' + ip.family }}
 {% endif %}
 {% if ip.suppress_prefix_length is defined and
-      ip.suppress_prefix_length != '' %}
+  ip.suppress_prefix_length != '' %}
 {{ 'SuppressPrefixLength=' ~ ip.suppress_prefix_length }}
 {% endif %}

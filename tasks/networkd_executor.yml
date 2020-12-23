@@ -5,7 +5,7 @@
   loop_control:
     loop_var: "outer_item"
 - name: systemd_helper | Enable systemd-networkd service
-  systemd:
+  ansible.builtin.systemd:
     name: "systemd-networkd"
     enabled: "yes"
   when:

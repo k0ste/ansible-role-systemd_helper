@@ -1,6 +1,6 @@
 ---
 - name: systemd_helper | Deploy journald configuration
-  template:
+  ansible.builtin.template:
     src: "systemd_journald.j2"
     dest: "/etc/systemd/journald.conf"
     group: "root"

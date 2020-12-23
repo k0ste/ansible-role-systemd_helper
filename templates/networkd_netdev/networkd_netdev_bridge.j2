@@ -20,12 +20,12 @@
 {% if br.default_pvid is defined and br.default_pvid != '' %}
 {{ 'DefaultPVID=' ~ br.default_pvid }}
 {% endif %}
-{% if br.multicast_querier is defined and br.multicast_querier in
-      ['true', 'false'] %}
+{% if br.multicast_querier is defined and
+  br.multicast_querier in ['true', 'false'] %}
 {{ 'MulticastQuerier=' + br.multicast_querier }}
 {% endif %}
-{% if br.multicast_snooping is defined and br.multicast_snooping in
-      ['true', 'false'] %}
+{% if br.multicast_snooping is defined and
+  br.multicast_snooping in ['true', 'false'] %}
 {{ 'MulticastSnooping=' + br.multicast_snooping }}
 {% endif %}
 {% if br.vlan_filtering is defined and br.vlan_filtering in ['true', 'false'] %}

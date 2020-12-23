@@ -1,18 +1,18 @@
 ---
 - name: systemd_helper | Make modules-load.d directory
-  file:
+  ansible.builtin.file:
     path: "/etc/modules-load.d"
     state: "directory"
     owner: "root"
     group: "root"
     mode: "0755"
 - name: systemd_helper | Set facts about modules-load.d
-  set_fact:
+  ansible.builtin.set_fact:
     systemd_modules_load_create: "{{
       hostvars[inventory_hostname]['systemd_modules_load'] |
       community.general.json_query('[].modules_load[].file_name') }}"
 - name: systemd_helper | Find exists modules-load configuration files
-  find:
+  ansible.builtin.find:
     paths: "/etc/modules-load.d"
     recurse: "no"
     file_type: "file"
@@ -27,7 +27,7 @@
   vars:
     modules_load_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
 - name: systemd_helper | Delete exists modules-load configuration files
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: "absent"
   loop: "{{ vars['modules_load_find_result']['files'] | flatten(levels=1) }}"

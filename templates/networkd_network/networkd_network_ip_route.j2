@@ -1,29 +1,31 @@
 {{ '[Route]' }}
 {% if ip.gateway is defined and
-     (ip.gateway | ipaddr('host') or ip.gateway == '_dhcp') %}
+  (ip.gateway | ansible.netcommon.ipaddr('host') or ip.gateway == '_dhcp') %}
 {{ 'Gateway=' + ip.gateway }}
 {% endif %}
 {% if ip.gateway_on_link is defined and
-      ip.gateway_on_link in ['true', 'false'] %}
+  ip.gateway_on_link in ['true', 'false'] %}
 {{ 'GatewayOnlink=' + ip.gateway_on_link }}
 {% endif %}
-{% if ip.destination is defined and ip.destination | ipaddr() %}
+{% if ip.destination is defined and ip.destination |
+  ansible.netcommon.ipaddr() %}
 {{ 'Destination=' + ip.destination }}
 {% endif %}
-{% if ip.source is defined and ip.source | ipaddr() %}
+{% if ip.source is defined and ip.source | ansible.netcommon.ipaddr() %}
 {{ 'Source=' + ip.source }}
 {% endif %}
 {% if ip.metric is defined and ip.metric != '' %}
 {{ 'Metric=' ~ ip.metric }}
 {% endif %}
 {% if ip.ipv6_prefer is defined and
-      ip.ipv6_prefer in ['low', 'medium', 'high'] %}
+  ip.ipv6_prefer in ['low', 'medium', 'high'] %}
 {{ 'IPv6Preference=' + ip.ipv6_prefer }}
 {% endif %}
 {% if ip.scope is defined and ip.scope in ['global', 'link', 'host'] %}
 {{ 'Scope=' + ip.scope }}
 {% endif %}
-{% if ip.prefer_source is defined and ip.prefer_source | ipaddr('host') %}
+{% if ip.prefer_source is defined and ip.prefer_source |
+  ansible.netcommon.ipaddr('host') %}
 {{ 'PreferredSource=' + ip.prefer_source }}
 {% endif %}
 {% if ip.table is defined and ip.table != '' %}
@@ -33,11 +35,11 @@
 {{ 'Protocol=' ~ ip.protocol }}
 {% endif %}
 {% if ip.type is defined and
-      ip.type in ['unicast', 'blackhole', 'unreachable', 'prohibit'] %}
+  ip.type in ['unicast', 'blackhole', 'unreachable', 'prohibit'] %}
 {{ 'Type=' + ip.type }}
 {% endif %}
 {% if ip.initial_congestion_window is defined and
-      ip.initial_congestion_window != '' %}
+  ip.initial_congestion_window != '' %}
 {{ 'InitialCongestionWindow=' + ip.initial_congestion_window }}
 {% endif %}
 {% if ip.initial_advertised_receive_window is defined and
@@ -62,7 +64,7 @@
 {% endif %}
 {% if ip.multi_path_route is defined and ip.multi_path_route != '' %}
 {% for ipm in ip.multi_path_route %}
-{% if ipm.gateway is defined and ipm.gateway | ipaddr('host') %}
+{% if ipm.gateway is defined and ipm.gateway | ansible.netcommon.ipaddr('host') %}
 {{ 'MultiPathRoute=' + ipm.gateway -}}
 {% if ipm.iface is defined and ipm.iface != '' %}
 {{ '@' ~ ipm.iface -}}

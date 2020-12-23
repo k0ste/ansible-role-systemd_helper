@@ -1,8 +1,10 @@
 {{ '[Tunnel]' }}
-{% if item.tun_local is defined and item.tun_local | ipaddr('host') %}
+{% if item.tun_local is defined and item.tun_local |
+  ansible.netcommon.ipaddr('host') %}
 {{ 'Local=' + item.tun_local }}
 {% endif %}
-{% if item.tun_remote is defined and item.tun_remote | ipaddr('host') %}
+{% if item.tun_remote is defined and item.tun_remote |
+  ansible.netcommon.ipaddr('host') %}
 {{ 'Remote=' + item.tun_remote }}
 {% endif %}
 {% if item.tun_tos is defined and item.tun_tos != '' %}
@@ -12,7 +14,7 @@
 {{ 'TTL=' ~ item.tun_ttl }}
 {% endif %}
 {% if item.discover_path_mtu is defined and
-      item.discover_path_mtu in ['true', 'false'] %}
+  item.discover_path_mtu in ['true', 'false'] %}
 {{ 'DiscoverPathMTU=' + item.discover_path_mtu }}
 {% endif %}
 {% if item.ipv6_flow_label is defined and item.ipv6_flow_label != '' %}
@@ -40,11 +42,10 @@
 {{ 'Independent=' + item.independent }}
 {% endif %}
 {% if item.assign_to_loopback is defined and
-      item.assign_to_loopback in ['true', 'false'] %}
+  item.assign_to_loopback in ['true', 'false'] %}
 {{ 'AssignToLoopback=' + item.assign_to_loopback }}
 {% endif %}
-
 {% if item.allow_local_remote is defined and
-      item.allow_local_remote in ['true', 'false'] %}
+  item.allow_local_remote in ['true', 'false'] %}
 {{ 'AllowLocalRemote=' + item.allow_local_remote }}
 {% endif %}

@@ -1,10 +1,10 @@
 ---
 - name: systemd_helper | Stat resolv.conf path
-  stat:
+  ansible.builtin.stat:
     path: "/etc/resolv.conf"
   register: "systemd_resolv_link_stat"
 - name: systemd_helper | Delete resolv.conf because is file
-  file:
+  ansible.builtin.file:
     path: "/etc/resolv.conf"
     state: "absent"
   when:
@@ -12,7 +12,7 @@
   - "vars['systemd_resolv_link_stat']['stat']['islnk'] is defined"
   - "vars['systemd_resolv_link_stat']['stat']['islnk'] == False"
 - name: systemd_helper | Delete resolv.conf because is wrong link
-  file:
+  ansible.builtin.file:
     path: "/etc/resolv.conf"
     state: "absent"
   when:
@@ -22,7 +22,7 @@
       vars['systemd_resolv_link_stat']['stat']['lnk_target'] !=
       '/var/run/systemd/resolve/resolv.conf')"
 - name: systemd_helper | Make symlink for systemd-resolved
-  file:
+  ansible.builtin.file:
     src: "/var/run/systemd/resolve/resolv.conf"
     dest: "/etc/resolv.conf"
     state: "link"

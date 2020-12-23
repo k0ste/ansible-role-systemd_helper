@@ -1,6 +1,6 @@
 ---
 - name: systemd_helper | Deploy vconsole configuration
-  template:
+  ansible.builtin.template:
     src: "vconsole.j2"
     dest: "/etc/vconsole.conf"
     group: "root"

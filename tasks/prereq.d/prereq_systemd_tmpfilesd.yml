@@ -1,13 +1,13 @@
 ---
 - name: systemd_helper | Make tmpfiles.d directory
-  file:
+  ansible.builtin.file:
     path: "/etc/tmpfiles.d"
     state: "directory"
     owner: "root"
     group: "root"
     mode: "0755"
 - name: systemd_helper | Set facts about tmpfiles.d
-  set_fact:
+  ansible.builtin.set_fact:
     systemd_tmpfiles_create: "{{
       hostvars[inventory_hostname]['systemd_tmpfiles'] |
       community.general.json_query('[].create[].file_name') }}"
@@ -18,7 +18,7 @@
       hostvars[inventory_hostname]['systemd_tmpfiles'] |
       community.general.json_query('[].remove[].file_name') }}"
 - name: systemd_helper | Find exists tmpfiles configuration files
-  find:
+  ansible.builtin.find:
     paths: "/etc/tmpfiles.d"
     recurse: "no"
     file_type: "file"
@@ -33,7 +33,7 @@
   vars:
     tmpfiles_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
 - name: systemd_helper | Delete exists tmpfiles configuration files
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: "absent"
   loop: "{{ vars['tmpfiles_find_result']['files'] | flatten(levels=1) }}"

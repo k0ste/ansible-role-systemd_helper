@@ -1,14 +1,14 @@
 ---
 - name: Restart systemd-journald
-  systemd:
+  ansible.builtin.systemd:
     name: "systemd-journald"
     state: "restarted"
 - name: Cleanup udev script
-  file:
+  ansible.builtin.file:
     path: "/tmp/rule-syntax-check.py"
     state: "absent"
 - name: Restart systemd-timesyncd
-  systemd:
+  ansible.builtin.systemd:
     name: "systemd-timesyncd"
     state: "restarted"
   when:
@@ -21,7 +21,7 @@
   vars:
     systemd_timesyncd_restart: "[] | map(&restart || 'false', @) | [0]"
 - name: Restart systemd-resolved
-  systemd:
+  ansible.builtin.systemd:
     name: "systemd-resolved"
     state: "restarted"
   when:
@@ -34,7 +34,7 @@
   vars:
     systemd_resolved_restart: "[] | map(&restart || 'false', @) | [0]"
 - name: Restart systemd-networkd
-  systemd:
+  ansible.builtin.systemd:
     name: "systemd-networkd"
     state: "restarted"
   when:

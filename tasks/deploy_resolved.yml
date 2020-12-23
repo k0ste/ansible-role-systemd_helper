@@ -1,6 +1,6 @@
 ---
 - name: systemd_helper | Deploy resolved.conf
-  template:
+  ansible.builtin.template:
     src: "systemd_resolved.j2"
     dest: "/etc/systemd/resolved.conf"
     group: "root"
@@ -11,7 +11,7 @@
   - "Restart systemd-resolved"
 - meta: "flush_handlers"
 - name: systemd_helper | Enable systemd-resolved service
-  systemd:
+  ansible.builtin.systemd:
     name: "systemd-resolved"
     enabled: "yes"
   when:

@@ -1,13 +1,13 @@
 ---
 - name: systemd_helper | Make networkd directory
-  file:
+  ansible.builtin.file:
     path: "/etc/systemd/network"
     state: "directory"
     owner: "root"
     group: "root"
     mode: "0755"
 - name: systemd_helper | Set facts about networkd
-  set_fact:
+  ansible.builtin.set_fact:
     systemd_networkd_networkd: "{{
       hostvars[inventory_hostname]['systemd_networkd'] |
       community.general.json_query('[].networkd[]') }}"
@@ -15,7 +15,7 @@
       hostvars[inventory_hostname]['systemd_networkd'] |
       community.general.json_query('[].interfaces[].interface') }}"
 - name: systemd_helper | Find exists networkd configuration files
-  find:
+  ansible.builtin.find:
     paths: "/etc/systemd/network"
     recurse: "no"
     file_type: "file"
@@ -31,7 +31,7 @@
   vars:
     networkd_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
 - name: systemd_helper | Delete exists networkd configuration files
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: "absent"
   loop: "{{ vars['networkd_find_result']['files'] | flatten(levels=1) }}"
@@ -40,11 +40,11 @@
   when:
   - "vars['networkd_find_result']['files'] is defined"
 - name: systemd_helper | Stat default networkd link settings
-  stat:
+  ansible.builtin.stat:
     path: "/etc/systemd/network/99-default.link"
   register: "systemd_default_link_stat"
 - name: systemd_helper | Mask default networkd link
-  file:
+  ansible.builtin.file:
     path: "/etc/systemd/network/99-default.link"
     owner: "root"
     group: "root"

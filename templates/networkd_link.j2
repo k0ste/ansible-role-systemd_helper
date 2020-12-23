@@ -15,7 +15,7 @@
       network_netdev_kind in ['vlan', 'macvlan'] %}
 {{ 'OriginalName=' + network_netdev_name }}
 {% else %}
-{{ 'MACAddress=' + item.physaddr | hwaddr('linux')}}
+{{ 'MACAddress=' + item.physaddr | ansible.netcommon.hwaddr('linux') }}
 {% endif %}
 {% endif %}
 {{ '' }}
@@ -37,8 +37,8 @@
       item.macaddr_policy in ['persistent', 'random', 'never'] %}
 {{ 'MACAddressPolicy=' + item.macaddr_policy }}
 {% endif %}
-{% if item.macaddr is defined and item.macaddr | hwaddr() %}
-{{ 'MACAddress=' + item.macaddr | hwaddr('linux') }}
+{% if item.macaddr is defined and item.macaddr | ansible.netcommon.hwaddr() %}
+{{ 'MACAddress=' + item.macaddr | ansible.netcommon.hwaddr('linux') }}
 {% endif %}
 {% if item.altname_policy is defined and item.altname_policy in
   ['database', 'onboard', 'slot', 'path', 'mac'] %}

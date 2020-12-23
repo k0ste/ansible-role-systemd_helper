@@ -1,6 +1,6 @@
 ---
 - name: systemd_helper | Set facts about time and date settings
-  set_fact:
+  ansible.builtin.set_fact:
     systemd_timedatectl_timezone: "{{
       hostvars[inventory_hostname]['systemd_timesyncd'] |
       community.general.json_query('[].timezone') }}"
@@ -8,7 +8,7 @@
       hostvars[inventory_hostname]['systemd_timesyncd'] |
       community.general.json_query('[].timesyncd[]') }}"
 - name: systemd_helper | Set timezone
-  timezone:
+  community.general.timezone:
     name: "{{ vars['systemd_timedatectl_timezone'] | join() }}"
   when:
   - "vars['systemd_timedatectl_timezone'] != []"

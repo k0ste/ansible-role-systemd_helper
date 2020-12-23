@@ -1,6 +1,6 @@
 ---
 - name: systemd_helper | Deploy modules-load
-  template:
+  ansible.builtin.template:
     src: "systemd_modules_load.j2"
     dest: "{{ '/etc/modules-load.d' + '/' ~ vars['outer_item'] ~ '.conf' }}"
     group: "root"

@@ -5,9 +5,9 @@
 {{ '[NetDev]' }}
 {{ 'Name=' ~ network_netdev_name }}
 {{ 'Kind=' + network_netdev_kind -}}
-{% if item.macaddr is defined and item.macaddr | hwaddr() %}
+{% if item.macaddr is defined and item.macaddr | ansible.netcommon.hwaddr() %}
 {{ '' }}
-{{ 'MACAddress=' ~ item.macaddr | hwaddr('linux') -}}
+{{ 'MACAddress=' ~ item.macaddr | ansible.netcommon.hwaddr('linux') -}}
 {% endif %}
 {% if item.mtu is defined and item.mtu != '' %}
 {{ '' }}

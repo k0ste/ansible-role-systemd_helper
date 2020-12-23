@@ -1,7 +1,7 @@
-{% if (ne.address is defined and ne.address | ipaddr('host')) and
-      (ne.link_layer_address is defined and
-      (ne.link_layer_address | ipaddr('host') or
-       ne.link_layer_address | hwaddr())) %}
+{% if (ne.address is defined and ne.address |
+  ansible.netcommon.ipaddr('host')) and (ne.link_layer_address is defined and
+  (ne.link_layer_address | ansible.netcommon.ipaddr('host') or
+  ne.link_layer_address | ansible.netcommon.hwaddr())) %}
 {{ '[Neighbor]' }}
 {{ 'Address=' + ne.address }}
 {{ 'LinkLayerAddress=' + ne.link_layer_address }}

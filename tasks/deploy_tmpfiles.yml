@@ -1,6 +1,6 @@
 ---
 - name: systemd_helper | Deploy tmpfiles
-  template:
+  ansible.builtin.template:
     src: "systemd_tmpfiles.j2"
     dest: "{{ '/etc/tmpfiles.d' + '/' ~ vars['outer_item'] ~ '.conf' }}"
     group: "root"
