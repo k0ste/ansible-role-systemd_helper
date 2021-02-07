@@ -1690,6 +1690,9 @@ systemd_networkd:
 # Takes the minor id in hexadecimal of the default class. Unclassified traffic
 # gets sent to the class. Defaults to unset.
         default: '30'
+# Takes an unsigned integer. The DRR quantums are calculated by dividing the
+# value configured in 'rate' by 'r2q'.
+        r2q: '10'
 # Manages the traffic control class of Hierarchy Token Bucket (htb).
       qdisc_htb_class:
 # Specifies the parent Queueing Discipline (qdisc). Takes one of 'root', or a
@@ -1704,6 +1707,20 @@ systemd_networkd:
 # the lowest priority field are tried for packets first. This setting is
 # mandatory.
         prio: '1'
+# Specifies how many bytes to serve from leaf at once. When suffixed with K, M,
+# or G, the specified size is parsed as Kilobytes, Megabytes, or Gigabytes,
+# respectively, to the base of 1024.
+        quantum: '1000'
+# Specifies the maximum packet size we create. When suffixed with K, M, or G,
+# the specified size is parsed as Kilobytes, Megabytes, or Gigabytes,
+# respectively, to the base of 1024.
+        mtu: '1500'
+# Takes an unsigned integer which specifies per-packet size overhead used in
+# rate computations. When suffixed with K, M, or G, the specified size is
+# parsed as Kilobytes, Megabytes, or Gigabytes, respectively, to the base of
+# 1024.
+        overhead: ''
+
 # Specifies the maximum rate this class and all its children are guaranteed.
 # When suffixed with K, M, or G, the specified size is parsed as Kilobits,
 # Megabits, or Gigabits, respectively, to the base of 1000. This setting is
@@ -1714,6 +1731,14 @@ systemd_networkd:
 # parsed as Kilobits, Megabits, or Gigabits, respectively, to the base of 1000.
 # When unset, the value specified with Rate= is used.
         ceil: '0.5M'
+# Specifies the maximum bytes burst which can be accumulated during idle period.
+# When suffixed with K, M, or G, the specified size is parsed as Kilobytes,
+# Megabytes, or Gigabytes, respectively, to the base of 1024.
+        burst: '15k'
+# Specifies the maximum bytes burst for ceil which can be accumulated during
+# idle period. When suffixed with K, M, or G, the specified size is parsed as
+# Kilobytes, Megabytes, or Gigabytes, respectively, to the base of 1024.
+        cburst: ''
       - parent: 'root'
         classid: '0002:0031'
         prio: '1'
