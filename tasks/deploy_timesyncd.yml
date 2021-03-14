@@ -8,15 +8,15 @@
     mode: "0644"
     force: "yes"
   notify:
-  - "Restart systemd-timesyncd"
+    - "Restart systemd-timesyncd"
 - name: systemd_helper | Enable systemd-timesyncd service
   ansible.builtin.systemd:
     name: "systemd-timesyncd"
     enabled: "yes"
   when:
-  - "hostvars[inventory_hostname]['systemd_timesyncd'] |
-     community.general.json_query(vars['systemd_timesyncd_enable']) is defined"
-  - "hostvars[inventory_hostname]['systemd_timesyncd'] |
-     community.general.json_query(vars['systemd_timesyncd_enable']) == 'true'"
+    - "hostvars[inventory_hostname]['systemd_timesyncd'] |
+       community.general.json_query(vars['systemd_timesyncd_enable']) is defined"
+    - "hostvars[inventory_hostname]['systemd_timesyncd'] |
+       community.general.json_query(vars['systemd_timesyncd_enable']) == 'true'"
   vars:
     systemd_timesyncd_enable: "[] | map(&enable || 'false', @) | [0]"

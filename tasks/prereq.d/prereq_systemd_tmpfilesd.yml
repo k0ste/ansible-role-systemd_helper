@@ -26,10 +26,10 @@
     use_regex: "true"
   register: "tmpfiles_find_result"
   when:
-  - "hostvars[inventory_hostname]['systemd_tmpfiles'] |
-     community.general.json_query(vars['tmpfiles_drop_exists']) is defined"
-  - "hostvars[inventory_hostname]['systemd_tmpfiles'] |
-     community.general.json_query(vars['tmpfiles_drop_exists']) == 'true'"
+    - "hostvars[inventory_hostname]['systemd_tmpfiles'] |
+       community.general.json_query(vars['tmpfiles_drop_exists']) is defined"
+    - "hostvars[inventory_hostname]['systemd_tmpfiles'] |
+       community.general.json_query(vars['tmpfiles_drop_exists']) == 'true'"
   vars:
     tmpfiles_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
 - name: systemd_helper | Delete exists tmpfiles configuration files
@@ -40,4 +40,4 @@
   loop_control:
     label: "{{ item.path }}"
   when:
-  - "vars['tmpfiles_find_result']['files'] is defined"
+    - "vars['tmpfiles_find_result']['files'] is defined"

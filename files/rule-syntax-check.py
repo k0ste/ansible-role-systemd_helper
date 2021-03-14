@@ -1,4 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 # Simple udev rules syntax checker
 #
 # (C) 2010 Canonical Ltd.

@@ -24,10 +24,10 @@
     use_regex: "true"
   register: "networkd_find_result"
   when:
-  - "hostvars[inventory_hostname]['systemd_networkd'] |
-     community.general.json_query(vars['networkd_drop_exists']) is defined"
-  - "hostvars[inventory_hostname]['systemd_networkd'] |
-     community.general.json_query(vars['networkd_drop_exists']) == 'true'"
+    - "hostvars[inventory_hostname]['systemd_networkd'] |
+       community.general.json_query(vars['networkd_drop_exists']) is defined"
+    - "hostvars[inventory_hostname]['systemd_networkd'] |
+       community.general.json_query(vars['networkd_drop_exists']) == 'true'"
   vars:
     networkd_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
 - name: systemd_helper | Delete exists networkd configuration files
@@ -38,7 +38,7 @@
   loop_control:
     label: "{{ item.path }}"
   when:
-  - "vars['networkd_find_result']['files'] is defined"
+    - "vars['networkd_find_result']['files'] is defined"
 - name: systemd_helper | Stat default networkd link settings
   ansible.builtin.stat:
     path: "/etc/systemd/network/99-default.link"
@@ -51,4 +51,4 @@
     mode: "0644"
     state: "touch"
   when:
-  - "vars['systemd_default_link_stat']['stat']['exists'] == False"
+    - "vars['systemd_default_link_stat']['stat']['exists'] == False"

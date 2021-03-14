@@ -20,10 +20,10 @@
     use_regex: "true"
   register: "modules_load_find_result"
   when:
-  - "hostvars[inventory_hostname]['systemd_modules_load'] |
-     community.general.json_query(vars['modules_load_drop_exists']) is defined"
-  - "hostvars[inventory_hostname]['systemd_modules_load'] |
-     community.general.json_query(vars['modules_load_drop_exists']) == 'true'"
+    - "hostvars[inventory_hostname]['systemd_modules_load'] |
+       community.general.json_query(vars['modules_load_drop_exists']) is defined"
+    - "hostvars[inventory_hostname]['systemd_modules_load'] |
+       community.general.json_query(vars['modules_load_drop_exists']) == 'true'"
   vars:
     modules_load_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
 - name: systemd_helper | Delete exists modules-load configuration files
@@ -34,4 +34,4 @@
   loop_control:
     label: "{{ item.path }}"
   when:
-  - "vars['modules_load_find_result']['files'] is defined"
+    - "vars['modules_load_find_result']['files'] is defined"

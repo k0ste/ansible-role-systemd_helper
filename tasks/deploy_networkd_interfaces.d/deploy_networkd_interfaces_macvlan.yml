@@ -14,7 +14,7 @@
     label: "{{ '[link] interface: ' ~ item.name ~ '@' ~ outer_item ~
       ' [' + network_netdev_kind + ']' }}"
   notify:
-  - "Restart systemd-networkd"
+    - "Restart systemd-networkd"
   vars:
     network_netdev_kind: "vlan"
     network_netdev_name: "{{ item.name }}"
@@ -33,7 +33,7 @@
     label: "{{ '[link] interface: ' ~ item.name ~ '@' ~ outer_item ~
       ' [' + network_netdev_kind + ']' }}"
   notify:
-  - "Restart systemd-networkd"
+    - "Restart systemd-networkd"
   vars:
     network_netdev_kind: "vlan"
     network_netdev_name: "{{ item.name }}"
@@ -52,7 +52,7 @@
     label: "{{ '[link] interface: ' ~ item.name ~ '@' ~ outer_item ~
       ' [' + network_netdev_kind + ']' }}"
   notify:
-  - "Restart systemd-networkd"
+    - "Restart systemd-networkd"
   vars:
     network_netdev_kind: "vlan"
     network_netdev_name: "{{ item.name }}"

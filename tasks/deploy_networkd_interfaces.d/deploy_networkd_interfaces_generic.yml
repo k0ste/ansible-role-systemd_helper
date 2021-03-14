@@ -14,7 +14,7 @@
     label: "{{ '[network] interface: ' ~ vars['outer_item'] ~
       ' [' + item.type + ']' }}"
   notify:
-  - "Restart systemd-networkd"
+    - "Restart systemd-networkd"
   vars:
     network_netdev_kind: "{{ item.type }}"
     network_netdev_name: "{{ vars['outer_item'] }}"
@@ -33,9 +33,9 @@
     label: "{{ '[netdev] interface: ' ~ vars['outer_item'] ~
       ' [' + item.type + ']' }}"
   when:
-  - "item.type != 'ether'"
+    - "item.type != 'ether'"
   notify:
-  - "Restart systemd-networkd"
+    - "Restart systemd-networkd"
   vars:
     network_netdev_kind: "{{ item.type }}"
     network_netdev_name: "{{ vars['outer_item'] }}"
@@ -54,9 +54,9 @@
     label: "{{ '[link] interface: ' ~ vars['outer_item'] ~
       ' [' + item.type + ']' }}"
   when:
-  - "item.type == 'ether'"
+    - "item.type == 'ether'"
   notify:
-  - "Restart systemd-networkd"
+    - "Restart systemd-networkd"
   vars:
     network_netdev_kind: "{{ item.type }}"
     network_netdev_name: "{{ vars['outer_item'] }}"

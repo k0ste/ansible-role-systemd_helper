@@ -12,5 +12,5 @@
     label: "{{ 'Try to deploy macvlans on vlan interface: ' ~
       outer_item_vlan['name'] }}"
   when:
-  - "outer_item_vlan['macvlans'] is defined"
-  - "outer_item_vlan['macvlans'] != []"
+    - "outer_item_vlan['macvlans'] is defined"
+    - "outer_item_vlan['macvlans'] != []"

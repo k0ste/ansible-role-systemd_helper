@@ -15,7 +15,7 @@
     label: "{{ '[link] interface: ' ~ item.name ~ '@' ~
       vars['outer_item_vlan']['name'] ~ ' [' + network_netdev_kind + ']' }}"
   notify:
-  - "Restart systemd-networkd"
+    - "Restart systemd-networkd"
   vars:
     network_netdev_kind: "macvlan"
     network_netdev_name: "{{ item.name }}"
@@ -35,7 +35,7 @@
     label: "{{ '[link] interface: ' ~ item.name ~ '@' ~
       vars['outer_item_vlan']['name'] ~ ' [' + network_netdev_kind + ']' }}"
   notify:
-  - "Restart systemd-networkd"
+    - "Restart systemd-networkd"
   vars:
     network_netdev_kind: "macvlan"
     network_netdev_name: "{{ item.name }}"
@@ -55,7 +55,7 @@
     label: "{{ '[link] interface: ' ~ item.name ~ '@' ~
       vars['outer_item_vlan']['name'] ~ ' [' + network_netdev_kind + ']' }}"
   notify:
-  - "Restart systemd-networkd"
+    - "Restart systemd-networkd"
   vars:
     network_netdev_kind: "macvlan"
     network_netdev_name: "{{ item.name }}"

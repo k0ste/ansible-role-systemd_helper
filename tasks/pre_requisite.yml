@@ -6,42 +6,43 @@
 - name: systemd_helper | Assert that systemd path exists
   ansible.builtin.assert:
     that:
-    - "vars['systemd_stat']['stat']['exists'] == True"
+      - "vars['systemd_stat']['stat']['exists'] == True"
     msg: "/etc/systemd not exists, something wrong with this system."
     quiet: "true"
 - name: systemd_helper | Assert that system manager is systemd
   ansible.builtin.assert:
     that:
-    - "hostvars[inventory_hostname]['ansible_service_mgr'] == 'systemd'"
+      - "hostvars[inventory_hostname]['ansible_service_mgr'] == 'systemd'"
     msg: "System manager is not systemd."
     quiet: "true"
 - include_tasks: 'prereq.d/prereq_systemd_timedatectl.yml'
   when:
-  - "hostvars[inventory_hostname]['systemd_timesyncd'] is defined"
-  - "hostvars[inventory_hostname]['systemd_timesyncd'] != ''"
+    - "hostvars[inventory_hostname]['systemd_timesyncd'] is defined"
+    - "hostvars[inventory_hostname]['systemd_timesyncd'] != ''"
 - include_tasks: 'prereq.d/prereq_systemd_tmpfilesd.yml'
   when:
-  - "hostvars[inventory_hostname]['systemd_tmpfiles'] is defined"
-  - "hostvars[inventory_hostname]['systemd_tmpfiles'] != ''"
+    - "hostvars[inventory_hostname]['systemd_tmpfiles'] is defined"
+    - "hostvars[inventory_hostname]['systemd_tmpfiles'] != ''"
 - include_tasks: 'prereq.d/prereq_systemd_modules_load.yml'
   when:
-  - "hostvars[inventory_hostname]['systemd_modules_load'] is defined"
-  - "hostvars[inventory_hostname]['systemd_modules_load'] != ''"
+    - "hostvars[inventory_hostname]['systemd_modules_load'] is defined"
+    - "hostvars[inventory_hostname]['systemd_modules_load'] != ''"
 - include_tasks: 'prereq.d/prereq_systemd_udev.yml'
   when:
-  - "hostvars[inventory_hostname]['systemd_udev'] is defined"
-  - "hostvars[inventory_hostname]['systemd_udev'] != ''"
+    - "hostvars[inventory_hostname]['systemd_udev'] is defined"
+    - "hostvars[inventory_hostname]['systemd_udev'] != ''"
 - include_tasks: 'prereq.d/prereq_systemd_resolved.yml'
   when:
-  - "hostvars[inventory_hostname]['systemd_resolved'] is defined"
-  - "hostvars[inventory_hostname]['systemd_resolved'] != ''"
-  - "hostvars[inventory_hostname]['systemd_resolved'] |
-     community.general.json_query(vars['systemd_resolved_make_link']) is defined"
-  - "hostvars[inventory_hostname]['systemd_resolved'] |
-     community.general.json_query(vars['systemd_resolved_make_link']) == 'true'"
+    - "hostvars[inventory_hostname]['systemd_resolved'] is defined"
+    - "hostvars[inventory_hostname]['systemd_resolved'] != ''"
+    - "hostvars[inventory_hostname]['systemd_resolved'] |
+      community.general.json_query(vars['systemd_resolved_make_link']) is
+      defined"
+    - "hostvars[inventory_hostname]['systemd_resolved'] |
+      community.general.json_query(vars['systemd_resolved_make_link']) == 'true'"
   vars:
     systemd_resolved_make_link: "[] | map(&make_link || 'false', @) | [0]"
 - include_tasks: 'prereq.d/prereq_systemd_networkd.yml'
   when:
-  - "hostvars[inventory_hostname]['systemd_networkd'] is defined"
-  - "hostvars[inventory_hostname]['systemd_networkd'] != ''"
+    - "hostvars[inventory_hostname]['systemd_networkd'] is defined"
+    - "hostvars[inventory_hostname]['systemd_networkd'] != ''"

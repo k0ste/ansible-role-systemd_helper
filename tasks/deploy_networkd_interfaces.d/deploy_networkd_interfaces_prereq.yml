@@ -20,9 +20,9 @@
   loop_control:
     label: "{{ 'interface: ' ~ vars['outer_item'] ~ ' [' + item.type + ']' }}"
   when:
-  - "item.type == 'ether'"
-  - "item.match_override is not defined or (item.match_override is defined and
-     item.match_override == '')"
+    - "item.type == 'ether'"
+    - "item.match_override is not defined or (item.match_override is defined and
+      item.match_override == '')"
 - name: systemd_helper | Assert that physaddr for interface is valid hwaddr
   ansible.builtin.assert:
     that: "item.physaddr is defined and item.physaddr | hwaddr()"
@@ -34,6 +34,6 @@
   loop_control:
     label: "{{ 'interface: ' ~ vars['outer_item'] ~ ' [' + item.type + ']' }}"
   when:
-  - "item.type == 'ether'"
-  - "item.match_override is not defined or (item.match_override is defined and
-     item.match_override == '')"
+    - "item.type == 'ether'"
+    - "item.match_override is not defined or (item.match_override is defined and
+      item.match_override == '')"

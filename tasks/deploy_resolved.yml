@@ -8,16 +8,16 @@
     mode: "0644"
     force: "yes"
   notify:
-  - "Restart systemd-resolved"
+    - "Restart systemd-resolved"
 - meta: "flush_handlers"
 - name: systemd_helper | Enable systemd-resolved service
   ansible.builtin.systemd:
     name: "systemd-resolved"
     enabled: "yes"
   when:
-  - "hostvars[inventory_hostname]['systemd_resolved'] |
-     community.general.json_query(vars['systemd_resolved_enable']) is defined"
-  - "hostvars[inventory_hostname]['systemd_resolved'] |
-     community.general.json_query(vars['systemd_resolved_enable']) == 'true'"
+    - "hostvars[inventory_hostname]['systemd_resolved'] |
+       community.general.json_query(vars['systemd_resolved_enable']) is defined"
+    - "hostvars[inventory_hostname]['systemd_resolved'] |
+       community.general.json_query(vars['systemd_resolved_enable']) == 'true'"
   vars:
     systemd_resolved_enable: "[] | map(&enable || 'false', @) | [0]"

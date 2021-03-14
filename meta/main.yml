@@ -5,21 +5,21 @@ galaxy_info:
   description: "Helper for deploy settings for systemd."
   company: "LLC Open Technologies"
   license: "GPL"
-  min_ansible_version: "2.10"
+  min_ansible_version: "3.0.0"
   platforms:
-  - name: Archlinux
-    versions:
-    - any
-  - name: Fedora
-    versions:
-     - all
-  - name: Ubuntu
-    versions:
-     - all
-  - name: EL
-    versions:
-    - 8
+    - name: Archlinux
+      versions:
+        - any
+    - name: Fedora
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+    - name: EL
+      versions:
+        - 8
   categories:
-  - system
-  - networking
+    - system
+    - networking
 dependencies: []

@@ -8,15 +8,15 @@
     mode: "0644"
     force: "yes"
   notify:
-  - "Restart systemd-networkd"
+    - "Restart systemd-networkd"
 - name: systemd_helper | Enable systemd-networkd service
   ansible.builtin.systemd:
     name: "systemd-networkd"
     enabled: "yes"
   when:
-  - "hostvars[inventory_hostname]['systemd_networkd'] |
-     community.general.json_query(vars['systemd_networkd_enable']) is defined"
-  - "hostvars[inventory_hostname]['systemd_networkd'] |
-     community.general.json_query(vars['systemd_networkd_enable']) == 'true'"
+    - "hostvars[inventory_hostname]['systemd_networkd'] |
+       community.general.json_query(vars['systemd_networkd_enable']) is defined"
+    - "hostvars[inventory_hostname]['systemd_networkd'] |
+       community.general.json_query(vars['systemd_networkd_enable']) == 'true'"
   vars:
     systemd_networkd_enable: "[] | map(&enable || 'false', @) | [0]"
