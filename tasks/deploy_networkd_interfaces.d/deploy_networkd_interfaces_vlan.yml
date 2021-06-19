@@ -11,7 +11,7 @@
     community.general.json_query(\"[].interfaces[?interface=='\" ~
     vars['outer_item'] ~ \"'].vlans[]\") | flatten(levels=1) }}"
   loop_control:
-    label: "{{ '[link] interface: ' ~ item.name ~ '@' ~ outer_item ~
+    label: "{{ '[link] interface: ' ~ item.name ~ '@' ~ vars['outer_item'] ~
       ' [' + network_netdev_kind + ']' }}"
   notify:
     - "Restart systemd-networkd"
@@ -30,7 +30,7 @@
     community.general.json_query(\"[].interfaces[?interface=='\" ~
     vars['outer_item'] ~ \"'].vlans[]\") | flatten(levels=1) }}"
   loop_control:
-    label: "{{ '[link] interface: ' ~ item.name ~ '@' ~ outer_item ~
+    label: "{{ '[link] interface: ' ~ item.name ~ '@' ~ vars['outer_item'] ~
       ' [' + network_netdev_kind + ']' }}"
   notify:
     - "Restart systemd-networkd"
@@ -49,7 +49,7 @@
     community.general.json_query(\"[].interfaces[?interface=='\" ~
     vars['outer_item'] ~ \"'].vlans[]\") | flatten(levels=1) }}"
   loop_control:
-    label: "{{ '[link] interface: ' ~ item.name ~ '@' ~ outer_item ~
+    label: "{{ '[link] interface: ' ~ item.name ~ '@' ~ vars['outer_item'] ~
       ' [' + network_netdev_kind + ']' }}"
   notify:
     - "Restart systemd-networkd"
