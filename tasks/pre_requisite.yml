@@ -44,7 +44,8 @@
       community.general.json_query(vars['systemd_resolved_make_link']) is
       defined"
     - "hostvars[inventory_hostname]['systemd_resolved'] |
-      community.general.json_query(vars['systemd_resolved_make_link']) == 'true'"
+      community.general.json_query(vars['systemd_resolved_make_link']) ==
+      'true'"
   vars:
     systemd_resolved_make_link: "[] | map(&make_link || 'false', @) | [0]"
 - ansible.builtin.include_tasks:

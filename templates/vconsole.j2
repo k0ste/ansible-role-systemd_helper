@@ -1,6 +1,6 @@
-{{ '## ' + 'vconsole.conf' }}
+{{ '## vconsole.conf' }}
 {{ '# ' + ansible_managed }}
-{{ '# ' + 'Do not edit manually' }}
+{{ '# Do not edit manually' }}
 
 {% for c in hostvars[inventory_hostname]['systemd_vconsole'] %}
 {% if c.keymap is defined and c.keymap != '' %}

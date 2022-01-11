@@ -1,6 +1,6 @@
 {{ '## ' ~ network_netdev_name ~ '.network' }}
 {{ '# ' + ansible_managed }}
-{{ '# ' + 'Do not edit manually' }}
+{{ '# Do not edit manually' }}
 
 {{ '[Match]' }}
 {% if item.match_override is defined and item.match_override != '' %}

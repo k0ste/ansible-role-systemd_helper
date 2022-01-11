@@ -1,5 +1,6 @@
 ---
-- import_tasks: "pre_requisite.yml"
+- ansible.builtin.import_tasks:
+    file: "pre_requisite.yml"
 - ansible.builtin.include_tasks:
     file: "deploy_resolved.yml"
   when:
@@ -20,7 +21,8 @@
   when:
     - "hostvars[inventory_hostname]['systemd_vconsole'] is defined"
     - "hostvars[inventory_hostname]['systemd_vconsole'] != ''"
-- import_tasks: "tmpfiles_executor.yml"
+- ansible.builtin.import_tasks:
+    file: "tmpfiles_executor.yml"
 - ansible.builtin.include_tasks:
     file: "modules_load_executor.yml"
   when:

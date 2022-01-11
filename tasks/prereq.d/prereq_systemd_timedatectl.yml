@@ -1,11 +1,11 @@
 ---
 - name: systemd_helper | Set facts about time and date settings
   ansible.builtin.set_fact:
-    systemd_timedatectl_timezone: "{{
-      hostvars[inventory_hostname]['systemd_timesyncd'] |
+    systemd_timedatectl_timezone:
+      "{{ hostvars[inventory_hostname]['systemd_timesyncd'] |
       community.general.json_query('[].timezone') }}"
-    systemd_timedatectl_timesyncd: "{{
-      hostvars[inventory_hostname]['systemd_timesyncd'] |
+    systemd_timedatectl_timesyncd:
+      "{{ hostvars[inventory_hostname]['systemd_timesyncd'] |
       community.general.json_query('[].timesyncd[]') }}"
 - name: systemd_helper | Set timezone
   community.general.timezone:

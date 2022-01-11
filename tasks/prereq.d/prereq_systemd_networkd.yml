@@ -8,11 +8,11 @@
     mode: "0755"
 - name: systemd_helper | Set facts about networkd
   ansible.builtin.set_fact:
-    systemd_networkd_networkd: "{{
-      hostvars[inventory_hostname]['systemd_networkd'] |
+    systemd_networkd_networkd:
+      "{{ hostvars[inventory_hostname]['systemd_networkd'] |
       community.general.json_query('[].networkd[]') }}"
-    systemd_networkd_interfaces: "{{
-      hostvars[inventory_hostname]['systemd_networkd'] |
+    systemd_networkd_interfaces:
+      "{{ hostvars[inventory_hostname]['systemd_networkd'] |
       community.general.json_query('[].interfaces[].interface') }}"
 - name: systemd_helper | Find exists networkd configuration files
   ansible.builtin.find:
@@ -32,11 +32,11 @@
     networkd_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
 - name: systemd_helper | Delete exists networkd configuration files
   ansible.builtin.file:
-    path: "{{ item.path }}"
+    path: "{{ item['path'] }}"
     state: "absent"
   loop: "{{ vars['networkd_find_result']['files'] | flatten(levels=1) }}"
   loop_control:
-    label: "{{ item.path }}"
+    label: "{{ item['path'] }}"
   when:
     - "vars['networkd_find_result']['files'] is defined"
 - name: systemd_helper | Stat default networkd link settings

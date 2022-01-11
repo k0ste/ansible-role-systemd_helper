@@ -1,6 +1,6 @@
-{{ '## ' + 'timesyncd.conf' }}
+{{ '## timesyncd.conf' }}
 {{ '# ' + ansible_managed }}
-{{ '# ' + 'Do not edit manually' }}
+{{ '# Do not edit manually' }}
 
 {{ '[Time]' }}
 {% for t in vars['systemd_timedatectl_timesyncd'] %}

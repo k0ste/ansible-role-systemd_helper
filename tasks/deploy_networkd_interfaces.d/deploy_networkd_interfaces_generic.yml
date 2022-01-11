@@ -12,11 +12,11 @@
     vars['outer_item'] ~ \"']\") | flatten(levels=1) }}"
   loop_control:
     label: "{{ '[network] interface: ' ~ vars['outer_item'] ~
-      ' [' + item.type + ']' }}"
+      ' [' + item['type'] + ']' }}"
   notify:
     - "Restart systemd-networkd"
   vars:
-    network_netdev_kind: "{{ item.type }}"
+    network_netdev_kind: "{{ item['type'] }}"
     network_netdev_name: "{{ vars['outer_item'] }}"
 - name: systemd_helper | Deploy networkd [netdev]
   template:
@@ -31,13 +31,13 @@
     vars['outer_item'] ~ \"']\") | flatten(levels=1) }}"
   loop_control:
     label: "{{ '[netdev] interface: ' ~ vars['outer_item'] ~
-      ' [' + item.type + ']' }}"
+      ' [' + item['type'] + ']' }}"
   when:
-    - "item.type != 'ether'"
+    - "item['type'] != 'ether'"
   notify:
     - "Restart systemd-networkd"
   vars:
-    network_netdev_kind: "{{ item.type }}"
+    network_netdev_kind: "{{ item['type'] }}"
     network_netdev_name: "{{ vars['outer_item'] }}"
 - name: systemd_helper | Deploy networkd [link]
   ansible.builtin.template:
@@ -52,11 +52,11 @@
     vars['outer_item'] ~ \"']\") | flatten(levels=1) }}"
   loop_control:
     label: "{{ '[link] interface: ' ~ vars['outer_item'] ~
-      ' [' + item.type + ']' }}"
+      ' [' + item['type'] + ']' }}"
   when:
-    - "item.type == 'ether'"
+    - "item['type'] == 'ether'"
   notify:
     - "Restart systemd-networkd"
   vars:
-    network_netdev_kind: "{{ item.type }}"
+    network_netdev_kind: "{{ item['type'] }}"
     network_netdev_name: "{{ vars['outer_item'] }}"

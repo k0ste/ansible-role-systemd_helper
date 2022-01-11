@@ -1,6 +1,6 @@
-{{ '## ' + 'resolved.conf' }}
+{{ '## resolved.conf' }}
 {{ '# ' + ansible_managed }}
-{{ '# ' + 'Do not edit manually' }}
+{{ '# Do not edit manually' }}
 
 {{ '[Resolve]' }}
 {% for r in hostvars[inventory_hostname]['systemd_resolved'] %}

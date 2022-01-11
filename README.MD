@@ -326,8 +326,24 @@ systemd_networkd:
   restart: 'true'
   networkd:
   - network:
+# If set to 'yes', then systemd-networkd measures the traffic of each
+# interface, and networkctl status INTERFACE shows the measured speed.
+# Defaults to 'no'.
     - speed_meter: 'no'
+# Specifies the time interval to calculate the traffic speed of each interface.
+# If speed_meter is 'no', the value is ignored. Defaults to 10sec.
       speed_meter_interval: '10'
+# When 'yes, systemd-networkd will remove rules that are not configured (except
+# for rules with protocol "kernel"). When 'no', it will not remove any foreign
+# rules. Defaults to yes.
+      manage_foreign_routing_policy_rules: 'yes'
+# When 'yes', systemd-networkd will remove routes that are not configured in
+# .network files (except for routes with protocol 'kernel', 'dhcp' when
+# 'keep_configuration' is 'true' or 'dhcp', and 'static' when
+# 'keep_configuration' is 'true' or 'static'). When 'no', it will not remove
+# any foreign routes, keeping them even if they are not configured in a .network
+# file. Defaults to 'yes'.
+      manage_foreign_routes: 'yes'
 # This section configures the DHCP Unique Identifier (DUID) value used by DHCP
 # protocol. DHCPv6 client protocol sends the DHCP Unique Identifier and the
 # interface Identity Association Identifier (IAID) to a DHCP server when
@@ -1382,15 +1398,15 @@ systemd_networkd:
       vlan_id: '6'
       address: '192.168.5.10/24'
       gateway: '192.168.5.1'
-# Nexthop is used to manipulate entries in the kernel's nexthop tables.
+# Nexthop is used to manipulate entries in the kernel's nexthop tables
       ip_next_hop:
 # The id of the nexthop. If unspecified or '0' then automatically chosen by
-# kernel.
+# kernel
       - id: '1'
         gateway: '192.168.5.1'
     - name: 'vlan7'
       vlan_id: '7'
-# The name of the VRF to add the link to.
+# The name of the VRF to add the link to
       vrf: 'vrf7'
       address: '100.200.200.1/24'
     - name: 'vlan8'
@@ -1402,11 +1418,11 @@ systemd_networkd:
       address: '101.201.201.1/24'
 # A 'neighbors' section adds a permanent, static entry to the neighbor table
 # (IPv6) or ARP table (IPv4) for the given hardware address on the links
-# matched for the network.
+# matched for the network
       neighbors:
-# The IP address of the neighbor.
+# The IP address of the neighbor
       - address: '101.201.201.2'
-# The link layer address (MAC address or IP address) of the neighbor.
+# The link layer address (MAC address or IP address) of the neighbor
         link_layer_address: '6c:62:6d:92:37:82'
       - address: '2001:db8:0:f102::17'
         link_layer_address: '2a00:ffde:4567:edde::4988'

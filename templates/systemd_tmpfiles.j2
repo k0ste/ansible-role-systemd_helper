@@ -1,6 +1,6 @@
 {{ '## ' + item.file_name + '.conf' }}
 {{ '# ' + ansible_managed }}
-{{ '# ' + 'Do not edit manually' }}
+{{ '# Do not edit manually' }}
 
 {{ item.type + ' ' + item.path -}}
 {% if item.mode is defined %}{{ ' ' + item.mode }}{% else %}{{ ' -' }}{% endif %}

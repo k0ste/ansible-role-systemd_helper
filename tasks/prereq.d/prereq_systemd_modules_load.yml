@@ -8,8 +8,8 @@
     mode: "0755"
 - name: systemd_helper | Set facts about modules-load.d
   ansible.builtin.set_fact:
-    systemd_modules_load_create: "{{
-      hostvars[inventory_hostname]['systemd_modules_load'] |
+    systemd_modules_load_create:
+      "{{ hostvars[inventory_hostname]['systemd_modules_load'] |
       community.general.json_query('[].modules_load[].file_name') }}"
 - name: systemd_helper | Find exists modules-load configuration files
   ansible.builtin.find:
@@ -21,17 +21,18 @@
   register: "modules_load_find_result"
   when:
     - "hostvars[inventory_hostname]['systemd_modules_load'] |
-       community.general.json_query(vars['modules_load_drop_exists']) is defined"
+       community.general.json_query(vars['modules_load_drop_exists']) is
+       defined"
     - "hostvars[inventory_hostname]['systemd_modules_load'] |
        community.general.json_query(vars['modules_load_drop_exists']) == 'true'"
   vars:
     modules_load_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
 - name: systemd_helper | Delete exists modules-load configuration files
   ansible.builtin.file:
-    path: "{{ item.path }}"
+    path: "{{ item['path'] }}"
     state: "absent"
   loop: "{{ vars['modules_load_find_result']['files'] | flatten(levels=1) }}"
   loop_control:
-    label: "{{ item.path }}"
+    label: "{{ item['path'] }}"
   when:
     - "vars['modules_load_find_result']['files'] is defined"
