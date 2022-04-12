@@ -85,7 +85,7 @@
 {% if loop.first %}
 {{ 'BlackList' + '=' -}}
 {% endif %}
-{% if db | ansible.netcommon.ipaddr('host') %}
+{% if db | ansible.utils.ipaddr('host') %}
 {{ db -}}
 {% endif %}
 {% if loop.last %}

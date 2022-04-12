@@ -1,10 +1,10 @@
 {{ '[Tunnel]' }}
 {% if item.tun_local is defined and item.tun_local |
-  ansible.netcommon.ipaddr('host') %}
+  ansible.utils.ipaddr('host') %}
 {{ 'Local=' + item.tun_local }}
 {% endif %}
 {% if item.tun_remote is defined and item.tun_remote |
-  ansible.netcommon.ipaddr('host') %}
+  ansible.utils.ipaddr('host') %}
 {{ 'Remote=' + item.tun_remote }}
 {% endif %}
 {% if item.tun_tos is defined and item.tun_tos != '' %}

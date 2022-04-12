@@ -27,7 +27,7 @@
 - name: systemd_helper | Assert that physaddr for interface is valid hwaddr
   ansible.builtin.assert:
     that: "item['physaddr'] is defined and item['physaddr'] |
-      ansible.netcommon.hwaddr()"
+      ansible.utils.hwaddr()"
     msg: "{{ 'physaddr for ' ~ vars['outer_item'] ~ ' is invalid, value is `' ~
       item['physaddr'] ~ '`' }}"
     quiet: "true"

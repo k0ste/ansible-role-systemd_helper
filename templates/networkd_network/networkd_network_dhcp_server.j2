@@ -14,19 +14,19 @@
 {% if d.push_dns is defined and d.push_dns in ['true', 'false'] %}
 {{ 'EmitDNS=' + d.push_dns }}
 {% endif %}
-{% if d.dns is defined and d.dns | ansible.netcommon.ipaddr('host') %}
+{% if d.dns is defined and d.dns | ansible.utils.ipaddr('host') %}
 {{ 'DNS=' + d.dns }}
 {% endif %}
 {% if d.push_ntp is defined and d.push_ntp in ['true', 'false'] %}
 {{ 'EmitNTP=' + d.push_ntp }}
 {% endif %}
-{% if d.ntp is defined and d.ntp | ansible.netcommon.ipaddr('host') %}
+{% if d.ntp is defined and d.ntp | ansible.utils.ipaddr('host') %}
 {{ 'NTP=' + d.ntp }}
 {% endif %}
 {% if d.push_sip is defined and d.push_sip in ['true', 'false'] %}
 {{ 'EmitSIP=' + d.push_sip }}
 {% endif %}
-{% if d.sip is defined and d.sip | ansible.netcommon.ipaddr('host') %}
+{% if d.sip is defined and d.sip | ansible.utils.ipaddr('host') %}
 {{ 'SIP=' + d.sip }}
 {% endif %}
 {% if d.push_router is defined and d.push_router in ['true', 'false'] %}

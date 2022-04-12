@@ -1,25 +1,25 @@
 {% if ip.address is defined and ip.address != '' %}
 {{ '[Address]' }}
 {% if ip.address is string and ip.address |
-  ansible.netcommon.ipaddr('host/prefix') %}
+  ansible.utils.ipaddr('host/prefix') %}
 {{ 'Address=' + ip.address }}
 {% elif ip.address is sequence %}
 {% for addr in ip.address %}
-{% if addr | ansible.netcommon.ipaddr('host/prefix') %}
+{% if addr | ansible.utils.ipaddr('host/prefix') %}
 {{ 'Address=' + addr }}
 {% endif %}
 {% endfor %}
 {% endif %}
-{% if ip.peer is string and ip.peer | ansible.netcommon.ipaddr('host/prefix') %}
+{% if ip.peer is string and ip.peer | ansible.utils.ipaddr('host/prefix') %}
 {{ 'Peer=' + ip.peer }}
 {% elif ip.peer is sequence %}
 {% for addr in ip.peer %}
-{% if addr | ansible.netcommon.ipaddr('host/prefix') %}
+{% if addr | ansible.utils.ipaddr('host/prefix') %}
 {{ 'Peer=' + addr }}
 {% endif %}
 {% endfor %}
 {% endif %}
-{% if ip.broadcast is defined and ip.broadcast | ansible.netcommon.ipaddr() %}
+{% if ip.broadcast is defined and ip.broadcast | ansible.utils.ipaddr() %}
 {{ 'Broadcast=' + ip.broadcast }}
 {% endif %}
 {% if ip.label is defined and ip.label != '' %}

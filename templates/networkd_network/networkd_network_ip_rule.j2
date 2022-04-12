@@ -2,10 +2,10 @@
 {% if ip.tos is defined and ip.tos != '' %}
 {{ 'TypeOfService=' ~ ip.tos }}
 {% endif %}
-{% if ip.from is defined and ip.from | ansible.netcommon.ipaddr() %}
+{% if ip.from is defined and ip.from | ansible.utils.ipaddr() %}
 {{ 'From=' + ip.from }}
 {% endif %}
-{% if ip.to is defined and ip.to | ansible.netcommon.ipaddr() %}
+{% if ip.to is defined and ip.to | ansible.utils.ipaddr() %}
 {{ 'To=' + ip.to }}
 {% endif %}
 {% if ip.fwmark is defined and ip.fwmark != '' %}

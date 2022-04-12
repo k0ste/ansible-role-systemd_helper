@@ -7,11 +7,11 @@
 {% if r.resolved is defined and r.resolved != '' %}
 {% for rr in r.resolved %}
 {% if rr.dns is defined and rr.dns != '' %}
-{% if rr.dns is string and rr.dns | ansible.netcommon.ipaddr('host') %}
+{% if rr.dns is string and rr.dns | ansible.utils.ipaddr('host') %}
 {{ 'DNS=' + rr.dns }}
 {% elif rr.dns is sequence %}
 {% for addr in rr.dns %}
-{% if addr | ansible.netcommon.ipaddr('host') %}
+{% if addr | ansible.utils.ipaddr('host') %}
 {% if loop.first %}
 {{ 'DNS' + '=' -}}
 {% endif %}
@@ -27,11 +27,11 @@
 {% endif %}
 {% if rr.fallback_dns is defined and rr.fallback_dns != '' %}
 {% if rr.fallback_dns is string and rr.fallback_dns |
-  ansible.netcommon.ipaddr('host') %}
+  ansible.utils.ipaddr('host') %}
 {{ 'FallbackDNS=' + rr.fallback_dns }}
 {% elif rr.fallback_dns is sequence %}
 {% for addr in rr.fallback_dns %}
-{% if addr | ansible.netcommon.ipaddr('host') %}
+{% if addr | ansible.utils.ipaddr('host') %}
 {% if loop.first %}
 {{ 'FallbackDNS' + '=' -}}
 {% endif %}
