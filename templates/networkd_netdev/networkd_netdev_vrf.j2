@@ -1,4 +1,4 @@
-{% if item.table is defined and item.table != '' %}
+{% if item['table'] is defined and item['table'] != '' %}
 {{ '[VRF]' }}
-{{ 'Table=' ~ item.table }}
+{{ 'Table=' ~ item['table'] }}
 {% endif %}

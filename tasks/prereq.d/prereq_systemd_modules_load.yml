@@ -1,23 +1,24 @@
 ---
-- name: systemd_helper | Make modules-load.d directory
+- name: "systemd_helper | Make modules-load.d directory"
   ansible.builtin.file:
     path: "/etc/modules-load.d"
     state: "directory"
     owner: "root"
     group: "root"
     mode: "0755"
-- name: systemd_helper | Set facts about modules-load.d
+- name: "systemd_helper | Set facts about modules-load.d"
   ansible.builtin.set_fact:
     systemd_modules_load_create:
       "{{ hostvars[inventory_hostname]['systemd_modules_load'] |
       community.general.json_query('[].modules_load[].file_name') }}"
-- name: systemd_helper | Find exists modules-load configuration files
+- name: "systemd_helper | Find exists modules-load configuration files"
   ansible.builtin.find:
     paths: "/etc/modules-load.d"
     recurse: "no"
     file_type: "file"
     patterns: "(.*).conf"
-    use_regex: "true"
+    use_regex: "yes"
+    excludes: "{{ exclude_systemd_modules_load_create | default('[]') }}"
   register: "modules_load_find_result"
   when:
     - "hostvars[inventory_hostname]['systemd_modules_load'] |
@@ -27,7 +28,10 @@
        community.general.json_query(vars['modules_load_drop_exists']) == 'true'"
   vars:
     modules_load_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
-- name: systemd_helper | Delete exists modules-load configuration files
+    exclude_systemd_modules_load_create:
+      "{{ vars['systemd_modules_load_create'] |
+      map('regex_replace', '^(.*)$', '\\1.conf') | list() }}"
+- name: "systemd_helper | Delete exists modules-load configuration files"
   ansible.builtin.file:
     path: "{{ item['path'] }}"
     state: "absent"

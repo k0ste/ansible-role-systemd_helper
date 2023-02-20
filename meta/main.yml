@@ -1,26 +1,17 @@
 ---
 galaxy_info:
+  role_name: "systemd_helper"
+  namespace: "none"
   author: "Konstantin Shalygin <k0ste@k0ste.ru>"
   issue_tracker_url: "https://github.com/k0ste/ansible-role-systemd_helper"
-  description: "Helper for deploy settings for systemd."
-  company: "LLC Open Technologies"
+  description: "Helper for deploy settings for systemd"
+  company: "YASB"
   license: "GPL"
   min_ansible_version: "3.0.0"
   platforms:
-    - name: Archlinux
+    - name: "EL"
       versions:
-        - any
-    - name: Fedora
-      versions:
-        - all
-    - name: Ubuntu
-      versions:
-        - all
-    - name: EL
-      versions:
-        - 8
-        - 9
-  categories:
-    - system
-    - networking
+        - 'all'
+  galaxy_tags:
+    - 'system'
 dependencies: []

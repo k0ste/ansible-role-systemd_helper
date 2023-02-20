@@ -1,5 +1,5 @@
 ---
-- name: systemd_helper | Assert that type for interface is defined
+- name: "systemd_helper | Assert that type for interface is defined"
   ansible.builtin.assert:
     that: "item['type'] is defined and item['type'] != ''"
     msg: "{{ 'type for ' ~ vars['outer_item'] ~ ' is not defined' }}"
@@ -9,7 +9,7 @@
     vars['outer_item'] ~ \"']\") | flatten(levels=1) }}"
   loop_control:
     label: "{{ 'interface: ' ~ vars['outer_item'] }}"
-- name: systemd_helper | Assert that physaddr for interface is defined
+- name: "systemd_helper | Assert that physaddr for interface is defined"
   ansible.builtin.assert:
     that: "item['physaddr'] is defined and item['physaddr'] != ''"
     msg: "{{ 'physaddr for ' ~ vars['outer_item'] ~ ' is not defined' }}"
@@ -24,7 +24,7 @@
     - "item['type'] == 'ether'"
     - "item['match_override'] is not defined or (
       item['match_override'] is defined and item['match_override'] == '')"
-- name: systemd_helper | Assert that physaddr for interface is valid hwaddr
+- name: "systemd_helper | Assert that physaddr for interface is valid hwaddr"
   ansible.builtin.assert:
     that: "item['physaddr'] is defined and item['physaddr'] |
       ansible.utils.hwaddr()"

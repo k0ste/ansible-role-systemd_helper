@@ -1,12 +1,12 @@
 ---
-- name: systemd_helper | Make networkd directory
+- name: "systemd_helper | Make networkd directory"
   ansible.builtin.file:
     path: "/etc/systemd/network"
     state: "directory"
     owner: "root"
     group: "root"
     mode: "0755"
-- name: systemd_helper | Set facts about networkd
+- name: "systemd_helper | Set facts about networkd"
   ansible.builtin.set_fact:
     systemd_networkd_networkd:
       "{{ hostvars[inventory_hostname]['systemd_networkd'] |
@@ -14,14 +14,14 @@
     systemd_networkd_interfaces:
       "{{ hostvars[inventory_hostname]['systemd_networkd'] |
       community.general.json_query('[].interfaces[].interface') }}"
-- name: systemd_helper | Find exists networkd configuration files
+- name: "systemd_helper | Find exists networkd configuration files"
   ansible.builtin.find:
     paths: "/etc/systemd/network"
     recurse: "no"
     file_type: "file"
+    use_regex: "yes"
     patterns: "(.*).(network|netdev|link)"
-    exclude: "99-default.link"
-    use_regex: "true"
+    excludes: "{{ exclude_systemd_networkd_interfaces + ['99-default.link'] }}"
   register: "networkd_find_result"
   when:
     - "hostvars[inventory_hostname]['systemd_networkd'] |
@@ -30,7 +30,10 @@
        community.general.json_query(vars['networkd_drop_exists']) == 'true'"
   vars:
     networkd_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
-- name: systemd_helper | Delete exists networkd configuration files
+    exclude_systemd_networkd_interfaces:
+      "{{ vars['systemd_networkd_interfaces'] | map('regex_replace', '^(.*)$',
+      '\\1.(network|netdev|link)') | list() }}"
+- name: "systemd_helper | Delete exists networkd configuration files"
   ansible.builtin.file:
     path: "{{ item['path'] }}"
     state: "absent"
@@ -43,7 +46,7 @@
   ansible.builtin.stat:
     path: "/etc/systemd/network/99-default.link"
   register: "systemd_default_link_stat"
-- name: systemd_helper | Mask default networkd link
+- name: "systemd_helper | Mask default networkd link"
   ansible.builtin.file:
     path: "/etc/systemd/network/99-default.link"
     owner: "root"

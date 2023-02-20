@@ -1,5 +1,5 @@
 ---
-- name: systemd_helper | Deploy networkd [network.vlan]
+- name: "systemd_helper | Deploy networkd [network.vlan]"
   ansible.builtin.template:
     src: "networkd_network.j2"
     dest: "{{ '/etc/systemd/network/' ~ item['name'] ~ '.network' }}"
@@ -18,7 +18,7 @@
   vars:
     network_netdev_kind: "vlan"
     network_netdev_name: "{{ item['name'] }}"
-- name: systemd_helper | Deploy networkd [netdev.vlan]
+- name: "systemd_helper | Deploy networkd [netdev.vlan]"
   ansible.builtin.template:
     src: "networkd_netdev.j2"
     dest: "{{ '/etc/systemd/network' ~ '/' ~ item['name'] ~ '.netdev' }}"
@@ -37,7 +37,7 @@
   vars:
     network_netdev_kind: "vlan"
     network_netdev_name: "{{ item['name'] }}"
-- name: systemd_helper | Deploy networkd [link.vlan]
+- name: "systemd_helper | Deploy networkd [link.vlan]"
   ansible.builtin.template:
     src: "networkd_link.j2"
     dest: "{{ '/etc/systemd/network/' ~ item['name'] ~ '.link' }}"

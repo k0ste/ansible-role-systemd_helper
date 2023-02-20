@@ -1,5 +1,5 @@
 ---
-- name: systemd_helper | Deploy networkd [network]
+- name: "systemd_helper | Deploy networkd [network]"
   ansible.builtin.template:
     src: "networkd_network.j2"
     dest: "{{ '/etc/systemd/network/' ~ vars['outer_item'] ~ '.network' }}"
@@ -18,7 +18,7 @@
   vars:
     network_netdev_kind: "{{ item['type'] }}"
     network_netdev_name: "{{ vars['outer_item'] }}"
-- name: systemd_helper | Deploy networkd [netdev]
+- name: "systemd_helper | Deploy networkd [netdev]"
   template:
     src: "networkd_netdev.j2"
     dest: "{{ '/etc/systemd/network/' ~ vars['outer_item'] ~ '.netdev' }}"
@@ -39,7 +39,7 @@
   vars:
     network_netdev_kind: "{{ item['type'] }}"
     network_netdev_name: "{{ vars['outer_item'] }}"
-- name: systemd_helper | Deploy networkd [link]
+- name: "systemd_helper | Deploy networkd [link]"
   ansible.builtin.template:
     src: "networkd_link.j2"
     dest: "{{ '/etc/systemd/network/' ~ vars['outer_item'] ~ '.link' }}"

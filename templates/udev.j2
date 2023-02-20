@@ -1,8 +1,8 @@
-{{ '## ' + item.file_name + '.conf' }}
+{{ '## ' + item['file_name'] + '.conf' }}
 {{ '# ' + ansible_managed }}
 {{ '# Do not edit manually' }}
 
-{% for r in item.rules %}
+{% for r in item['rules'] %}
 {% if r is defined and r != '' %}
 {{ r }}
 {% endif %}

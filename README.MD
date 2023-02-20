@@ -729,22 +729,50 @@ systemd_networkd:
 # the kernel's default will be used.
     eth_gro: 'false'
 # If set to 'true', the Large Receive Offload (LRO) is enabled. When unset, the
-# kernel's default will be used.
+# kernel's default will be used
     eth_lro: 'false'
-# Sets the number of receive channels (a number between 1 and 4294967295).
+# If set to 'true', receive VLAN CTAG hardware acceleration is enabled. When
+# unset, the kernel's default will be used
+    eth_rxvlan: 'false'
+# If set to 'true', transmit VLAN CTAG hardware acceleration is enabled. When
+# unset, the kernel's default will be used
+    eth_txvlan: 'false'
+# If set to 'true', receive filtering on VLAN CTAGs is enabled. When unset, the
+# kernel's default will be used
+    eth_rx_vlan_filter: 'false'
+# If set to 'true', transmit VLAN STAG HW acceleration is enabled. When unset,
+# the kernel's default will be used
+    eth_tx_vlan_stag: 'false'
+# If set to 'true', receive N-tuple filters and actions are enabled. When unset,
+# the kernel's default will be used
+    eth_rx_ntuple_filter: 'false'
+# Sets the number of receive channels (a number between 1 and 4294967295)
     eth_rx_channels: ''
-# Sets the number of transmit channels (a number between 1 and 4294967295).
+# Sets the number of transmit channels (a number between 1 and 4294967295)
     eth_tx_channels: ''
-# Sets the number of other channels (a number between 1 and 4294967295).
+# Sets the number of other channels (a number between 1 and 4294967295)
     eth_other_channels: ''
-# Sets the number of combined set channels (a number between 1 and 4294967295).
+# Sets the number of combined set channels (a number between 1 and 4294967295)
     eth_combined_channels: ''
 # Specifies the NIC receive ring buffer size. When unset, the kernel's default
-# will be used.
+# will be used
     eth_rx_ring: ''
 # Specifies the NIC transmit ring buffer size. When unset, the kernel's default
-# will be used.
+# will be used
     eth_tx_ring: ''
+# When set, enables receive flow control, also known as the ethernet receive
+# PAUSE message (generate and send ethernet PAUSE frames). When unset, the
+# kernel's default will be used
+    eth_rx_flow: 'false'
+# When set, enables transmit flow control, also known as the ethernet transmit
+# PAUSE message (respond to received ethernet PAUSE frames). When unset, the
+# kernel's default will be used
+    eth_tx_flow: 'false'
+# When set, auto negotiation enables the interface to exchange state
+# advertisements with the connected peer so that the two devices can agree on
+# the ethernet PAUSE configuration. When unset, the kernel's default will be
+# used
+    eth_flow_control_autoneg: 'false'
   - interface: 'po1'
     type: 'bond'
     mtu: '9000'
@@ -991,7 +1019,7 @@ systemd_networkd:
 # Specifies how many times the DHCPv4 client configuration should be attempted.
 # Takes a number or 'infinity' (the default). Note that the time between
 # retries is increased exponentially, so the network will not be overloaded
-# even if this number is high.  
+# even if this number is high.
         max_attempts: 'infinity'
 # If 'vendor', then the DUID value will be generated using "43793" as the
 # vendor identifier (systemd) and hashed contents of machine-id(5). This is the

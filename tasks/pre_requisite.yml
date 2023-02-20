@@ -1,15 +1,15 @@
 ---
-- name: systemd_helper | Stat systemd path
+- name: "systemd_helper | Stat systemd path"
   ansible.builtin.stat:
     path: "/etc/systemd"
   register: "systemd_stat"
-- name: systemd_helper | Assert that systemd path exists
+- name: "systemd_helper | Assert that systemd path exists"
   ansible.builtin.assert:
     that:
       - "vars['systemd_stat']['stat']['exists'] == True"
-    msg: "/etc/systemd not exists, something wrong with this system."
+    msg: "/etc/systemd not exists, something wrong with this system"
     quiet: "true"
-- name: systemd_helper | Assert that system manager is systemd
+- name: "systemd_helper | Assert that system manager is systemd"
   ansible.builtin.assert:
     that:
       - "hostvars[inventory_hostname]['ansible_service_mgr'] == 'systemd'"
