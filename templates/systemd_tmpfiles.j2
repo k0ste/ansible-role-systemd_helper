@@ -4,27 +4,27 @@
 
 {{ item['type'] + ' ' + item['path'] -}}
 {% if item['mode'] is defined %}
-{{ ' ' + item['mode'] }}
+{{ ' ' + item['mode'] -}}
 {% else %}
 {{- ' -' -}}
 {% endif %}
 {% if item['uid'] is defined %}
-{{ ' ' + item['uid'] }}
+{{ ' ' + item['uid'] -}}
 {% else %}
 {{- ' -' -}}
 {% endif %}
 {% if item['gid'] is defined %}
-{{ ' ' + item['gid'] }}
+{{ ' ' + item['gid'] -}}
 {% else %}
 {{- ' -' -}}
 {% endif %}
 {% if item['age'] is defined %}
-{{ ' ' + item['age'] }}
+{{ ' ' + item['age'] -}}
 {% else %}
 {{- ' -' -}}
 {% endif %}
 {% if item['arg'] is defined %}
-{{ ' ' + item['arg'] }}
+{{ ' ' + item['arg'] -}}
 {% else %}
 {{- ' -' -}}
 {% endif %}
