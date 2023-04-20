@@ -9,7 +9,8 @@
     force: "yes"
   notify:
     - "Restart systemd-resolved"
-- meta: "flush_handlers"
+- name: "systemd_helper | Flush handlers"
+  ansible.builtin.meta: "flush_handlers"
 - name: "systemd_helper | Enable systemd-resolved service"
   ansible.builtin.systemd:
     name: "systemd-resolved"

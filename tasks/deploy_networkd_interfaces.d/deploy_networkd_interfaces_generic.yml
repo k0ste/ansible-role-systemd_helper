@@ -19,7 +19,7 @@
     network_netdev_kind: "{{ item['type'] }}"
     network_netdev_name: "{{ vars['outer_item'] }}"
 - name: "systemd_helper | Deploy networkd [netdev]"
-  template:
+  ansible.builtin.template:
     src: "networkd_netdev.j2"
     dest: "{{ '/etc/systemd/network/' ~ vars['outer_item'] ~ '.netdev' }}"
     group: "root"
