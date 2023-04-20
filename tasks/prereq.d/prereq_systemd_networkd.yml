@@ -42,7 +42,7 @@
     label: "{{ item['path'] }}"
   when:
     - "vars['networkd_find_result']['files'] is defined"
-- name: systemd_helper | Stat default networkd link settings
+- name: "systemd_helper | Stat default networkd link settings"
   ansible.builtin.stat:
     path: "/etc/systemd/network/99-default.link"
   register: "systemd_default_link_stat"
