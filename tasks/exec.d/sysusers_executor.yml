@@ -1,0 +1,8 @@
+---
+- name: "systemd_helper | Include systemd-sysusers deployment tasks"
+  ansible.builtin.include_tasks:
+    file: "deploy.d/deploy_sysusers.yml"
+  loop: "{{ hostvars[inventory_hostname]['systemd_sysusers_create'] |
+    flatten(levels=1) }}"
+  loop_control:
+    loop_var: "outer_item"

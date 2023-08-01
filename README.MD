@@ -1,18 +1,18 @@
 # ansible-systemd_helper
 
 Allow to define systemd:
-* [journald.conf](https://www.freedesktop.org/software/systemd/man/journald.conf.html);
-* [tmpfiles](https://www.freedesktop.org/software/systemd/man/tmpfiles.d.html);
-* set timezone via [systemd-timedatectl](https://www.freedesktop.org/software/systemd/man/timedatectl.html);
+* [journald.conf](https://www.freedesktop.org/software/systemd/man/journald.conf.html)
+* [tmpfiles](https://www.freedesktop.org/software/systemd/man/tmpfiles.d.html)
+* [sysusers](https://www.freedesktop.org/software/systemd/man/sysusers.d.html#)
+* set timezone via [systemd-timedatectl](https://www.freedesktop.org/software/systemd/man/timedatectl.html)
 * [timesyncd](https://www.freedesktop.org/software/systemd/man/systemd-timesyncd.service.html)
-support;
+support
 * set console settings via [vconsole.conf](https://www.freedesktop.org/software/systemd/man/vconsole.conf.html)
 * [networkd](https://www.freedesktop.org/software/systemd/man/systemd-networkd.html)
-support;
+support
 * [resolved](https://www.freedesktop.org/software/systemd/man/systemd-resolved.html)
-support;
-* [modules-load](https://www.freedesktop.org/software/systemd/man/modules-load.d.html)
-support;
+support
+* [modules-load](https://www.freedesktop.org/software/systemd/man/modules-load.d.html) support
 
 ## Requirements
 
@@ -104,6 +104,50 @@ systemd_tmpfiles:
   - file_name: 'example3'
     path: '/tmp/example3'
     type: 'r'
+
+# systemd-sysusers uses the files from sysusers.d directory to create system
+# users and groups and to add users to groups, at package installation or boot
+# time. This tool may be used to allocate system users and groups only, it is
+# not useful for creating non-system (i.e. regular, "human") users and groups,
+# as it accesses /etc/passwd and /etc/group directly, bypassing any more
+# complex user databases, for example any database involving NIS or LDAP
+systemd_sysusers:
+  - drop_exists: 'true'
+    create:
+      - file_name: 'example1'
+        sysusers:
+          - type: 'u'
+            name: 'user_name'
+            id: '1000'
+            gecos: 'User Description'
+            home: '/home/dir'
+            shell: '/bin/bash'
+          - type: 'u'
+            name: 'user_name'
+            id: '1000:1000'
+            gecos: 'User Description'
+            home: '/home/dir'
+            shell: '/bin/bash'
+      - file_name: 'example3'
+        sysusers:
+          - type: 'u'
+            name: 'user_name'
+            id: '/file/owned/by/user'
+            gecos: 'User Description'
+            home: '/home/dir'
+            shell: '/bin/bash'
+          - type: 'g'
+            name: 'group_name'
+            id: '1001'
+          - type: 'g'
+            name: 'group_name'
+            id: '/file/owned/by/group'
+          - type: 'm'
+            name: 'dialer'
+            id: 'modem'
+          - type: 'r'
+            name: '-'
+            id: '500:900'
 
 systemd_modules_load:
 # This option allow to delete '/etc/modules-load.d/*.conf' files before deploy.

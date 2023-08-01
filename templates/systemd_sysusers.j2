@@ -1,0 +1,32 @@
+{{ '## ' + item['file_name'] + '.conf' }}
+{{ '# ' + ansible_managed }}
+{{ '# Do not edit manually' }}
+
+{% for s in item['sysusers'] %}
+{{ s['type'] -}}
+{% if s['name'] is defined %}
+{{ ' ' + s['name'] -}}
+{% else %}
+{{- ' -' -}}
+{% endif %}
+{% if s['id'] is defined %}
+{{ ' ' ~ s['id'] -}}
+{% else %}
+{{- ' -' -}}
+{% endif %}
+{% if s['gecos'] is defined %}
+{{ ' ' + s['gecos'] -}}
+{% else %}
+{{- ' -' -}}
+{% endif %}
+{% if s['home'] is defined %}
+{{ ' ' + s['home'] -}}
+{% else %}
+{{- ' -' -}}
+{% endif %}
+{% if s['shell'] is defined %}
+{{ ' ' + s['shell'] }}
+{% else %}
+{{- ' -' }}
+{% endif %}
+{% endfor %}

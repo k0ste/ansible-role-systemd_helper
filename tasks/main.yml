@@ -1,44 +1,60 @@
 ---
-- ansible.builtin.import_tasks:
+- name: "systemd_helper | Include prereq tasks"
+  ansible.builtin.import_tasks:
     file: "pre_requisite.yml"
-- ansible.builtin.include_tasks:
-    file: "deploy_resolved.yml"
+- name: "systemd_helper | Include deploy tasks for systemd-resolved"
+  ansible.builtin.include_tasks:
+    file: "deploy.d/deploy_resolved.yml"
   when:
     - "hostvars[inventory_hostname]['systemd_resolved'] is defined"
     - "hostvars[inventory_hostname]['systemd_resolved'] != ''"
-- ansible.builtin.include_tasks:
-    file: "deploy_journald.yml"
+- name: "systemd_helper | Include deploy tasks for systemd-journald"
+  ansible.builtin.include_tasks:
+    file: "deploy.d/deploy_journald.yml"
   when:
     - "hostvars[inventory_hostname]['systemd_journald_settings'] is defined"
     - "hostvars[inventory_hostname]['systemd_journald_settings'] != ''"
-- ansible.builtin.include_tasks:
-    file: "deploy_timesyncd.yml"
+- name: "systemd_helper | Include deploy tasks for systemd-timesyncd"
+  ansible.builtin.include_tasks:
+    file: "deploy.d/deploy_timesyncd.yml"
   when:
     - "vars['systemd_timedatectl_timesyncd'] is defined"
     - "vars['systemd_timedatectl_timesyncd'] != []"
-- ansible.builtin.include_tasks:
-    file: "deploy_vconsole.yml"
+- name: "systemd_helper | Include deploy tasks for systemd-vconsole"
+  ansible.builtin.include_tasks:
+    file: "deploy.d/deploy_vconsole.yml"
   when:
     - "hostvars[inventory_hostname]['systemd_vconsole'] is defined"
     - "hostvars[inventory_hostname]['systemd_vconsole'] != ''"
-- ansible.builtin.import_tasks:
-    file: "tmpfiles_executor.yml"
-- ansible.builtin.include_tasks:
-    file: "modules_load_executor.yml"
+- name: "systemd_helper | Include deploy tasks for systemd-tmpfiles"
+  ansible.builtin.import_tasks:
+    file: "exec.d/tmpfiles_executor.yml"
+- name: "systemd_helper | Include deploy tasks for systemd-sysusers"
+  ansible.builtin.import_tasks:
+    file: "exec.d/sysusers_executor.yml"
+  when:
+    - "vars['systemd_sysusers_create'] is defined"
+    - "vars['systemd_sysusers_create'] != []"
+- name: "systemd_helper | Include deploy tasks for systemd-modules-load"
+  ansible.builtin.include_tasks:
+    file: "exec.d/modules_load_executor.yml"
   when:
     - "vars['systemd_modules_load_create'] is defined"
     - "vars['systemd_modules_load_create'] != []"
-- ansible.builtin.include_tasks:
-    file: "udev_executor.yml"
+- name: "systemd_helper | Include deploy tasks for systemd-udev"
+  ansible.builtin.include_tasks:
+    file: "exec.d/udev_executor.yml"
   when:
     - "vars['systemd_udev_rules'] is defined"
-- ansible.builtin.include_tasks:
-    file: "deploy_networkd.yml"
+- name: "systemd_helper | Include deploy tasks for systemd-networkd"
+  ansible.builtin.include_tasks:
+    file: "deploy.d/deploy_networkd.yml"
   when:
     - "vars['systemd_networkd_networkd'] is defined"
     - "vars['systemd_networkd_networkd'] != []"
-- ansible.builtin.include_tasks:
-    file: "networkd_executor.yml"
+- name: "systemd_helper | Include deploy tasks for networkd profiles"
+  ansible.builtin.include_tasks:
+    file: "exec.d/networkd_executor.yml"
   when:
     - "vars['systemd_networkd_interfaces'] is defined"
     - "vars['systemd_networkd_interfaces'] != []"

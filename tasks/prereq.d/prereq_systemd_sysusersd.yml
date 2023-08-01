@@ -1,0 +1,40 @@
+---
+- name: "systemd_helper | Make sysusers.d directory"
+  ansible.builtin.file:
+    path: "/etc/sysusers.d"
+    state: "directory"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+- name: "systemd_helper | Set facts about sysusers.d"
+  ansible.builtin.set_fact:
+    systemd_sysusers_create:
+      "{{ hostvars[inventory_hostname]['systemd_sysusers'] |
+      community.general.json_query('[].create[].file_name') }}"
+- name: "systemd_helper | Find exists sysusers configuration files"
+  ansible.builtin.find:
+    paths: "/etc/sysusers.d"
+    recurse: "no"
+    file_type: "file"
+    use_regex: "yes"
+    patterns: "(.*).conf"
+    excludes: "{{ exclude_systemd_sysusers_create | default('[]') }}"
+  register: "sysusers_find_result"
+  when:
+    - "hostvars[inventory_hostname]['systemd_sysusers'] |
+       community.general.json_query(vars['sysusers_drop_exists']) is defined"
+    - "hostvars[inventory_hostname]['systemd_sysusers'] |
+       community.general.json_query(vars['sysusers_drop_exists']) == 'true'"
+  vars:
+    sysusers_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
+    exclude_systemd_sysusers_create: "{{ vars['systemd_sysusers_create'] |
+      map('regex_replace', '^(.*)$', '\\1.conf') | list() }}"
+- name: "systemd_helper | Delete exists sysusers configuration files"
+  ansible.builtin.file:
+    path: "{{ item['path'] }}"
+    state: "absent"
+  loop: "{{ vars['sysusers_find_result']['files'] | flatten(levels=1) }}"
+  loop_control:
+    label: "{{ item['path'] }}"
+  when:
+    - "vars['sysusers_find_result']['files'] is defined"

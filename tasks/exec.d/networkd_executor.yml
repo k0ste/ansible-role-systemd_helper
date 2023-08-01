@@ -1,6 +1,7 @@
 ---
-- ansible.builtin.include_tasks:
-    file: "deploy_networkd_interfaces.yml"
+- name: "systemd_helper | Include systemd-networkd profile deployment tasks"
+  ansible.builtin.include_tasks:
+    file: "deploy.d/deploy_networkd_interfaces.yml"
   loop: "{{ hostvars[inventory_hostname]['systemd_networkd_interfaces'] |
     flatten(levels=1) }}"
   loop_control:

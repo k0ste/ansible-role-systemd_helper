@@ -1,6 +1,7 @@
 ---
-- ansible.builtin.include_tasks:
-    file: "deploy_udev.yml"
+- name: "systemd_helper | Include systemd-udev deployment tasks"
+  ansible.builtin.include_tasks:
+    file: "deploy.d/deploy_udev.yml"
   loop: "{{ hostvars[inventory_hostname]['systemd_udev_rules'] |
     flatten(levels=1) }}"
   loop_control:
