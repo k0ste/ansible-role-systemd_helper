@@ -21,5 +21,7 @@
     \"']\") | flatten(levels=1) }}"
   loop_control:
     label: "{{ item['file_name'] }}"
-  notify:
-    - "Cleanup udev script"
+- name: "systemd_helper | Cleanup udev syntax check script"
+  ansible.builtin.file:
+    path: "/tmp/rule-syntax-check.py"
+    state: "absent"

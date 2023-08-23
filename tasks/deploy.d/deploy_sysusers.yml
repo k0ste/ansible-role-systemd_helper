@@ -12,3 +12,12 @@
     vars['outer_item'] + \"']\") | flatten(levels=1) }}"
   loop_control:
     label: "{{ item['file_name'] }}"
+  register: "systemd_sysusers_deploy_result"
+- name: "systemd_helper | Touch /usr for systemd-update-done service"
+  ansible.builtin.file:
+    path: "/usr"
+    state: "touch"
+  when:
+    - "vars['systemd_sysusers_deploy_result'] is changed"
+    - "vars['systemd_sysusers_deploy_result'] is success"
+  diff: "false"
