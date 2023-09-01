@@ -15,6 +15,12 @@
       - "hostvars[inventory_hostname]['ansible_service_mgr'] == 'systemd'"
     msg: "System manager is not systemd"
     quiet: "true"
+- name: "systemd_helper | Include prereq tasks for systemd-logind"
+  ansible.builtin.include_tasks:
+    file: "prereq.d/prereq_systemd_logind.yml"
+  when:
+    - "hostvars[inventory_hostname]['systemd_logind'] is defined"
+    - "hostvars[inventory_hostname]['systemd_logind'] != ''"
 - name: "systemd_helper | Include prereq tasks for systemd-timedatectl"
   ansible.builtin.include_tasks:
     file: "prereq.d/prereq_systemd_timedatectl.yml"

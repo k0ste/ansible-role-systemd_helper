@@ -1,0 +1,58 @@
+{{ '## logind.conf' }}
+{{ '# ' + ansible_managed }}
+{{ '# Do not edit manually' }}
+
+{% for l in vars['systemd_logind_logind'] %}
+{% if l['logind'] is defined and l['logind'] != '' %}
+{% set systemd_logind_handle_values = ['ignore', 'poweroff', 'reboot', 'halt',
+  'kexec', 'suspend', 'hibernate', 'hybrid-sleep', 'suspend-then-hibernate',
+  'lock', 'factory-reset'] %}
+{{ '[Logind]' }}
+{% for ll in l['logind'] %}
+{% if ll['handle_power_key'] is defined and ll['handle_power_key'] in
+  systemd_logind_handle_values %}
+{{ 'HandlePowerKey=' + ll['handle_power_key'] }}
+{% endif %}
+{% if ll['handle_power_key_long_press'] is defined and
+  ll['handle_power_key_long_press'] in systemd_logind_handle_values %}
+{{ 'HandlePowerKeyLongPress=' + ll['handle_power_key_long_press'] }}
+{% endif %}
+{% if ll['handle_reboot_key'] is defined and
+  ll['handle_reboot_key'] in systemd_logind_handle_values %}
+{{ 'HandleRebootKey=' + ll['handle_reboot_key'] }}
+{% endif %}
+{% if ll['handle_reboot_key_long_press'] is defined and
+  ll['handle_reboot_key_long_press'] in systemd_logind_handle_values %}
+{{ 'HandleRebootKeyLongPress=' + ll['handle_reboot_key_long_press'] }}
+{% endif %}
+{% if ll['handle_suspend_key'] is defined and
+  ll['handle_suspend_key'] in systemd_logind_handle_values %}
+{{ 'HandleSuspendKey=' + ll['handle_suspend_key'] }}
+{% endif %}
+{% if ll['handle_suspend_key_long_press'] is defined and
+  ll['handle_suspend_key_long_press'] in systemd_logind_handle_values %}
+{{ 'HandleSuspendKeyLongPress=' + ll['handle_suspend_key_long_press'] }}
+{% endif %}
+{% if ll['handle_suspend_key'] is defined and
+  ll['handle_suspend_key'] in systemd_logind_handle_values %}
+{{ 'HandleHibernateKey=' + ll['handle_suspend_key'] }}
+{% endif %}
+{% if ll['handle_suspend_key_long_press'] is defined and
+  ll['handle_suspend_key_long_press'] in systemd_logind_handle_values %}
+{{ 'HandleHibernateKeyLongPress=' + ll['handle_suspend_key_long_press'] }}
+{% endif %}
+{% if ll['handle_lid_switch'] is defined and
+  ll['handle_lid_switch'] in systemd_logind_handle_values %}
+{{ 'HandleLidSwitch=' + ll['handle_lid_switch'] }}
+{% endif %}
+{% if ll['handle_lid_switch_external_power'] is defined and
+  ll['handle_lid_switch_external_power'] in systemd_logind_handle_values %}
+{{ 'HandleLidSwitchExternalPower=' + ll['handle_lid_switch_external_power'] }}
+{% endif %}
+{% if ll['handle_lid_switch_docked'] is defined and
+  ll['handle_lid_switch_docked'] in systemd_logind_handle_values %}
+{{ 'HandleLidSwitchDocked=' + ll['handle_lid_switch_docked'] }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}

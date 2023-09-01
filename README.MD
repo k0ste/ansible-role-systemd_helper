@@ -105,6 +105,40 @@ systemd_tmpfiles:
     path: '/tmp/example3'
     type: 'r'
 
+# systemd-logind is a system service that manages user logins. It is responsible
+# for:
+# * Keeping track of users and sessions, their processes and their idle state.
+# This is implemented by allocating a systemd slice unit for each user below
+# user.slice, and a scope unit below it for each concurrent session of a user.
+# Also, a per-user service manager is started as system service instance of
+# user@.service for each logged in user.
+# * Generating and managing session IDs. If auditing is available and an audit
+# session ID is already set for a session, then this ID is reused as the
+# session ID. Otherwise, an independent session counter is used.
+# * Handling of power/sleep hardware keys
+# And other, consult with man systemd-logind
+
+systemd_logind:
+  - logind:
+# Controls how logind shall handle the system power, reboot and sleep keys and
+# the lid switch to trigger actions such as system power-off, reboot or suspend.
+# Can be one of 'ignore', 'poweroff', 'reboot', 'halt', 'kexec', 'suspend',
+# 'hibernate', 'hybrid-sleep', 'suspend-then-hibernate', 'lock', and
+# 'factory-reset'. If 'ignore', systemd-logind will never handle these keys. If
+# 'lock', all running sessions will be screen-locked; otherwise, the specified
+# action will be taken in the respective event. Only input devices with the
+# 'power-switch'udev tag will be watched for key/lid switch events.
+      - handle_power_key: 'poweroff'
+        handle_power_key_long_press: 'ignore'
+        handle_reboot_key: 'reboot'
+        handle_reboot_key_long_press: 'poweroff'
+        handle_suspend_key: 'suspend'
+        handle_suspend_key_long_press: 'hibernate'
+        handle_hibernate_key: 'hibernate'
+        handle_hibernate_key_long_press: 'ignore'
+        handle_lid_switch: 'suspend'
+        handle_lid_switch_external_power: 'ignore'
+        handle_lid_switch_docked: 'ignore'
 # systemd-sysusers uses the files from sysusers.d directory to create system
 # users and groups and to add users to groups, at package installation or boot
 # time. This tool may be used to allocate system users and groups only, it is
@@ -388,6 +422,16 @@ systemd_networkd:
 # any foreign routes, keeping them even if they are not configured in a .network
 # file. Defaults to 'yes'.
       manage_foreign_routes: 'yes'
+# Defines the route table name. The route table name must not be "default",
+# 'main', or 'local', as these route table names are predefined with route
+# table number 253, 254, and 255, respectively. The route table number must be
+# an integer in the range 1...4294967295, except for predefined numbers
+# 253, 254, and 255.
+      route_table:
+        - name: 'red'
+          id: '100'
+        - name: 'blue'
+          id: '200'
 # This section configures the DHCP Unique Identifier (DUID) value used by DHCP
 # protocol. DHCPv6 client protocol sends the DHCP Unique Identifier and the
 # interface Identity Association Identifier (IAID) to a DHCP server when

@@ -8,6 +8,12 @@
   when:
     - "hostvars[inventory_hostname]['systemd_resolved'] is defined"
     - "hostvars[inventory_hostname]['systemd_resolved'] != ''"
+- name: "systemd_helper | Include deploy tasks for systemd-logind"
+  ansible.builtin.include_tasks:
+    file: "deploy.d/deploy_logind.yml"
+  when:
+    - "vars['systemd_logind_logind'] is defined"
+    - "vars['systemd_logind_logind'] != []"
 - name: "systemd_helper | Include deploy tasks for systemd-journald"
   ansible.builtin.include_tasks:
     file: "deploy.d/deploy_journald.yml"
