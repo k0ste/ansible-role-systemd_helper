@@ -1,6 +1,6 @@
 ---
 - name: "systemd_helper | Import systemd-networkd interface prereq tasks"
-- ansible.builtin.import_tasks:
+  ansible.builtin.import_tasks:
     file: "deploy.d/networkd_interfaces.d/deploy_networkd_interfaces_prereq.yml"
 - name: "systemd_helper | Import systemd-networkd interface generic tasks"
   ansible.builtin.import_tasks:

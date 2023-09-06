@@ -54,4 +54,4 @@
     mode: "0644"
     state: "touch"
   when:
-    - "vars['systemd_default_link_stat']['stat']['exists'] == False"
+    - "not vars['systemd_default_link_stat']['stat']['exists']"
