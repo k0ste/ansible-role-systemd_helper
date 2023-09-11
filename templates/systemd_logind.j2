@@ -7,7 +7,7 @@
 {% set systemd_logind_handle_values = ['ignore', 'poweroff', 'reboot', 'halt',
   'kexec', 'suspend', 'hibernate', 'hybrid-sleep', 'suspend-then-hibernate',
   'lock', 'factory-reset'] %}
-{{ '[Logind]' }}
+{{ '[Login]' }}
 {% for ll in l['logind'] %}
 {% if ll['handle_power_key'] is defined and ll['handle_power_key'] in
   systemd_logind_handle_values %}
