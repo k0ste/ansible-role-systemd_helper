@@ -766,6 +766,9 @@ systemd_networkd:
   - interface: 'fo1'
     type: 'ether'
     physaddr: 'e8:65:d4:e8:5c:68'
+# Specifies the transmit queue length of the device in number of packets. When
+# unset, the kernel's default will be used.
+    txqueuelen: '10000'
     speed: '40G'
 # The duplex mode to set for the device. The accepted values are 'half' and
 # 'full'.
@@ -1852,7 +1855,6 @@ systemd_networkd:
 # parsed as Kilobytes, Megabytes, or Gigabytes, respectively, to the base of
 # 1024.
         overhead: ''
-
 # Specifies the maximum rate this class and all its children are guaranteed.
 # When suffixed with K, M, or G, the specified size is parsed as Kilobits,
 # Megabits, or Gigabits, respectively, to the base of 1000. This setting is

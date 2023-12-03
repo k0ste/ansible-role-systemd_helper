@@ -11,8 +11,8 @@
 {% endif %}
 {% endfor %}
 {% else %}
-{% if network_netdev_kind is defined and
-      network_netdev_kind in ['vlan', 'macvlan'] %}
+{% if network_netdev_kind is defined and network_netdev_kind in ['vlan',
+  'macvlan'] %}
 {{ 'OriginalName=' + network_netdev_name }}
 {% else %}
 {{ 'MACAddress=' + item['physaddr'] | ansible.utils.hwaddr('linux') }}
@@ -52,6 +52,9 @@
 {{ 'AlternativeName=' + a }}
 {% endfor %}
 {% endif %}
+{% endif %}
+{% if item['txqueuelen'] is defined and item['txqueuelen'] != '' %}
+{{ 'TransmitQueueLength=' ~ item['txqueuelen'] }}
 {% endif %}
 {% if item['mtu'] is defined and item['mtu'] != '' %}
 {{ 'MTUBytes=' ~ item['mtu'] }}

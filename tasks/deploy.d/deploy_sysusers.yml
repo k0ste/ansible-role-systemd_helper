@@ -17,7 +17,8 @@
   ansible.builtin.file:
     path: "/usr"
     state: "touch"
+    mode: "0755"
   when:
     - "vars['systemd_sysusers_deploy_result'] is changed"
     - "vars['systemd_sysusers_deploy_result'] is success"
-  diff: "false"
+  diff: false

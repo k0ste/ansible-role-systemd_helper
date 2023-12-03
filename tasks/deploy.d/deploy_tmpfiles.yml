@@ -18,7 +18,8 @@
   ansible.builtin.file:
     path: "/usr"
     state: "touch"
+    mode: "0755"
   when:
     - "vars['systemd_tmpfiles_deploy_result'] is changed"
     - "vars['systemd_tmpfiles_deploy_result'] is success"
-  diff: "false"
+  diff: false

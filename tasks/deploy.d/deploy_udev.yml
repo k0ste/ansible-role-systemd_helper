@@ -6,7 +6,7 @@
     owner: "root"
     group: "root"
     mode: "0755"
-  diff: "false"
+  diff: false
 - name: "systemd_helper | Deploy udev"
   ansible.builtin.template:
     src: "udev.j2"
