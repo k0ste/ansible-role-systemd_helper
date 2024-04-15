@@ -20,6 +20,7 @@
   when:
     - "hostvars[inventory_hostname]['systemd_journald_settings'] is defined"
     - "hostvars[inventory_hostname]['systemd_journald_settings'] != ''"
+    - "hostvars[inventory_hostname]['systemd_journald_settings'] != []"
 - name: "systemd_helper | Include deploy tasks for systemd-timesyncd"
   ansible.builtin.include_tasks:
     file: "deploy.d/deploy_timesyncd.yml"
