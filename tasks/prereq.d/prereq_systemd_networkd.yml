@@ -13,7 +13,24 @@
       community.general.json_query('[].networkd[]') }}"
     systemd_networkd_interfaces:
       "{{ hostvars[inventory_hostname]['systemd_networkd'] |
-      community.general.json_query('[].interfaces[].interface') }}"
+      community.general.json_query('[].interfaces[].interface') |
+      ansible.builtin.unique() }}"
+    systemd_networkd_vlans:
+      "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+      community.general.json_query('[].interfaces[].vlans[].name') |
+      ansible.builtin.unique() }}"
+    systemd_networkd_macvlans:
+      "{{ hostvars[inventory_hostname]['systemd_networkd'] |
+      community.general.json_query('[].interfaces[].vlans[].macvlans[].name') |
+      ansible.builtin.unique() }}"
+  when:
+    - "hostvars[inventory_hostname]['systemd_networkd'] is defined"
+    - "hostvars[inventory_hostname]['systemd_networkd'] != ''"
+    - "hostvars[inventory_hostname]['systemd_networkd'] != []"
+- name: "systemd_helper | Make networkd all interfaces list"
+  ansible.builtin.set_fact:
+    systemd_networkd_interfaces_list: "{{ (systemd_networkd_interfaces +
+      systemd_networkd_vlans + systemd_networkd_macvlans) | default([]) }}"
 - name: "systemd_helper | Find exists networkd configuration files"
   ansible.builtin.find:
     paths: "/etc/systemd/network"
@@ -21,25 +38,39 @@
     file_type: "file"
     use_regex: "yes"
     patterns: "(.*).(network|netdev|link)"
-    excludes: "{{ exclude_systemd_networkd_interfaces + ['99-default.link'] }}"
+    excludes: "{{ exclude_systemd_networkd_interfaces_network +
+      exclude_systemd_networkd_interfaces_netdev +
+      exclude_systemd_networkd_interfaces_link + ['99-default.link'] }}"
   register: "networkd_find_result"
   when:
+    - "hostvars[inventory_hostname]['systemd_networkd'] is defined"
+    - "hostvars[inventory_hostname]['systemd_networkd'] != ''"
     - "hostvars[inventory_hostname]['systemd_networkd'] |
        community.general.json_query(vars['networkd_drop_exists']) is defined"
     - "hostvars[inventory_hostname]['systemd_networkd'] |
        community.general.json_query(vars['networkd_drop_exists']) == 'true'"
+    - "exclude_systemd_networkd_interfaces_network != []"
+    - "exclude_systemd_networkd_interfaces_netdev != []"
+    - "exclude_systemd_networkd_interfaces_link != []"
   vars:
     networkd_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
-    exclude_systemd_networkd_interfaces:
-      "{{ vars['systemd_networkd_interfaces'] | map('regex_replace', '^(.*)$',
-      '\\1.(network|netdev|link)') | list() }}"
+    exclude_systemd_networkd_interfaces_network:
+      "{{ (vars['systemd_networkd_interfaces_list'] |
+      map('regex_replace', '^(.*)$', '\\1.network') | list() | default([])) }}"
+    exclude_systemd_networkd_interfaces_netdev:
+      "{{ (vars['systemd_networkd_interfaces_list'] |
+      map('regex_replace', '^(.*)$', '\\1.netdev') | list() | default([])) }}"
+    exclude_systemd_networkd_interfaces_link:
+      "{{ (vars['systemd_networkd_interfaces_list'] |
+      map('regex_replace', '^(.*)$', '\\1.link') | list() | default([])) }}"
 - name: "systemd_helper | Delete exists networkd configuration files"
   ansible.builtin.file:
-    path: "{{ item['path'] }}"
+    path: "{{ interface['path'] }}"
     state: "absent"
   loop: "{{ vars['networkd_find_result']['files'] | flatten(levels=1) }}"
   loop_control:
-    label: "{{ item['path'] }}"
+    loop_var: "interface"
+    label: "{{ 'Remove file: ' + interface['path'] }}"
   when:
     - "vars['networkd_find_result']['files'] is defined"
 - name: "systemd_helper | Stat default networkd link settings"
