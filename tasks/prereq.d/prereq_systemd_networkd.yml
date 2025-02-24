@@ -29,8 +29,10 @@
     - "hostvars[inventory_hostname]['systemd_networkd'] != []"
 - name: "systemd_helper | Make networkd all interfaces list"
   ansible.builtin.set_fact:
-    systemd_networkd_interfaces_list: "{{ (systemd_networkd_interfaces +
-      systemd_networkd_vlans + systemd_networkd_macvlans) | default([]) }}"
+    systemd_networkd_interfaces_list:
+      "{{ ((vars['systemd_networkd_interfaces'] | default([])) +
+      (vars['systemd_networkd_vlans'] | default([])) +
+      (vars['systemd_networkd_macvlans'] | default([])) | default([])) }}"
 - name: "systemd_helper | Find exists networkd configuration files"
   ansible.builtin.find:
     paths: "/etc/systemd/network"
