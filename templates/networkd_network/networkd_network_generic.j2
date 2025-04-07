@@ -24,6 +24,9 @@
 {% if item['ipv6_token'] is defined and item['ipv6_token'] != '' %}
 {{ 'IPv6Token=' ~ item['ipv6_token'] }}
 {% endif %}
+{% if item['ipv6_accept_ra'] is defined and item['ipv6_accept_ra'] in ['true', 'false'] %}
+{{ 'IPv6AcceptRA=' + item['ipv6_accept_ra'] }}
+{% endif %}
 {% if item['llmnr'] is defined and item['llmnr'] in ['true', 'false',
   'resolve'] %}
 {{ 'LLMNR=' + item['llmnr'] }}
