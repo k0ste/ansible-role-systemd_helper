@@ -7,7 +7,9 @@
     file: "deploy.d/deploy_resolved.yml"
   when:
     - "hostvars[inventory_hostname]['systemd_resolved'] is defined"
+    - "hostvars[inventory_hostname]['systemd_resolved'] != []"
     - "hostvars[inventory_hostname]['systemd_resolved'] != ''"
+    - "hostvars[inventory_hostname]['systemd_resolved'] != None"
 - name: "systemd_helper | Include deploy tasks for systemd-logind"
   ansible.builtin.include_tasks:
     file: "deploy.d/deploy_logind.yml"

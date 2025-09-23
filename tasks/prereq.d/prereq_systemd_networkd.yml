@@ -40,6 +40,7 @@
     file_type: "file"
     use_regex: "yes"
     patterns: "(.*).(network|netdev|link)"
+    ## noqa: jinja[invalid]
     excludes: "{{ exclude_systemd_networkd_interfaces_network +
       exclude_systemd_networkd_interfaces_netdev +
       exclude_systemd_networkd_interfaces_link + ['99-default.link'] }}"
