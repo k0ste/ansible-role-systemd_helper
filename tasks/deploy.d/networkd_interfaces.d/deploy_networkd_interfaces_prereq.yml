@@ -2,7 +2,7 @@
 - name: "systemd_helper | Assert that type for interface is defined"
   ansible.builtin.assert:
     that: "item['type'] is defined and item['type'] != ''"
-    msg: "{{ 'type for ' ~ vars['outer_item'] ~ ' is not defined' }}"
+    fail_msg: "{{ 'type for ' ~ vars['outer_item'] ~ ' is not defined' }}"
     quiet: "true"
   loop: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
     community.general.json_query(\"[].interfaces[?interface=='\" ~
@@ -12,7 +12,7 @@
 - name: "systemd_helper | Assert that physaddr for interface is defined"
   ansible.builtin.assert:
     that: "item['physaddr'] is defined and item['physaddr'] != ''"
-    msg: "{{ 'physaddr for ' ~ vars['outer_item'] ~ ' is not defined' }}"
+    fail_msg: "{{ 'physaddr for ' ~ vars['outer_item'] ~ ' is not defined' }}"
     quiet: "true"
   loop: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
     community.general.json_query(\"[].interfaces[?interface=='\" ~
@@ -28,8 +28,8 @@
   ansible.builtin.assert:
     that: "item['physaddr'] is defined and item['physaddr'] |
       ansible.utils.hwaddr()"
-    msg: "{{ 'physaddr for ' ~ vars['outer_item'] ~ ' is invalid, value is `' ~
-      item['physaddr'] ~ '`' }}"
+    fail_msg: "{{ 'physaddr for ' ~ vars['outer_item'] ~ ' is invalid, value
+      is `' ~ item['physaddr'] ~ '`' }}"
     quiet: "true"
   loop: "{{ hostvars[inventory_hostname]['systemd_networkd'] |
     community.general.json_query(\"[].interfaces[?interface=='\" ~

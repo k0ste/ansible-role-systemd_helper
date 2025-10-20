@@ -35,12 +35,12 @@
        community.general.json_query(vars['tmpfiles_drop_exists']) == 'true'"
   vars:
     tmpfiles_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
-    exclude_systemd_tmpfiles_create: "{{ vars['systemd_tmpfiles_create'] |
-      map('regex_replace', '^(.*)$', '\\1.conf') | list() }}"
-    exclude_systemd_tmpfiles_clean: "{{ vars['systemd_tmpfiles_clean'] |
-      map('regex_replace', '^(.*)$', '\\1.conf') | list() }}"
-    exlucde_systemd_tmpfiles_remove: "{{ vars['systemd_tmpfiles_remove'] |
-      map('regex_replace', '^(.*)$', '\\1.conf') | list() }}"
+    exclude_systemd_tmpfiles_create: "{{ ((vars['systemd_tmpfiles_create'] |
+      map('regex_replace', '^(.*)$', '\\1.conf')) | list()) | default([]) }}"
+    exclude_systemd_tmpfiles_clean: "{{ ((vars['systemd_tmpfiles_clean'] |
+      map('regex_replace', '^(.*)$', '\\1.conf')) | list()) | default([]) }}"
+    exlucde_systemd_tmpfiles_remove: "{{ ((vars['systemd_tmpfiles_remove'] |
+      map('regex_replace', '^(.*)$', '\\1.conf')) | list()) | default([]) }}"
 - name: "systemd_helper | Delete exists tmpfiles configuration files"
   ansible.builtin.file:
     path: "{{ item['path'] }}"

@@ -14,7 +14,7 @@
     file:
       "deploy.d/networkd_interfaces.d/deploy_networkd_interfaces_macvlan.yml"
 - name: "systemd_helper | Include systemd-networkd interface macvlan-on-vlan
-  tasks"
+    tasks"
   ansible.builtin.include_tasks:
     file:
       "deploy.d/networkd_interfaces.d/deploy_networkd_interfaces_vlan_macvlan.yml"
@@ -27,4 +27,4 @@
       outer_item_vlan['name'] }}"
   when:
     - "outer_item_vlan['macvlans'] is defined"
-    - "outer_item_vlan['macvlans'] != []"
+    - "outer_item_vlan['macvlans'] not in ['', [], None]"

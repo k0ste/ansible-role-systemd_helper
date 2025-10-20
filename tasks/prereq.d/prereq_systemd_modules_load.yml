@@ -21,6 +21,8 @@
     excludes: "{{ exclude_systemd_modules_load_create | default('[]') }}"
   register: "modules_load_find_result"
   when:
+    - "vars['systemd_modules_load_create'] is defined"
+    - "vars['systemd_modules_load_create'] not in ['', [], None]"
     - "hostvars[inventory_hostname]['systemd_modules_load'] |
        community.general.json_query(vars['modules_load_drop_exists']) is
        defined"
@@ -29,8 +31,8 @@
   vars:
     modules_load_drop_exists: "[] | map(&drop_exists || 'false', @) | [0]"
     exclude_systemd_modules_load_create:
-      "{{ vars['systemd_modules_load_create'] |
-      map('regex_replace', '^(.*)$', '\\1.conf') | list() }}"
+      "{{ ((vars['systemd_modules_load_create'] |
+      map('regex_replace', '^(.*)$', '\\1.conf')) | list()) | default([]) }}"
 - name: "systemd_helper | Delete exists modules-load configuration files"
   ansible.builtin.file:
     path: "{{ item['path'] }}"
